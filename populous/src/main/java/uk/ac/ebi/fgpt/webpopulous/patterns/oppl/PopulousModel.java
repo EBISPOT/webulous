@@ -5,8 +5,8 @@ import uk.ac.manchester.cs.owl.semspreadsheets.model.OntologyTermValidation;
 import uk.ac.manchester.cs.owl.semspreadsheets.model.Range;
 import uk.ac.manchester.cs.owl.semspreadsheets.model.Workbook;
 import uk.ac.manchester.cs.owl.semspreadsheets.model.WorkbookManager;
-import uk.ac.manchester.cs.owl.semspreadsheets.patterns.oppl.entity.AutoIDGenerator;
-import uk.ac.manchester.cs.owl.semspreadsheets.patterns.oppl.entity.EntityCreation;
+import uk.ac.ebi.fgpt.webpopulous.patterns.oppl.entity.AutoIDGenerator;
+import uk.ac.ebi.fgpt.webpopulous.patterns.oppl.entity.EntityCreation;
 
 import java.io.File;
 import java.io.FileInputStream;

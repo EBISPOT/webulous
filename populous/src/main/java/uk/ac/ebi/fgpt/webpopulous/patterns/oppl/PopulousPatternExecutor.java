@@ -6,7 +6,7 @@ import org.coode.oppl.Variable;
 import org.coode.oppl.exceptions.QuickFailRuntimeExceptionHandler;
 import org.coode.oppl.variabletypes.*;
 import org.coode.parsers.BidirectionalShortFormProviderAdapter;
-import org.coode.parsers.common.JUnitTestErrorListener;
+//import org.coode.parsers.test.JUnitTestErrorListener;
 import org.coode.parsers.common.SystemErrorEcho;
 import org.coode.patterns.*;
 import org.semanticweb.owlapi.model.*;
@@ -14,13 +14,17 @@ import org.semanticweb.owlapi.util.AnnotationValueShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.semspreadsheets.model.*;
-import uk.ac.manchester.cs.owl.semspreadsheets.patterns.oppl.entity.CustomOWLEntityFactory;
-import uk.ac.manchester.cs.owl.semspreadsheets.patterns.oppl.entity.EntityCreation;
-import uk.ac.manchester.cs.owl.semspreadsheets.patterns.oppl.entity.OWLEntityCreationException;
-import uk.ac.manchester.cs.owl.semspreadsheets.patterns.oppl.entity.OWLEntityCreationSet;
+import uk.ac.ebi.fgpt.webpopulous.patterns.oppl.entity.CustomOWLEntityFactory;
+import uk.ac.ebi.fgpt.webpopulous.patterns.oppl.entity.EntityCreation;
+import uk.ac.ebi.fgpt.webpopulous.patterns.oppl.entity.OWLEntityCreationException;
+import uk.ac.ebi.fgpt.webpopulous.patterns.oppl.entity.OWLEntityCreationSet;
 
 
-import java.util.*;/*
+import java.util.*;
+
+/* THIS IS JUPP'S MAGIC CLASS*/
+
+/*
  * Copyright (C) 2007, University of Manchester
  *
  * Modifications to the initial code base are copyright of their
@@ -75,7 +79,7 @@ public class PopulousPatternExecutor {
     private List<OWLAnnotationProperty> props;
 
     CustomOWLEntityFactory cf;
-    final JUnitTestErrorListener errorListener = new JUnitTestErrorListener();
+//    final JUnitTestErrorListener errorListener = new JUnitTestErrorListener();
 
 
     public PopulousPatternExecutor(WorkbookManager workbookManager, OWLOntologyManager man, PopulousModel populousModel, EntityCreation newEntities) throws OWLOntologyCreationException {
