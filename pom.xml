@@ -13,7 +13,12 @@
 
 
     <modules>
-        <module>populous</module>
+        <module>populous-oppl</module>
+        <module>populous-api</module>
+        <module>populous-impl</module>
+        <module>populous-cli</module>
+        <module>populous-service</module>
+        <module>populous-app</module>
     </modules>
 
     <build>
