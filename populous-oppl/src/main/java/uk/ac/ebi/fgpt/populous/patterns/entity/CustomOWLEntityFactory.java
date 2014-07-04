@@ -109,7 +109,7 @@ public class CustomOWLEntityFactory implements OWLEntityFactory {
             OWLAxiom ax = df.getOWLDeclarationAxiom(entity);
             changes.add(new AddAxiom(onto, ax));
 
-            return new SimpleOWLEntityCreationSet<T>(entity, changes);
+            return new OWLEntityCreationSet<T>(entity, changes);
         }
         catch (URISyntaxException e) {
             throw new OWLEntityCreationException(e);

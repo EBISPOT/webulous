@@ -3,6 +3,8 @@ package uk.ac.ebi.fgpt.populous.patterns;
 import org.semanticweb.owlapi.model.IRI;
 import uk.ac.ebi.fgpt.populous.model.AutoIDGenerator;
 import uk.ac.ebi.fgpt.populous.model.EntityCreation;
+import uk.ac.ebi.fgpt.populous.model.PopulousModel;
+import uk.ac.ebi.fgpt.populous.model.PopulousPattern;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +19,7 @@ import java.util.*;
  * The University of Manchester<br>
  * Bio-Health Informatics Group<br>
  */
-public class PopulousModel {
+public class SimplePopulousModel implements PopulousModel{
 
     private IRI sourceOntologyIRI;
 
@@ -30,16 +32,16 @@ public class PopulousModel {
     private int startRow = 0;
     private int endRow = 0;
 
-    private Set<SimplePopulousPattern> simplePopulousPattern;
+    private Set<PopulousPattern> simplePopulousPattern;
     private Set<String> variables;
     private List<Integer> columns;
     private boolean isNewSourceOntology = true;
 
-    private uk.ac.ebi.fgpt.populous.patterns.entity.SimpleEntityCreation entityPrefs;
+    private EntityCreation entityPrefs;
 
-    public PopulousModel () {
+    public SimplePopulousModel() {
         importedOntologies = new HashSet<IRI> ();
-        simplePopulousPattern = new HashSet<SimplePopulousPattern>();
+        simplePopulousPattern = new HashSet<PopulousPattern>();
         variables = new HashSet<String>();
         columns = new ArrayList<Integer>();
     }
@@ -53,7 +55,7 @@ public class PopulousModel {
     }
 
 
-    public Set<SimplePopulousPattern> getPopulousPatterns() {
+    public Set<PopulousPattern> getPopulousPatterns() {
         return simplePopulousPattern;
     }
 
@@ -249,7 +251,7 @@ public class PopulousModel {
         }
 
         Integer j = 0;
-        for (SimplePopulousPattern p : simplePopulousPattern) {
+        for (PopulousPattern p : simplePopulousPattern) {
             prop.setProperty("pattern.id." + j , p.getPatternID());
             prop.setProperty("pattern.name." + p.getPatternID(), p.getPatternName());
             prop.setProperty("pattern.value." + p.getPatternID(), p.getPatternValue());
@@ -357,7 +359,7 @@ public class PopulousModel {
 //
 //        try {
 //            Workbook workbook = manager.loadWorkbook(URI.create("file:/Users/simon/Desktop/kupo_cells_small.xls"));
-//            PopulousModel model = new PopulousModel();
+//            SimplePopulousModel model = new SimplePopulousModel();
 //
 //
 //

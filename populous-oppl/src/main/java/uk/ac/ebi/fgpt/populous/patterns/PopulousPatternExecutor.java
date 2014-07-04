@@ -1,24 +1,26 @@
 package uk.ac.ebi.fgpt.populous.patterns;
 
+import javafx.scene.control.Cell;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.coode.oppl.Variable;
 import org.coode.oppl.exceptions.QuickFailRuntimeExceptionHandler;
 import org.coode.oppl.variabletypes.*;
 import org.coode.parsers.BidirectionalShortFormProviderAdapter;
-//import org.coode.parsers.test.JUnitTestErrorListener;
 import org.coode.parsers.common.SystemErrorEcho;
 import org.coode.patterns.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AnnotationValueShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
-import uk.ac.ebi.fgpt.populous.patterns.entity.CustomOWLEntityFactory;
 import uk.ac.ebi.fgpt.populous.exception.OWLEntityCreationException;
+import uk.ac.ebi.fgpt.populous.model.*;
+import uk.ac.ebi.fgpt.populous.patterns.entity.CustomOWLEntityFactory;
 import uk.ac.ebi.fgpt.populous.patterns.entity.SimpleOWLEntityCreationSet;
 
-
 import java.util.*;
+
+//import org.coode.parsers.test.JUnitTestErrorListener;
 
 /* THIS IS JUPP'S MAGIC CLASS*/
 
@@ -56,10 +58,10 @@ public class PopulousPatternExecutor {
     private static Logger logger = Logger.getLogger(PopulousPatternExecutor.class);
 
     private WorkbookManager workbookManager;
-    private Workbook workbook;
+    private DataCollection dataCollection;
 
     private PopulousModel populousModel;
-    private uk.ac.ebi.fgpt.populous.patterns.entity.SimpleEntityCreation entityCreation;
+    private EntityCreation entityCreation;
     private OWLOntologyManager ontologyManager;
 
     private Set<OWLOntology> ontologies;
@@ -69,7 +71,7 @@ public class PopulousPatternExecutor {
     private OPPLPatternParser parser;
     private PatternModel patternModel;
 
-    private Map<Integer, Map<String, IRI>> shortFromMapper;
+    private HashMap<String, IRI> shortFromMapper;
     private BidirectionalShortFormProviderAdapter shortFormProvider;
 
     private Random randomGenerator;
@@ -80,10 +82,10 @@ public class PopulousPatternExecutor {
 //    final JUnitTestErrorListener errorListener = new JUnitTestErrorListener();
 
 
-    public PopulousPatternExecutor(WorkbookManager workbookManager, OWLOntologyManager man, PopulousModel populousModel, uk.ac.ebi.fgpt.populous.patterns.entity.SimpleEntityCreation newEntities) throws OWLOntologyCreationException {
+    public PopulousPatternExecutor(DataCollection collection, OWLOntologyManager man, PopulousModel populousModel, EntityCreation newEntities) throws OWLOntologyCreationException {
         logger.debug("Starting Pattern Executor");
-        this.workbookManager = workbookManager;
-        this.workbook = workbookManager.getWorkbook();
+//        this.workbookManager = workbookManager;
+        this.dataCollection = collection;
         this.populousModel = populousModel;
         this.entityCreation = newEntities;
         randomGenerator = new Random();
@@ -131,7 +133,7 @@ public class PopulousPatternExecutor {
 
         QuickFailRuntimeExceptionHandler handler = new QuickFailRuntimeExceptionHandler();
 
-        for (SimplePopulousPattern pattern : populousModel.getPopulousPatterns()) {
+        for (PopulousPattern pattern : populousModel.getPopulousPatterns()) {
             System.err.println("Got pattern: " + pattern.getPatternName() + "\n" + pattern.getPatternValue());
             this.patternModel = parser.parse(pattern.getPatternValue());
 
@@ -146,24 +148,35 @@ public class PopulousPatternExecutor {
                     opplVariableMap.put(v.getName(), v);
                 }
 
-                shortFromMapper = new HashMap<Integer, Map<String, IRI>>();
+                shortFromMapper = new HashMap<String, IRI>();
                 // for each column, create a new short form provider for the specific ontologies
-                for (Integer column : populousModel.getVariableMapper().keySet()) {
+//                for (Integer column : populousModel.getVariableMapper().keySet()) {
+//
+//                    // get the range for this column
+////                    Range range = new Range(workbook.getSheet(0), column, populousModel.getStartRow(), column, populousModel.getEndRow());
+//
+//                    if (!workbookManager.getContainingOntologyTermValidations(range).isEmpty()) {
+//                        for (OntologyTermValidation val : workbookManager.getContainingOntologyTermValidations(range)) {
+//
+//                            OntologyTermValidationDescriptor desc = val.getValidationDescriptor();
+//                            shortFromMapper.put(column, getTermToURIMapping(desc.getTerms()));
+//                        }
+//                    }
+//                    else {
+//                        shortFromMapper.put(column, new HashMap<String, IRI>());
+//                    }
+//
+//                }
 
-                    // get the range for this column
-                    Range range = new Range(workbook.getSheet(0), column, populousModel.getStartRow(), column, populousModel.getEndRow());
+                for(DataAttribute dataAttribute : dataCollection.getDataAttributes()){
+                    if(!dataAttribute.getPermissibleTerms().isEmpty()){
 
-                    if (!workbookManager.getContainingOntologyTermValidations(range).isEmpty()) {
-                        for (OntologyTermValidation val : workbookManager.getContainingOntologyTermValidations(range)) {
+//                         shortFromMapper.put(getTermToURIMapping(dataAttribute.getPermissibleTerms());
 
-                            OntologyTermValidationDescriptor desc = val.getValidationDescriptor();
-                            shortFromMapper.put(column, getTermToURIMapping(desc.getTerms()));
-                        }
                     }
-                    else {
-                        shortFromMapper.put(column, new HashMap<String, IRI>());
-                    }
-
+//                    else{
+//                        shortFromMapper.put(new HashMap<String, IRI>());
+//                    }
                 }
 
 
@@ -183,9 +196,10 @@ public class PopulousPatternExecutor {
 
                         if (column != null) {
 
-                            Cell cell = workbook.getSheet(populousModel.getSheet()).getCellAt(column, row);
+/**MIND OUT, THIS NEXT LINE IS JUST A PLACE HOLDER, NEEDS CORRECTING***/
+                            DataField dataField = dataCollection.getDataObjects().iterator().next().getDataFields().iterator().next();
 
-                            if (cell != null) {
+                            if (dataField != null) {
 
 
 //                                System.err.println("cell value: " + cell.getValue());
@@ -198,9 +212,9 @@ public class PopulousPatternExecutor {
                                         VariableType type = v.getType();
 
                                         if (type.accept(variableVisitor).equals(5)) {
-                                            if (StringUtils.isNotBlank(cell.getValue())) {
+                                            if (StringUtils.isNotBlank(dataField.getValue())) {
 //                                                System.err.println("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + cell.getValue());
-                                                String [] values = cell.getValue().split("\\s*\\|\\s*");
+                                                String [] values = dataField.getValue().split("\\s*\\|\\s*");
                                                 for (String s : values) {
                                                     s = s.trim();
                                                     ipm.instantiate(opplVariableMap.get(variable), ontologyManager.getOWLDataFactory().getOWLLiteral(s));
@@ -208,7 +222,7 @@ public class PopulousPatternExecutor {
                                             }
                                         }
                                         else if (type.accept(variableVisitor).equals(1)) {
-                                            for (OWLEntity entity : getOWLEntities2(cell, column, 1)) {
+                                            for (OWLEntity entity : getOWLEntities(dataField, 1)) {
                                                 if (entity.isOWLClass()) {
                                                     logger.debug("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
 //                                                    System.err.println("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
@@ -218,7 +232,7 @@ public class PopulousPatternExecutor {
                                             }
                                         }
                                         else if (type.accept(variableVisitor).equals(4)) {
-                                            for (OWLEntity entity : getOWLEntities2(cell, column, 4)) {
+                                            for (OWLEntity entity : getOWLEntities(dataField, 4)) {
                                                 if (entity.isOWLNamedIndividual()) {
                                                     logger.debug("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
 //                                                    System.err.println("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
@@ -310,55 +324,38 @@ public class PopulousPatternExecutor {
         ontologyManager.saveOntology(activeOntology, file);
     }
 
-    private Set<OWLEntity> getOWLEntities2(Cell cell, Integer column, Integer type) {
+    private Set<OWLEntity> getOWLEntities(DataField field, Integer type) {
         Set<OWLEntity> entities = new HashSet<OWLEntity>();
 
-        String value = cell.getValue();
+        String value = field.getValue();
         if (!value.equals("")) {
             String [] values = value.split("\\s*\\|\\s*");
             for (String s : values) {
                 s = s.trim();
                 logger.debug("Looking up:" + s);
-                entities.addAll(getEntityShortForms2(s, column, type));
+                entities.addAll(getEntityShortForms(s, type));
             }
         }
 
         return entities;
     }
 
-//    private Set<OWLEntity> getOWLEntities(Cell cell) {
-//        Set<OWLEntity> entities = new HashSet<OWLEntity>();
-//
-//        String value = cell.getValue();
-//        if (!value.equals("")) {
-//            String [] values = value.split("\\s*\\|\\s*");
-//            for (String s : values) {
-//                s = s.trim();
-//                logger.debug("Looking up:" + s);
-//                entities.addAll(getEntityShortForms(s));
-//            }
-//        }
-//
-//        return entities;
-//
-//    }
-
-    private Set<OWLEntity> getEntityShortForms2(String shortForm, Integer column, Integer type) {
+    private Set<OWLEntity> getEntityShortForms(String shortForm, Integer type) {
         Set<OWLEntity> entities = new HashSet<OWLEntity>();
 
         // first look in the validation list
-        for (String s : shortFromMapper.get(column).keySet()) {
+        for (String s : shortFromMapper.keySet()) {
             if (s.toLowerCase().equals(shortForm.toLowerCase())) {
                 logger.debug("Entity found:" + s.toLowerCase());
 
                 if (type == 1) {
 
-                    entities.add(ontologyManager.getOWLDataFactory().getOWLClass(shortFromMapper.get(column).get(s)));
+                    entities.add(ontologyManager.getOWLDataFactory().getOWLClass(shortFromMapper.get(s)));
 
                 }
                 else if (type == 4) {
 
-                    entities.add(ontologyManager.getOWLDataFactory().getOWLNamedIndividual(shortFromMapper.get(column).get(s)));
+                    entities.add(ontologyManager.getOWLDataFactory().getOWLNamedIndividual(shortFromMapper.get(s)));
 
                 }
             }
@@ -380,31 +377,15 @@ public class PopulousPatternExecutor {
 
         // finally create a new entity
         if (entities.isEmpty()) {
-            OWLEntity e = getNewEntities2(shortForm, type);
+            OWLEntity e = getNewEntities(shortForm, type);
             entities.add(e);
         }
         return entities;
     }
 
-//    private Set<OWLEntity> getEntityShortForms(String shortForm) {
-//        Set<OWLEntity> entities = new HashSet<OWLEntity>();
-//        Set<String> unknown = new HashSet<String>();
-//
-//        for (String s : shortFormProvider.getShortForms()) {
-//            if (s.toLowerCase().equals(shortForm.toLowerCase())) {
-//                logger.debug("Entity found:" + s.toLowerCase());
-//
-//                entities.addAll(shortFormProvider.getEntities(s));
-//            }
-//        }
-//
-//        if (entities.isEmpty()) {
-//            entities.add(getNewEntities(shortForm));
-//        }
-//        return entities;
-//    }
 
-    private OWLEntity getNewEntities2(String newTerm, Integer type) {
+
+    private OWLEntity getNewEntities(String newTerm, Integer type) {
 
 //        Set<OWLEntity> entities = new HashSet<OWLEntity>();
         // this is wrong, assumes classes all the time.
@@ -421,7 +402,7 @@ public class PopulousPatternExecutor {
 //        ontologyManager.addAxiom(activeOntology, ontologyManager.getOWLDataFactory().getOWLAnnotationAssertionAxiom(prop, cls.getIRI(), literal));
 
         if (type == 1) {
-            SimpleOWLEntityCreationSet<OWLClass> ecs = null;
+            OWLEntityCreationSet<OWLClass> ecs = null;
             try {
                 ecs = cf.createOWLClass(newTerm, entityCreation.getDefaultBaseURI());
             } catch (OWLEntityCreationException e) {
@@ -435,7 +416,7 @@ public class PopulousPatternExecutor {
 
         }
         else if (type == 4) {
-            SimpleOWLEntityCreationSet<OWLNamedIndividual> ecs = null;
+            OWLEntityCreationSet<OWLNamedIndividual> ecs = null;
             try {
                 ecs = cf.createOWLIndividual(newTerm, entityCreation.getDefaultBaseURI());
             } catch (OWLEntityCreationException e) {
@@ -451,21 +432,4 @@ public class PopulousPatternExecutor {
         return null;
 
     }
-
-//    private OWLEntity getNewEntities(String newTerm) {
-//
-////        Set<OWLEntity> entities = new HashSet<OWLEntity>();
-//        // this is wrong, assumes classes all the time.
-//        //
-//        logger.debug("Creating new term:" + newTerm);
-//
-//            OWLClass cls = ontologyManager.getOWLDataFactory().getOWLClass(
-//                    IRI.create(newEntities.getBaseIRI().toURI() + "#" + newTerm.replaceAll(" ", "_")));
-//            ontologyManager.addAxiom(activeOntology, ontologyManager.getOWLDataFactory().getOWLDeclarationAxiom(cls));
-//
-//
-//        return cls;
-
-//    }
-
 }
