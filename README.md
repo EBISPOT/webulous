@@ -10,8 +10,6 @@ Modules
 
 -populous-cli: command line client for populous
 
--populous-impl: implementation of the populous API
-
 -populous-oppl: the original populous code that uses OPPL
 
 -populous-service: the REST API used by the populous app

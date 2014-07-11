@@ -14,9 +14,11 @@ public interface DataAttribute {
 
     Collection<Term> getPermissibleTerms();
 
-    String getType();
+    String getTypeLabel();
 
     String getTypeURI();
+
+    String getTypeRestriction();
 
     int getIndex();
 

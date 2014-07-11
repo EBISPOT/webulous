@@ -1,0 +1,58 @@
+{
+    -configuration:{
+          sourceOntology: "mySourceOntologyURI",
+        - importedOntologies: [
+            "ontologyURI1",
+            "ontologyURI2",
+            ...
+          ],
+        - entityCreationStrategy: {
+            baseURI: "",
+            useDefaultBaseURI: "",
+            URIseparator: "",
+            useAutoIDforFragment: "",
+            nameLabelGenerate: "",
+            nameLabelURI: "",
+            namelLabelLang: "",
+            autoIDgenerator: "",
+            autoIDprefix: "",
+            autoIDsuffix: "",
+            autoIDsize: "",
+            autoIDstart: "",
+            autoIDend: ""
+          },
+        - opplPatterns: [
+            "pattern1",
+            "pattern2",
+            ...
+         ],
+        - dataRestrictions: [
+            - {
+                columnIndex: "index", //we need this to marry up the restriction with the correct data field server-side, otherwise we'd need to attach a type to every data value
+                typeName: "columnHeader", //(eg "disease")
+                restrictionParentURI: "parentURI",
+                restrictionType: "type", //(eg direct subclasses, instances, all subclasses)
+                opplVariable: "?variable" //the OPPL variable associated with this column
+              },
+            ...
+          ]
+	  },
+	- data: [
+		- [
+			"val1a",
+			"val2a",
+			"val3a",
+			...
+		  ],
+		- [
+			"val1b",
+			"val2b",
+			"val3b",
+			...
+		  ],
+		 ...
+	 ]
+}
+		
+		
+		

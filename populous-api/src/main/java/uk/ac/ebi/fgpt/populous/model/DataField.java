@@ -16,4 +16,6 @@ public interface DataField {
     String getType();
 
     String getIRI();
+
+    int getIndex();
 }

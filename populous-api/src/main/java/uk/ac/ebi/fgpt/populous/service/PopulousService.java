@@ -13,10 +13,11 @@ package uk.ac.ebi.fgpt.populous.service;
  *
  *
  */
-public interface PopulousService<I> {
+public interface PopulousService {
 
     void createPopulousModel();
 
-    void parseInputData(I inputData );
+    void setUpOntologyConfiguration();
+
 
 }
