@@ -1,10 +1,10 @@
 package uk.ac.ebi.fgpt.populous.model;
 
 import org.semanticweb.owlapi.model.IRI;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -33,19 +33,12 @@ public interface PopulousModel {
     public LinkedHashMap<Integer, String> getVariableMapper();
 
 
-    public List<Integer> getColumns ();
-
-
-
-//    COMMENTED THIS OUT BECAUSE I'M NOT QUITE SURE WHAT IT DOES YET
-//    public Set<OntologyTermValidation> getValidations(WorkbookManager workbookManager, Workbook workbook) ;
-
     public boolean isNewOntology();
 
 
     public Set<String> getVariables();
 
-    public void loadProperties (File file) throws IOException;
+//    public void loadProperties (File file) throws IOException;
 
 
     public Properties getPopulousModelProperties () ;

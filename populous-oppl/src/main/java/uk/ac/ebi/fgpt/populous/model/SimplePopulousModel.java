@@ -1,14 +1,10 @@
 package uk.ac.ebi.fgpt.populous.model;
 
 import org.semanticweb.owlapi.model.IRI;
-import uk.ac.ebi.fgpt.populous.entity.SimpleEntityCreation;
-
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.*;
 
 /**
@@ -26,13 +22,8 @@ public class SimplePopulousModel implements PopulousModel{
 
     private  LinkedHashMap<Integer, String> variableBinding;
 
-    private int sheet = 0;
-    private int startRow = 0;
-    private int endRow = 0;
-
     private Set<PopulousPattern> simplePopulousPattern;
     private Set<String> variables;
-    private List<Integer> columns;
     private boolean isNewSourceOntology = true;
 
     private EntityCreation entityPrefs;
@@ -41,28 +32,36 @@ public class SimplePopulousModel implements PopulousModel{
         importedOntologies = new HashSet<IRI> ();
         simplePopulousPattern = new HashSet<PopulousPattern>();
         variables = new HashSet<String>();
-        columns = new ArrayList<Integer>();
     }
 
+    @Override
     public EntityCreation getEntity() {
         return entityPrefs;
     }
 
-    public void setEntity(EntityCreation entityPrefs) {
+    public void createEntity(EntityCreation entityPrefs) {
         this.entityPrefs = entityPrefs;
     }
 
-
+    @Override
     public Set<PopulousPattern> getPopulousPatterns() {
         return simplePopulousPattern;
     }
 
+    public void setPopulousPattern(Set<PopulousPattern> patterns){
+        this.simplePopulousPattern = patterns;
+    }
 
+    @Override
     public Set<IRI> getImportedOntologies() {
         return importedOntologies;
     }
 
+    public void setImportedOntologies(Set<IRI> importedOntologies){
+        this.importedOntologies = importedOntologies;
+    }
 
+    @Override
     public IRI getSourceOntologyIRI() {
         return sourceOntologyIRI;
     }
@@ -71,6 +70,7 @@ public class SimplePopulousModel implements PopulousModel{
         this.sourceOntologyIRI = sourceOntologyIRI;
     }
 
+    @Override
     public LinkedHashMap<Integer, String> getVariableMapper() {
         return variableBinding;
     }
@@ -79,33 +79,7 @@ public class SimplePopulousModel implements PopulousModel{
         this.variableBinding = variableMapper;
     }
 
-    public int getStartRow() {
-        return startRow;
-    }
-
-    public void setStartRow(int startRow) {
-        this.startRow = startRow -1;
-    }
-
-    public int getEndRow() {
-        return endRow;
-    }
-
-    public void setEndRow(int endRow) {
-        this.endRow = endRow -1;
-    }
-
-
-    public List<Integer> getColumns () {
-        return columns;
-    }
-
-
-    public int getColumnInt (String columnName) {
-        // this is wrong!!
-        return (int) columnName.charAt(0) - 65;
-    }
-
+    @Override
     public IRI getSourceOntologyPhysicalIRI() {
         return sourceOntologyPhysicalIRI;
     }
@@ -114,126 +88,94 @@ public class SimplePopulousModel implements PopulousModel{
         this.sourceOntologyPhysicalIRI = sourceOntologyPhysicalIRI;
     }
 
-    public void setSheet(int i) {
-        this.sheet = i;
-
-    }
-
-    public int getSheet () {
-        return sheet;
-    }
-
-
-//    COMMENTED THIS OUT BECAUSE I'M NOT QUITE SURE WHAT IT DOES YET
-//    public Set<OntologyTermValidation> getValidations(WorkbookManager workbookManager, Workbook workbook) {
-//
-//        Set<OntologyTermValidation> validationSet = new HashSet<OntologyTermValidation>();
-//        if (!columns.isEmpty()) {
-//            for (int columnInt : this.columns) {
-//                Range range = new Range(workbook.getSheet(sheet), columnInt, startRow, columnInt, endRow);
-//                System.err.println(range.toString());
-//                validationSet.addAll(workbookManager.getOntologyTermValidationManager().getIntersectingValidations(range));
-//            }
-//        }
-//        return validationSet;
-//    }
-
+    @Override
     public boolean isNewOntology() {
         return isNewSourceOntology;
     }
 
-    public void isNewOntology(boolean b) {
+    public void setIsNewOntology(boolean b) {
         isNewSourceOntology = b;
     }
 
+    @Override
     public Set<String> getVariables() {
         return variables;
     }
 
-    public void loadProperties (File file) throws IOException {
-        Properties p = new Properties();
-        p.loadFromXML(new FileInputStream(file));
-        setProperties(p);
+    public void setVariables(Set<String> variables){
+        this.variables = variables;
     }
 
-    private void setProperties (Properties prop) {
-        setSheet(Integer.valueOf(prop.getProperty("sheet")));
-        int col = 0;
-        getColumns().clear();
-        while (prop.containsKey(("column" + col))) {
-            getColumns().add(Integer.valueOf(prop.getProperty("column" + col)));
-            col++;
-        }
+//    @Override
+//    public void loadProperties (File file) throws IOException {
+//        Properties p = new Properties();
+//        p.loadFromXML(new FileInputStream(file));
+//        setProperties(p);
+//    }
+//
+//    private void setProperties (Properties prop) {
+//
+//        setSourceOntologyIRI(IRI.create(prop.getProperty("sourceontology.iri")));
+//        setSourceOntologyPhysicalIRI(IRI.create(prop.getProperty("sourceontology.physical")));
+//        this.isNewSourceOntology = Boolean.valueOf(prop.getProperty("sourceontology.isnew"));
+//
+//        int k = 0;
+//        getImportedOntologies().clear();
+//        while (prop.containsKey("importedontology.iri" + k)) {
+//            getImportedOntologies().add(IRI.create(prop.getProperty("importedontology.iri" + k)));
+//            k++;
+//        }
+//
+//        LinkedHashMap<Integer, String> variableMapper = new LinkedHashMap<Integer, String> ();
+//        for (int cols : columns) {
+//            variableMapper.put(cols, prop.getProperty("bindingcol." + cols));
+//        }
+//        getVariables().addAll(variableMapper.values());
+//        setVariableMapper(variableMapper);
+//
+//        int j = 0;
+//        getPopulousPatterns().clear();
+//        while (prop.containsKey("pattern.id." + j)) {
+//            SimplePopulousPattern p = new SimplePopulousPattern();
+//            String id = prop.getProperty("pattern.id." + j);
+//            p.setPatternID(id);
+//            p.setPatternName(prop.getProperty("pattern.name." + id));
+//            p.setPatternValue(prop.getProperty("pattern.value." + id));
+//            getPopulousPatterns().add(p);
+//            j++;
+//        }
+//
+//        SimpleEntityCreation entityCreation = new SimpleEntityCreation();
+//
+//        // entity creation preferences
+//        entityCreation.setUseDefaultBaseURI(Boolean.valueOf(prop.getProperty("entity.usebaseuri")));
+//        entityCreation.setDefaultBaseURI(prop.getProperty("entity.baseuri"));
+//        entityCreation.setDefaultSeparator(prop.getProperty("entity.seperator"));
+//        entityCreation.setFragmentAutoGenerated(Boolean.valueOf(prop.getProperty("entity.autogeneratefragment")));
+//        entityCreation.setGenerateNameLabel(Boolean.valueOf(prop.getProperty("entity.namelabel")));
+//        entityCreation.setGenerateIDLabel(Boolean.valueOf(prop.getProperty("entity.idlabel")));
+//        entityCreation.setNameLabelURI(URI.create(prop.getProperty("entity.labeluri")));
+//        entityCreation.setNameLabelLang(prop.getProperty("entity.labellang"));
+//        try {
+//            entityCreation.setAutoIDGeneratorClass((Class<AutoIDGenerator>)Class.forName(prop.getProperty("entity.autoidclass")));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        entityCreation.setAutoIDStart(Integer.valueOf(prop.getProperty("entity.start")));
+//        entityCreation.setAutoIDEnd(Integer.valueOf(prop.getProperty("entity.end")));
+//        entityCreation.setAutoIDDigitCount(Integer.valueOf(prop.getProperty("entity.digit")));
+//        entityCreation.setPrefix(prop.getProperty("entity.prefix"));
+//        entityCreation.setSuffix(prop.getProperty("entity.suffix"));
+//        setEntity(entityCreation);
+//
+//
+//    }
 
-        setStartRow(Integer.valueOf(prop.getProperty("startrow")) + 1);
-        setEndRow(Integer.valueOf(prop.getProperty("endrow")) + 1);
-        setSourceOntologyIRI(IRI.create(prop.getProperty("sourceontology.iri")));
-        setSourceOntologyPhysicalIRI(IRI.create(prop.getProperty("sourceontology.physical")));
-        this.isNewSourceOntology = Boolean.valueOf(prop.getProperty("sourceontology.isnew"));
-
-        int k = 0;
-        getImportedOntologies().clear();
-        while (prop.containsKey("importedontology.iri" + k)) {
-            getImportedOntologies().add(IRI.create(prop.getProperty("importedontology.iri" + k)));
-            k++;
-        }
-
-        LinkedHashMap<Integer, String> variableMapper = new LinkedHashMap<Integer, String> ();
-        for (int cols : columns) {
-            variableMapper.put(cols, prop.getProperty("bindingcol." + cols));
-        }
-        getVariables().addAll(variableMapper.values());
-        setVariableMapper(variableMapper);
-
-        int j = 0;
-        getPopulousPatterns().clear();
-        while (prop.containsKey("pattern.id." + j)) {
-            SimplePopulousPattern p = new SimplePopulousPattern();
-            String id = prop.getProperty("pattern.id." + j);
-            p.setPatternID(id);
-            p.setPatternName(prop.getProperty("pattern.name." + id));
-            p.setPatternValue(prop.getProperty("pattern.value." + id));
-            getPopulousPatterns().add(p);
-            j++;
-        }
-
-        SimpleEntityCreation entityCreation = new SimpleEntityCreation();
-
-        // entity creation preferences
-        entityCreation.setUseDefaultBaseURI(Boolean.valueOf(prop.getProperty("entity.usebaseuri")));
-        entityCreation.setDefaultBaseURI(prop.getProperty("entity.baseuri"));
-        entityCreation.setDefaultSeparator(prop.getProperty("entity.seperator"));
-        entityCreation.setFragmentAutoGenerated(Boolean.valueOf(prop.getProperty("entity.autogeneratefragment")));
-        entityCreation.setGenerateNameLabel(Boolean.valueOf(prop.getProperty("entity.namelabel")));
-        entityCreation.setGenerateIDLabel(Boolean.valueOf(prop.getProperty("entity.idlabel")));
-        entityCreation.setNameLabelURI(URI.create(prop.getProperty("entity.labeluri")));
-        entityCreation.setNameLabelLang(prop.getProperty("entity.labellang"));
-        try {
-            entityCreation.setAutoIDGeneratorClass((Class<AutoIDGenerator>)Class.forName(prop.getProperty("entity.autoidclass")));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        entityCreation.setAutoIDStart(Integer.valueOf(prop.getProperty("entity.start")));
-        entityCreation.setAutoIDEnd(Integer.valueOf(prop.getProperty("entity.end")));
-        entityCreation.setAutoIDDigitCount(Integer.valueOf(prop.getProperty("entity.digit")));
-        entityCreation.setPrefix(prop.getProperty("entity.prefix"));
-        entityCreation.setSuffix(prop.getProperty("entity.suffix"));
-        setEntity(entityCreation);
-
-
-    }
-
+    @Override
     public Properties getPopulousModelProperties () {
 
         Properties prop = new Properties();
 
-        prop.setProperty("sheet", String.valueOf(sheet));
-        for (int x = 0 ; x<columns.size(); x++) {
-            prop.setProperty("column" + x, String.valueOf(columns.get(x)));
-        }
-
-        prop.setProperty("startrow", String.valueOf(startRow));
-        prop.setProperty("endrow", String.valueOf(endRow));
         prop.setProperty("sourceontology.iri", sourceOntologyIRI.toString());
         prop.setProperty("sourceontology.physical", sourceOntologyPhysicalIRI.toString());
         prop.setProperty("sourceontology.isnew", String.valueOf(isNewSourceOntology));
@@ -275,10 +217,10 @@ public class SimplePopulousModel implements PopulousModel{
         return prop;
     }
 
+    @Override
     public void saveModel (File file) throws IOException {
 
         getPopulousModelProperties().storeToXML(new FileOutputStream(file), "populous model");
-
     }
 
 //    public static void main(String[] args) {

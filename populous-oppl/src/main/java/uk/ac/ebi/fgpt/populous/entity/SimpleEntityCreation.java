@@ -36,7 +36,7 @@ import java.net.URI;
  * The University of Manchester<br>
  * Bio-Health Informatics Group<br>
  */
-public class SimpleEntityCreation implements EntityCreation {
+public class    SimpleEntityCreation implements EntityCreation {
 
 
     private String DEFAULT_BASE_URI = "http://www.co-ode.org/ontologies/ont.owl#";

@@ -1,9 +1,11 @@
 package uk.ac.ebi.fgpt.populous.service;
 
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import uk.ac.ebi.fgpt.populous.utils.OntologyConfiguration;
+import uk.ac.ebi.fgpt.populous.entity.SimpleEntityCreation;
 import uk.ac.ebi.fgpt.populous.model.DataCollection;
-import uk.ac.ebi.fgpt.populous.model.PopulousModel;
+import uk.ac.ebi.fgpt.populous.model.SimpleDataCollection;
+import uk.ac.ebi.fgpt.populous.model.SimplePopulousModel;
+import uk.ac.ebi.fgpt.populous.utils.OntologyConfiguration;
 
 /**
  * Created by dwelter on 04/07/14.
@@ -11,12 +13,13 @@ import uk.ac.ebi.fgpt.populous.model.PopulousModel;
  * Default implementation of the PopulousService interface. The default implementation takes data coming in from a converter that processes it into the correct format.
  *
  */
-public class DefaultPopulousService implements PopulousService {
+public class DefaultPopulousService implements PopulousService<SimplePopulousModel, SimpleDataCollection> {
 
 
     private OntologyConfiguration config;
     private DataCollection dataCollection;
-    private PopulousModel populousModel;
+    private SimplePopulousModel populousModel;
+    private SimpleEntityCreation creationStrategy;
 
     public DefaultPopulousService(DataCollection collection){
 
@@ -24,24 +27,43 @@ public class DefaultPopulousService implements PopulousService {
         this.dataCollection = collection;
         setUpOntologyConfiguration();
 
+        setEntityCreationStrategy();
         createPopulousModel();
 
-        try {
-            PopulousPatternExecutionService executor = new PopulousPatternExecutionService(dataCollection, config.getOntologyManager(), populousModel, populousModel.getEntity());
-        } catch (OWLOntologyCreationException e) {
-            e.printStackTrace();
-        }
+    //    setUpPatternExecutor(populousModel, dataCollection);
+
+
 
     }
 
     @Override
     public void createPopulousModel() {
+       populousModel = new SimplePopulousModel();
+
 
     }
+
 
     @Override
     public void setUpOntologyConfiguration(){
 
+    }
+
+    @Override
+    public void setEntityCreationStrategy() {
+        creationStrategy = new SimpleEntityCreation();
+
+
+
+    }
+
+    @Override
+    public void setUpPatternExecutor(SimplePopulousModel populousModel, SimpleDataCollection data) {
+        try {
+            PopulousPatternExecutionService executor = new PopulousPatternExecutionService(data, config.getOntologyManager(), populousModel, creationStrategy);
+        } catch (OWLOntologyCreationException e) {
+            e.printStackTrace();
+        }
     }
 
 
