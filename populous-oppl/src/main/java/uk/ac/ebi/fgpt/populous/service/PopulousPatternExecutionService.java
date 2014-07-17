@@ -42,7 +42,7 @@ public class PopulousPatternExecutionService {
 
     private ParserFactory pf;
     private OPPLPatternParser parser;
-    private PatternModel patternModel;
+//    private PatternModel patternModel;
 
     private HashMap<Integer, Map<String, IRI>> shortFromMapper;
     private BidirectionalShortFormProviderAdapter shortFormProvider;
@@ -89,7 +89,7 @@ public class PopulousPatternExecutionService {
 
     }
 
-    public void generateOPPLScript() {
+    public void executeOPPLPatterns() {
 
         QuickFailRuntimeExceptionHandler handler = new QuickFailRuntimeExceptionHandler();
 
@@ -97,7 +97,7 @@ public class PopulousPatternExecutionService {
             System.err.println("Got pattern: " + pattern.getPatternName() + "\n" + pattern.getPatternValue());
 
 //pass the OPPL pattern string to the parser for processing
-            this.patternModel = parser.parse(pattern.getPatternValue());
+            PatternModel patternModel = parser.parse(pattern.getPatternValue());
 
             List<OWLAxiomChange> changes = new ArrayList<OWLAxiomChange>();
 
@@ -105,108 +105,30 @@ public class PopulousPatternExecutionService {
             if (!patternModel.getInputVariables().isEmpty()) {
 
 //create a map of the input variable names, eg "?disease" and the actual variable
-                Map<String, Variable> opplVariableMap = new HashMap<String, Variable>();
-                for (Variable v : patternModel.getInputVariables()) {
-                    System.err.println("Loading input variables:" + v.getName());
-                    opplVariableMap.put(v.getName(), v);
-                }
+                Map<String, Variable> opplVariableMap = createOPPLVariableMap(patternModel);
 
-                shortFromMapper = new HashMap<Integer, Map<String, IRI>>();
-                // for each column, create a new short form mapper for the values that are allowed in that column
-
-                for(DataAttribute dataAttribute : dataCollection.getDataAttributes()){
-                    if(!dataAttribute.getPermissibleTerms().isEmpty()){
-
-                         shortFromMapper.put(dataAttribute.getIndex(), getTermToURIMapping(dataAttribute.getPermissibleTerms()));
-
-                    }
-                    //if no term restrictions exist for a given column, create an empty HashMap
-                    else{
-                        shortFromMapper.put(dataAttribute.getIndex(), new HashMap<String, IRI>());
-                    }
-                }
-
+// for each column, create a new short form mapper for the values that are allowed in that column
+                shortFromMapper = createShortFormMapper();
 
                 logger.debug("Processing model");
 
                 int done = 0;
 
+//process each row in the DataCollection, one by one
                 for (DataObject row : dataCollection.getDataObjects()) {
                     logger.debug("Reading row: " + done+1);
 
-                    InstantiatedPatternModel ipm = pf.getPatternFactory().createInstantiatedPatternModel(patternModel, handler);
-
-                    for (Integer column : populousModel.getVariableMapper().keySet()) {
-
-                        if (column != null) {
-
-                            DataField dataField = null;
- //go through each data field in the current row until you find the one that matches the column
-                            for(DataField field : row.getDataFields()){
-                                if (field.getIndex() == column){
-                                    dataField = field;
-                                }
-                            }
-
-                            if (dataField != null) {
-//                                System.err.println("cell value: " + dataField.getValue());
-
-//get the variable associated with this column
-                                String variable = populousModel.getVariableMapper().get(column);
-
-                                if (StringUtils.isNotBlank(variable)) {
-
-//check that the variable matches an OPPL pattern input variable
-                                    if (opplVariableMap.keySet().contains(variable)) {
-                                        Variable v = opplVariableMap.get(variable);
-                                        VariableType type = v.getType();
-
-//determine the type of the input variable: OWLClass, OWLIndividual or constant, then instantiate as appropriate
-                                        if (type.accept(variableVisitor).equals(5)) {
-                                            if (StringUtils.isNotBlank(dataField.getValue())) {
-//                                                System.err.println("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + dataField.getValue());
-                                                String [] values = dataField.getValue().split("\\s*\\|\\s*");
-                                                for (String s : values) {
-                                                    s = s.trim();
-                                                    ipm.instantiate(opplVariableMap.get(variable), ontologyManager.getOWLDataFactory().getOWLLiteral(s));
-                                                }
-                                            }
-                                        }
-                                        else if (type.accept(variableVisitor).equals(1)) {
-                                            for (OWLEntity entity : getOWLEntities(dataField, 1)) {
-                                                if (entity.isOWLClass()) {
-                                                    logger.debug("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
-//                                                    System.err.println("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
-                                                    ipm.instantiate(opplVariableMap.get(variable), entity);
-                                                }
-
-                                            }
-                                        }
-                                        else if (type.accept(variableVisitor).equals(4)) {
-                                            for (OWLEntity entity : getOWLEntities(dataField, 4)) {
-                                                if (entity.isOWLNamedIndividual()) {
-                                                    logger.debug("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
-//                                                    System.err.println("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
-                                                    ipm.instantiate(opplVariableMap.get(variable), entity);
-                                                }
-
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+//create an instantiated pattern model based on the data in the row
+                    InstantiatedPatternModel ipm =  processDataObject(row, opplVariableMap, handler,patternModel);
 
 //pass the instantiated pattern model to a patternExecutor and add the changes to the list of all changes for this model
                     NonClassPatternExecutor patternExecutor = new NonClassPatternExecutor(ipm, activeOntology, ontologyManager, IRI.create("http://e-lico.eu/populous#OPPL_pattern"), handler);
                     changes.addAll(patternExecutor.visit(patternModel));
-
                     done++;
                 }
 
             }
-//if there are no input variables in the OPPL pattern, do this
+//if there are no input variables in the OPPL pattern, create an instantiated pattern model without data
             else {
                 InstantiatedPatternModel ipm = pf.getPatternFactory().createInstantiatedPatternModel(patternModel, handler);
 
@@ -251,6 +173,101 @@ public class PopulousPatternExecutionService {
         }
     };
 
+
+    public Map<String, Variable> createOPPLVariableMap(PatternModel patternModel){
+        Map<String, Variable> opplVariableMap = new HashMap<String, Variable>();
+        for (Variable v : patternModel.getInputVariables()) {
+            System.err.println("Loading input variables:" + v.getName());
+            opplVariableMap.put(v.getName(), v);
+        }
+        return opplVariableMap;
+    }
+
+    public HashMap<Integer, Map<String, IRI>> createShortFormMapper(){
+        HashMap<Integer, Map<String, IRI>> sfMapper = new HashMap<Integer, Map<String, IRI>>();
+        // for each column, create a new short form mapper for the values that are allowed in that column
+        for(DataAttribute dataAttribute : dataCollection.getDataAttributes()){
+            if(!dataAttribute.getPermissibleTerms().isEmpty()){
+                sfMapper.put(dataAttribute.getIndex(), getTermToURIMapping(dataAttribute.getPermissibleTerms()));
+
+            }
+            //if no term restrictions exist for a given column, create an empty HashMap
+            else{
+                sfMapper.put(dataAttribute.getIndex(), new HashMap<String, IRI>());
+            }
+        }
+
+       return sfMapper;
+    }
+
+
+    public InstantiatedPatternModel processDataObject(DataObject row, Map<String, Variable> opplVariableMap, QuickFailRuntimeExceptionHandler handler, PatternModel patternModel){
+
+        InstantiatedPatternModel ipm = pf.getPatternFactory().createInstantiatedPatternModel(patternModel, handler);
+
+        for (Integer column : populousModel.getVariableMapper().keySet()) {
+
+            if (column != null) {
+
+                DataField dataField = null;
+                //go through each data field in the current row until you find the one that matches the column
+                for(DataField field : row.getDataFields()){
+                    if (field.getIndex() == column){
+                        dataField = field;
+                    }
+                }
+
+                if (dataField != null) {
+//                                System.err.println("cell value: " + dataField.getValue());
+
+//get the variable associated with this column
+                    String variable = populousModel.getVariableMapper().get(column);
+
+                    if (StringUtils.isNotBlank(variable)) {
+
+//check that the variable matches an OPPL pattern input variable
+                        if (opplVariableMap.keySet().contains(variable)) {
+                            Variable v = opplVariableMap.get(variable);
+                            VariableType type = v.getType();
+
+//determine the type of the input variable: OWLClass, OWLIndividual or constant, then instantiate as appropriate
+                            if (type.accept(variableVisitor).equals(5)) {
+                                if (StringUtils.isNotBlank(dataField.getValue())) {
+//                                                System.err.println("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + dataField.getValue());
+                                    String [] values = dataField.getValue().split("\\s*\\|\\s*");
+                                    for (String s : values) {
+                                        s = s.trim();
+                                        ipm.instantiate(opplVariableMap.get(variable), ontologyManager.getOWLDataFactory().getOWLLiteral(s));
+                                    }
+                                }
+                            }
+                            else if (type.accept(variableVisitor).equals(1)) {
+                                for (OWLEntity entity : getOWLEntities(dataField, 1)) {
+                                    if (entity.isOWLClass()) {
+                                        logger.debug("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
+//                                                    System.err.println("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
+                                        ipm.instantiate(opplVariableMap.get(variable), entity);
+                                    }
+
+                                }
+                            }
+                            else if (type.accept(variableVisitor).equals(4)) {
+                                for (OWLEntity entity : getOWLEntities(dataField, 4)) {
+                                    if (entity.isOWLNamedIndividual()) {
+                                        logger.debug("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
+//                                                    System.err.println("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + entity.getIRI().toString());
+                                        ipm.instantiate(opplVariableMap.get(variable), entity);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return ipm;
+    }
 
 //transform a collection of Terms into a String to IRI map
     private Map<String, IRI> getTermToURIMapping(Collection<Term> terms) {
