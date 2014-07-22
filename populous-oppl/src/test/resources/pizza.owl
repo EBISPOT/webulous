@@ -652,13 +652,6 @@
     </SubClassOf>
     <SubClassOf>
         <Class IRI="#Pizza"/>
-        <ObjectSomeValuesFrom>
-            <ObjectProperty IRI="#hasBase"/>
-            <Class IRI="#PizzaBase"/>
-        </ObjectSomeValuesFrom>
-    </SubClassOf>
-    <SubClassOf>
-        <Class IRI="#Pizza"/>
         <DataSomeValuesFrom>
             <DataProperty IRI="#hasCalorificContentValue"/>
             <Datatype abbreviatedIRI="xsd:integer"/>

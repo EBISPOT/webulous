@@ -1,7 +1,8 @@
 package uk.ac.ebi.fgpt.populous.entity;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.semanticweb.owlapi.model.*;
+import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.populous.exception.AutoIDException;
 import uk.ac.ebi.fgpt.populous.exception.OWLEntityCreationException;
 import uk.ac.ebi.fgpt.populous.model.*;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class CustomOWLEntityFactory implements OWLEntityFactory {
 
-    private Logger logger = Logger.getLogger(CustomOWLEntityFactory.class);
+    private Logger logger = LoggerFactory.getLogger(CustomOWLEntityFactory.class);
 
     private OWLOntologyManager mngr;
 

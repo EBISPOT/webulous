@@ -2,21 +2,19 @@ package uk.ac.ebi.fgpt.populous.service;
 
 import junit.framework.TestCase;
 import org.coode.oppl.Variable;
+import org.coode.oppl.exceptions.QuickFailRuntimeExceptionHandler;
 import org.coode.parsers.common.SystemErrorEcho;
-import org.coode.patterns.OPPLPatternParser;
-import org.coode.patterns.ParserFactory;
-import org.coode.patterns.PatternModel;
+import org.coode.patterns.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 import uk.ac.ebi.fgpt.populous.entity.CustomOWLEntityFactory;
 import uk.ac.ebi.fgpt.populous.model.*;
 
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
 
 import static org.mockito.Mockito.mock;
@@ -38,24 +36,42 @@ public class TestPopulousPatternExecutor extends TestCase {
 
     private PopulousPatternExecutionService service;
 
+    private String output;
+
+    private OWLOntologyManager manager;
+
 
     @Before
     public void setUp(){
 
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+        manager = OWLManager.createOWLOntologyManager();
 
-        populousModel = mock(SimplePopulousModel.class);
 
 
         MockPopulousPattern mockPattern = new MockPopulousPattern();
 
+
         Set<PopulousPattern> mockPatterns = new HashSet<PopulousPattern>();
         mockPatterns.add(mockPattern);
 
+        populousModel = mock(SimplePopulousModel.class);
+
+        LinkedHashMap<Integer, String> variableMap = new LinkedHashMap<Integer, String>();
+
+        variableMap.put(0, "?namedPizza");
+        variableMap.put(1, "?pizzaBase");
+
+        URL ontologyURL = getClass().getClassLoader().getResource("pizza.owl");
 
         when(populousModel.getSourceOntologyIRI()).thenReturn(IRI.create("http://www.pizza.com/ontologies/pizza.owl"));
-        when(populousModel.getSourceOntologyPhysicalIRI()).thenReturn(IRI.create("../../resources/pizza.owl"));
+        try {
+            when(populousModel.getSourceOntologyPhysicalIRI()).thenReturn(IRI.create(ontologyURL));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail();
+        }
         when(populousModel.getPopulousPatterns()).thenReturn((Set<PopulousPattern>) mockPatterns);
+        when(populousModel.getVariableMapper()).thenReturn(variableMap);
 
         manager.addIRIMapper(new SimpleIRIMapper(populousModel.getSourceOntologyIRI(), populousModel.getSourceOntologyPhysicalIRI()));
 
@@ -64,20 +80,11 @@ public class TestPopulousPatternExecutor extends TestCase {
 
 
         try {
-            activeOntology = manager.createOntology(populousModel.getSourceOntologyIRI());
+            activeOntology = manager.loadOntology(populousModel.getSourceOntologyIRI());
 
             this.pf = new ParserFactory(activeOntology, manager);
             this.parser = pf.build(new SystemErrorEcho());
-
-//            Variable var = mock(Variable.class);
-
-//            List<InputVariable<?>> foo = parser.parse(populousModel.getPopulousPatterns().iterator().next().getPatternValue());
-            patternModel = parser.parse(mockPattern.getPatternValue());
-//            patternModel = mock(PatternModel.class);
-//
-//            when(patternModel.getInputVariables()).thenReturn(parser.parse(mockPattern.getPatternValue()).getInputVariables());
-
-
+            this.patternModel = parser.parse(mockPattern.getPatternValue());
 
             service = new PopulousPatternExecutionService(collection, manager, populousModel, populousModel.getEntity());
 
@@ -94,24 +101,46 @@ public class TestPopulousPatternExecutor extends TestCase {
 
         Map<String, Variable> map = service.createOPPLVariableMap(patternModel);
 
+
         assertTrue(map.keySet().contains("?namedPizza"));
         assertTrue(map.keySet().contains("?pizzaBase"));
 
 
+        HashMap<Integer, Map<String, IRI>> sfMapper = service.createShortFormMapper();
 
-//        service.createShortFormMapper();
-//        service.processDataObject();
-
-//        service.executeOPPLPatterns();
+        assertEquals(sfMapper.get(0).get("ChicagoPizza"), IRI.create("http://www.pizza.com/ontologies/pizza.owl#ChicagoPizza"));
+        assertEquals(sfMapper.get(1).get("ThinAndCrispyBase"), IRI.create("http://www.pizza.com/ontologies/pizza.owl#ThinAndCrispyBase"));
 
 
+        QuickFailRuntimeExceptionHandler handler = mock((QuickFailRuntimeExceptionHandler.class));
+
+        for(DataObject row : collection.getDataObjects()){
+            InstantiatedPatternModel pm = service.processDataObject(row, map, handler, patternModel);
+
+            assertNotNull(pm);
+
+            NonClassPatternExecutor patternExecutor = new NonClassPatternExecutor(pm, activeOntology, manager, IRI.create("http://e-lico.eu/populous#OPPL_pattern"), handler);
+
+
+            for (OWLAxiomChange owlAxiomChange : patternExecutor.visit(patternModel)) {
+                assertNotNull(owlAxiomChange);
+            }
+
+
+        }
+
+        service.executeOPPLPatterns();
+
+        try {
+            service.saveOntology(populousModel.getSourceOntologyPhysicalIRI());
+
+        } catch (OWLOntologyStorageException e) {
+            e.printStackTrace();
+        }
     }
 
 
-//    @Test
-//    public void testNewEntities(){
-//
-//    }
+
 
 
     private class MockDataCollection implements DataCollection{
@@ -174,7 +203,7 @@ public class TestPopulousPatternExecutor extends TestCase {
 
         @Override
         public Collection<Term> getPermissibleTerms() {
-            return null;
+            return permissableTerms;
         }
 
         @Override
@@ -209,9 +238,9 @@ public class TestPopulousPatternExecutor extends TestCase {
         @Override
         public String getPatternValue() {
             return "?namedPizza:CLASS, \n" +
-                    "?pizzaBase:CLASS \n " +
+                    "?pizzaBase:CLASS \n" +
                     "BEGIN \n" +
-                    "ADD ?namedPizza hasBase some ?pizzaBase \n" +
+                    "ADD ?namedPizza subClassOf hasBase some ?pizzaBase \n" +
                     "END;";
         }
 
@@ -222,7 +251,11 @@ public class TestPopulousPatternExecutor extends TestCase {
     }
 
     private class MockDataObject implements DataObject {
-        private Collection<DataField> fields; 
+        private Collection<DataField> fields;
+
+        public MockDataObject(){
+            fields = new ArrayList<DataField>();
+        }
         
         public void setDataField(String value, int index){
             fields.add(new MockDataField(value, index));

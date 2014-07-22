@@ -1,6 +1,6 @@
 package uk.ac.ebi.fgpt.populous.service;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.coode.oppl.Variable;
 import org.coode.oppl.exceptions.QuickFailRuntimeExceptionHandler;
 import org.coode.oppl.variabletypes.*;
@@ -86,6 +86,8 @@ public class PopulousPatternExecutionService {
         props.add(prop);
         ShortFormProvider provider = new AnnotationValueShortFormProvider(props, new HashMap<OWLAnnotationProperty, List<String>>(), ontologyManager);
         shortFormProvider = new BidirectionalShortFormProviderAdapter(ontologyManager, ontologyManager.getOntologies(), provider);
+        shortFromMapper = createShortFormMapper();
+
 
     }
 
@@ -108,7 +110,7 @@ public class PopulousPatternExecutionService {
                 Map<String, Variable> opplVariableMap = createOPPLVariableMap(patternModel);
 
 // for each column, create a new short form mapper for the values that are allowed in that column
-                shortFromMapper = createShortFormMapper();
+//                shortFromMapper = createShortFormMapper();
 
                 logger.debug("Processing model");
 
@@ -205,15 +207,20 @@ public class PopulousPatternExecutionService {
 
         InstantiatedPatternModel ipm = pf.getPatternFactory().createInstantiatedPatternModel(patternModel, handler);
 
+//        System.out.println("Processing a row with " + row.getDataFieldCount() + " fields");
+
+
         for (Integer column : populousModel.getVariableMapper().keySet()) {
 
             if (column != null) {
+//                System.out.println("Processing column " + column);
 
                 DataField dataField = null;
                 //go through each data field in the current row until you find the one that matches the column
                 for(DataField field : row.getDataFields()){
                     if (field.getIndex() == column){
                         dataField = field;
+//                        System.out.println("My data field is " + dataField.getValue());
                     }
                 }
 
