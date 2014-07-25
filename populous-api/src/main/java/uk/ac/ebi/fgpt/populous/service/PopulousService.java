@@ -1,5 +1,8 @@
 package uk.ac.ebi.fgpt.populous.service;
 
+import uk.ac.ebi.fgpt.populous.model.DataCollection;
+import uk.ac.ebi.fgpt.populous.model.PopulousModel;
+
 /**
  * Created by dwelter on 02/07/14.
  *
@@ -13,7 +16,7 @@ package uk.ac.ebi.fgpt.populous.service;
  *
  *
  */
-public interface PopulousService<M, D> {
+public interface PopulousService{//<M, D> {
 
     void createPopulousModel();
 
@@ -21,7 +24,7 @@ public interface PopulousService<M, D> {
 
     void setEntityCreationStrategy();
 
-    void setUpPatternExecutor(M populousModel, D data);
+    void setUpPatternExecutor(PopulousModel model, DataCollection data); //(M populousModel, D data);
 
 
 }

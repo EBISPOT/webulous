@@ -256,14 +256,14 @@ public class TestPopulousPatternExecutor extends TestCase {
         public MockDataObject(){
             fields = new ArrayList<DataField>();
         }
-        
+
         public void setDataField(String value, int index){
             fields.add(new MockDataField(value, index));
 
         }
         @Override
         public Collection<DataField> getDataFields() {
-            
+
             return fields;
         }
 

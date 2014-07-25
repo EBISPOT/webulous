@@ -3,7 +3,7 @@ package uk.ac.ebi.fgpt.populous.service;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import uk.ac.ebi.fgpt.populous.entity.SimpleEntityCreation;
 import uk.ac.ebi.fgpt.populous.model.DataCollection;
-import uk.ac.ebi.fgpt.populous.model.SimpleDataCollection;
+import uk.ac.ebi.fgpt.populous.model.PopulousModel;
 import uk.ac.ebi.fgpt.populous.model.SimplePopulousModel;
 import uk.ac.ebi.fgpt.populous.utils.OntologyConfiguration;
 
@@ -13,7 +13,7 @@ import uk.ac.ebi.fgpt.populous.utils.OntologyConfiguration;
  * Default implementation of the PopulousService interface. The default implementation takes data coming in from a converter that processes it into the correct format.
  *
  */
-public class DefaultPopulousService implements PopulousService<SimplePopulousModel, SimpleDataCollection> {
+public class DefaultPopulousService implements PopulousService{ //<SimplePopulousModel, SimpleDataCollection> {
 
 
     private OntologyConfiguration config;
@@ -30,7 +30,7 @@ public class DefaultPopulousService implements PopulousService<SimplePopulousMod
         setEntityCreationStrategy();
         createPopulousModel();
 
-    //    setUpPatternExecutor(populousModel, dataCollection);
+        setUpPatternExecutor(populousModel, dataCollection);
 
 
 
@@ -58,7 +58,7 @@ public class DefaultPopulousService implements PopulousService<SimplePopulousMod
     }
 
     @Override
-    public void setUpPatternExecutor(SimplePopulousModel populousModel, SimpleDataCollection data) {
+    public void setUpPatternExecutor(PopulousModel populousModel, DataCollection data) {
         try {
             PopulousPatternExecutionService executor = new PopulousPatternExecutionService(data, config.getOntologyManager(), populousModel, creationStrategy);
         } catch (OWLOntologyCreationException e) {
