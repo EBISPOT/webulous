@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css" />
+    <link rel="stylesheet" href="http://bioportal.bioontology.org/widgets/minified/jquery.ncbo.tree.min.css" />
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://bioportal.bioontology.org/widgets/minified/jquery.ncbo.tree.min.js"></script>
+
+
+</head>
+
+<body>
+
+
+
+<div>
+    <b>New entities</b><br>
+    <div>
+        Entity URI <br>
+        Start with:   <input type="radio" value="baseURI" /> base ontology URI      <input type="radio" value="specifiedURI" /> specified URI <input type="text" name="specURI"><br>
+        Followed by:  <input type="radio" value="hash"/> # <input type="radio" value="slash"/> / <input type="radio" value="colon"/> : <br>
+        End with: <input type="radio" value="cellVal"/> table cell value <input type="radio" value="autoID"/> auto ID  <br>
+        <br>
+        <br>
+    </div>
+    <div>
+    <b> Entity label</b> <br>
+        <input type="checkbox" value="labelCellVal"/> create label using cell value <br>
+        <input type="radio" value="customLab"/> Custom label <br>
+        URI  <input type="text" value="http://www.w3.org/2000/01/rdf-schema#label" width="50px"> <br>
+        Lang <input type="text" value="eng" >
+        <br>
+        <br>
+    </div>
+    <div>
+    <b>Auto ID</b> <br>
+        <input type="radio" value="pseudoRan"/> Numeric (pseudo random) <br>
+        <input type="radio" value="iterative"/> Numeric (iterative)  Start <input type="text" value="1"> End <input type="text" value="-1"><br>
+        <br>
+        Digit count <input type="text" value="20"><br>
+        Prefix <input type="text" value="[type]">  Suffix <input type="text" value="">
+        <br>
+        <br>
+     </div>
+    <input type="button" value="Close" onclick="google.script.host.close()" />
+
+</div>
+
+
+<br>
+<div id="tree" style="margin-left: 50px; margin-top: 50px"></div>
+
+
+<br>
+<br>
+
+
+<script type="text/javascript">
+    var tree = $("#tree").NCBOTree({
+        apikey: "73c9dd31-4bc1-42cc-9b78-cf30741a9723",
+        ontology: "EFO",
+        autoclose: "true",
+        afterSelect: function(event, classId, prefLabel, selectedNode){
+            console.log(classId);
+        }
+    });
+</script>
+
+    </body>
+</html>
