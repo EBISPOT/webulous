@@ -1,6 +1,7 @@
 {
     -configuration:{
           sourceOntology: "mySourceOntologyURI",
+****don't need these bits as they are all stored server-side*****
         - importedOntologies: [
             "ontologyURI1",
             "ontologyURI2",
@@ -26,6 +27,7 @@
             "pattern2",
             ...
          ],
+**************
         - dataRestrictions: [
             - {
                 columnIndex: "index", //we need this to marry up the restriction with the correct data field server-side, otherwise we'd need to attach a type to every data value

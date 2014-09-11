@@ -1,5 +1,14 @@
 package uk.ac.ebi.fgpt.populous.controller;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.*;
+
 /**
  * Created by dwelter on 09/07/14.
  *
@@ -17,5 +26,122 @@ package uk.ac.ebi.fgpt.populous.controller;
  *
  *
  */
+
+@Controller
+@RequestMapping("/webulous")
 public class PopulousController {
+
+
+
+    @RequestMapping(value = "/source/{ontology}")
+    public @ResponseBody Map<String, Object> getSourceOntologyParameters(@PathVariable String ontologyID){
+        Properties ontologyConfig = new Properties();
+        boolean status = true;
+
+        try {
+            ontologyConfig.load(getClass().getClassLoader().getResource(ontologyID+".properties").openStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (NullPointerException e){
+            System.out.println("There is no config file for this ontology");
+            status = false;
+        }
+
+        Map<String,Object> sourceParameters;
+        if(status){
+            sourceParameters = processConfig(ontologyConfig);
+        }
+        else{
+            sourceParameters = new HashMap<String, Object>();
+            sourceParameters.put("status", "No config parameters available for " + ontologyID);
+        }
+
+        return sourceParameters;
+    }
+
+
+    @RequestMapping(value = "/data/all", method = RequestMethod.POST, consumes = "application/json")
+    public @ResponseBody String processDataSubmission(@RequestBody String data){
+
+        JsonFactory jsonFactory = new JsonFactory();
+        ObjectMapper mapper = new ObjectMapper(jsonFactory);
+        try {
+            JsonNode actualObj = mapper.readTree(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        String status = "Upload complete";
+
+        return status;
+    }
+
+
+//    @RequestMapping(value = "/validate/{opplPattern}")
+//    public @ResponseBody String validateOPPL(@PathVariable String opplPattern){
+//
+//
+//        return "false";
+//    }
+
+
+    public Map<String, Object> processConfig(Properties ontologyConfig){
+
+        Map<String,Object> sourceParameters = new HashMap<String, Object>();
+        sourceParameters.put("status", "OK");
+
+        Map<String, String> sourceOntology = new HashMap<String, String>();
+        sourceOntology.put("acronym", ontologyConfig.getProperty("sourceOntology.acronym"));
+        sourceOntology.put("name", ontologyConfig.getProperty("sourceOntology.name"));
+        sourceParameters.put("sourceOntology", sourceOntology);
+
+        List<Object> imports = new ArrayList<Object>();
+        int importCount = 1;
+        String acronym = ontologyConfig.getProperty("importOntology.acronym."+importCount);
+
+        while(acronym != null){
+            Map<String, String> importOntology = new HashMap<String, String>();
+            importOntology.put("acronym", acronym);
+            importOntology.put("name", ontologyConfig.getProperty("importOntology.name."+importCount));
+            imports.add(importOntology);
+
+            importCount++;
+            acronym = ontologyConfig.getProperty("importOntology.acronym."+importCount);
+        }
+
+        sourceParameters.put("importOntologies", imports);
+
+        List<Object> patterns = new ArrayList<Object>();
+
+        int patternCount = 1;
+        String name = ontologyConfig.getProperty("opplPattern.name."+patternCount);
+
+        while(name != null){
+            Map<String, Object> pattern = new HashMap<String, Object>();
+            pattern.put("name", name);
+            pattern.put("pattern", ontologyConfig.getProperty("opplPattern.pattern."+patternCount));
+
+            int varCount = 1;
+            List<String> variables = new ArrayList<String>();
+            String variable = ontologyConfig.getProperty("opplPattern.variable."+patternCount+"."+varCount);
+
+            while (variable != null){
+                variables.add(variable);
+                varCount++;
+                variable = ontologyConfig.getProperty("opplPattern.variable."+patternCount+"."+varCount);
+            }
+
+            pattern.put("variables", variables);
+
+            patterns.add(pattern);
+            patternCount++;
+            name = ontologyConfig.getProperty("opplPattern.name."+patternCount);
+        }
+
+        sourceParameters.put("opplPatterns", patterns);
+
+        return sourceParameters;
+    }
 }
