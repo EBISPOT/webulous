@@ -1,6 +1,6 @@
 package uk.ac.ebi.fgpt.populous.model;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by dwelter on 02/07/14.
@@ -12,13 +12,13 @@ import java.util.Collection;
 public interface DataAttribute {
 
 
-    Collection<Term> getPermissibleTerms();
+    List<Term> getPermissibleTerms();
 
-    String getTypeLabel();
-
-    String getTypeURI();
-
-    String getTypeRestriction();
+//    String getTypeLabel();
+//
+//    String getTypeURI();
+//
+//    String getTypeRestriction();
 
     int getIndex();
 

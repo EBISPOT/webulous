@@ -1,6 +1,6 @@
 package uk.ac.ebi.fgpt.populous.model;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by dwelter on 27/06/14.
@@ -13,7 +13,7 @@ import java.util.Collection;
 public interface DataObject {
 
 
-    Collection<DataField> getDataFields();
+    List<DataField> getDataFields();
 
     int getDataFieldCount();
 

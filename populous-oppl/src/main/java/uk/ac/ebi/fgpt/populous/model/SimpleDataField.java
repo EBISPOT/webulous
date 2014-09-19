@@ -5,14 +5,15 @@ package uk.ac.ebi.fgpt.populous.model;
  */
 public class SimpleDataField implements DataField{
 
-    private String value, type, typeIRI;
-    private int index;
+    private String value, type;//, typeIRI;
+    private int columnIndex, restrictionIndex;
 
-    public SimpleDataField(String value, String type, String typeIRI, int ind){
+    public SimpleDataField(String value, String type, int restriction, int ind){
         this.value = value;
         this.type = type;
-        this.typeIRI = typeIRI;
-        this.index = ind;
+   //     this.typeIRI = typeIRI;
+        this.columnIndex = ind;
+        this.restrictionIndex = restriction;
     }
 
 
@@ -26,13 +27,17 @@ public class SimpleDataField implements DataField{
         return type;
     }
 
-    @Override
-    public String getIRI() {
-        return typeIRI;
-    }
+//    @Override
+//    public String getIRI() {
+//        return typeIRI;
+//    }
 
     @Override
     public int getIndex(){
-        return index;
+        return columnIndex;
+    }
+
+    public int getRestrictionIndex(){
+        return restrictionIndex;
     }
 }

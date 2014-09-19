@@ -1,7 +1,7 @@
 package uk.ac.ebi.fgpt.populous.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by dwelter on 04/07/14.
@@ -10,8 +10,8 @@ public class SimpleDataCollection implements DataCollection {
 
     private int dataObjectCount, dataAttributeCount;
 
-    private Collection<DataAttribute> dataAttributes;
-    private Collection<DataObject> dataObjects;
+    private List<DataAttribute> dataAttributes;
+    private List<DataObject> dataObjects;
 
 
     public SimpleDataCollection(int objectCount, int attributeCount){
@@ -23,11 +23,11 @@ public class SimpleDataCollection implements DataCollection {
     }
 
 
-    public void addDataAttribute(DataAttribute attribute) {
+    public void addDataAttribute(SimpleDataAttribute attribute) {
         dataAttributes.add(attribute);
     }
 
-    public void addDataObject(DataObject object) {
+    public void addDataObject(SimpleDataObject object) {
         dataObjects.add(object);
     }
 
@@ -42,12 +42,12 @@ public class SimpleDataCollection implements DataCollection {
     }
 
     @Override
-    public Collection<DataAttribute> getDataAttributes() {
+    public List<DataAttribute> getDataAttributes() {
         return dataAttributes;
     }
 
     @Override
-    public Collection<DataObject> getDataObjects() {
+    public List<DataObject> getDataObjects() {
         return dataObjects;
     }
 }

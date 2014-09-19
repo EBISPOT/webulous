@@ -1,7 +1,7 @@
 package uk.ac.ebi.fgpt.populous.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by dwelter on 04/07/14.
@@ -9,7 +9,7 @@ import java.util.Collection;
 public class SimpleDataObject implements DataObject{
 
     private int dataFieldCount;
-    private Collection<DataField> dataFields;
+    private List<DataField> dataFields;
 
 
     public SimpleDataObject(int fieldCount){
@@ -18,7 +18,7 @@ public class SimpleDataObject implements DataObject{
     }
 
     @Override
-    public Collection<DataField> getDataFields() {
+    public List<DataField> getDataFields() {
         return dataFields;
     }
 

@@ -1,6 +1,8 @@
 package uk.ac.ebi.fgpt.populous.model;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dwelter on 11/07/14.
@@ -8,10 +10,20 @@ import java.util.ArrayList;
 public class PopulousInput {
 
     private String sourceOntology;
-    private ArrayList<String> importedOntologies;
+    private List<String> importedOntologies;
     private EntityCreationStrategy strategy;
-    private ArrayList<String> opplPatterns;
-    private ArrayList<PopulousDataRestriction> restrictions;
+    private List<String> opplPatterns;
+    private Map<Integer, PopulousDataRestriction> restrictions;
+    private Map<String, Integer> opplVariables;
+
+    public Map<String, Integer> getOpplVariables() {
+        return opplVariables;
+    }
+
+    public void setOpplVariables(Map<String, Integer> opplVariables) {
+        this.opplVariables = opplVariables;
+    }
+
 
     private ArrayList<ArrayList<String>> data;
 
@@ -23,11 +35,11 @@ public class PopulousInput {
         this.sourceOntology = sourceOntology;
     }
 
-    public ArrayList<String> getImportedOntologies() {
+    public List<String> getImportedOntologies() {
         return importedOntologies;
     }
 
-    public void setImportedOntologies(ArrayList<String> importedOntologies) {
+    public void setImportedOntologies(List<String> importedOntologies) {
         this.importedOntologies = importedOntologies;
     }
 
@@ -39,19 +51,19 @@ public class PopulousInput {
         this.strategy = strategy;
     }
 
-    public ArrayList<String> getOpplPatterns() {
+    public List<String> getOpplPatterns() {
         return opplPatterns;
     }
 
-    public void setOpplPatterns(ArrayList<String> opplPatterns) {
+    public void setOpplPatterns(List<String> opplPatterns) {
         this.opplPatterns = opplPatterns;
     }
 
-    public ArrayList<PopulousDataRestriction> getRestrictions() {
+    public Map<Integer, PopulousDataRestriction> getRestrictions() {
         return restrictions;
     }
 
-    public void setRestrictions(ArrayList<PopulousDataRestriction> restrictions) {
+    public void setRestrictions(Map<Integer, PopulousDataRestriction> restrictions) {
         this.restrictions = restrictions;
     }
 

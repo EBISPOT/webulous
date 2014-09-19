@@ -1,10 +1,8 @@
 package uk.ac.ebi.fgpt.populous.controller;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import uk.ac.ebi.fgpt.populous.service.WebulousDataConverter;
 
 import java.io.IOException;
 import java.util.*;
@@ -64,16 +62,11 @@ public class PopulousController {
     @RequestMapping(value = "/data/all", method = RequestMethod.POST, consumes = "application/json")
     public @ResponseBody String processDataSubmission(@RequestBody String data){
 
-        JsonFactory jsonFactory = new JsonFactory();
-        ObjectMapper mapper = new ObjectMapper(jsonFactory);
-        try {
-            JsonNode actualObj = mapper.readTree(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        WebulousDataConverter converter = new WebulousDataConverter(data);
 
+        converter.processInput();
 
-        String status = "Upload complete";
+        String status = converter.getStatusMessage();
 
         return status;
     }

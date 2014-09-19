@@ -6,6 +6,9 @@ import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by dwelter on 04/07/14.
  */
@@ -13,7 +16,13 @@ public class OntologyConfiguration {
 
     private OWLOntologyManager manager;
     private OWLDataFactory factory;
-    private OWLReasoner reasoner;
+    private Map<OWLOntology, OWLReasoner> reasonerList;
+
+    public OntologyConfiguration(){
+        setOntologyManager();
+        setDataFactory();
+        reasonerList = new HashMap<OWLOntology, OWLReasoner>();
+    }
 
 
     public void setOntologyManager(){
@@ -49,16 +58,20 @@ public class OntologyConfiguration {
 
 
     public OWLReasoner getReasoner(OWLOntology ont){
-
-        if(reasoner == null ){
+        OWLReasoner reasoner;
+        if(reasonerList.get(ont) == null ){
             OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
             ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
              OWLReasonerConfiguration config = new SimpleConfiguration(
                     progressMonitor);
-             OWLReasoner reasoner = reasonerFactory.createReasoner(ont, config);
+             reasoner = reasonerFactory.createReasoner(ont, config);
             // Ask the reasoner to do all the necessary work now
             reasoner.precomputeInferences();
+            reasonerList.put(ont, reasoner);
 
+        }
+        else{
+            reasoner = reasonerList.get(ont);
         }
 
         return reasoner;

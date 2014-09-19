@@ -156,8 +156,8 @@ public class TestPopulousPatternExecutor extends TestCase {
         }
 
         @Override
-        public Collection<DataAttribute> getDataAttributes() {
-            Collection<DataAttribute> attributes = new ArrayList<DataAttribute>();
+        public List<DataAttribute> getDataAttributes() {
+            List<DataAttribute> attributes = new ArrayList<DataAttribute>();
             MockDataAttribute attr1 = new MockDataAttribute("NamedPizza", 0);
             attr1.setPermissableTerm(IRI.create("http://www.pizza.com/ontologies/pizza.owl#NewYorkPizza"), "NewYorkPizza");
             attr1.setPermissableTerm(IRI.create("http://www.pizza.com/ontologies/pizza.owl#ChicagoPizza"), "ChicagoPizza");
@@ -170,8 +170,8 @@ public class TestPopulousPatternExecutor extends TestCase {
         }
 
         @Override
-        public Collection<DataObject> getDataObjects() {
-            Collection<DataObject> objects = new ArrayList<DataObject>();
+        public List<DataObject> getDataObjects() {
+            List<DataObject> objects = new ArrayList<DataObject>();
             MockDataObject obj1 = new MockDataObject();
             obj1.setDataField("ChicagoPizza", 0);
             obj1.setDataField("DeepPanBase", 1);
@@ -202,24 +202,24 @@ public class TestPopulousPatternExecutor extends TestCase {
         }
 
         @Override
-        public Collection<Term> getPermissibleTerms() {
+        public List<Term> getPermissibleTerms() {
             return permissableTerms;
         }
 
-        @Override
-        public String getTypeLabel() {
-            return label;
-        }
-
-        @Override
-        public String getTypeURI() {
-            return null;
-        }
-
-        @Override
-        public String getTypeRestriction() {
-            return null;
-        }
+//        @Override
+//        public String getTypeLabel() {
+//            return label;
+//        }
+//
+//        @Override
+//        public String getTypeURI() {
+//            return null;
+//        }
+//
+//        @Override
+//        public String getTypeRestriction() {
+//            return null;
+//        }
 
         @Override
         public int getIndex() {
@@ -251,7 +251,7 @@ public class TestPopulousPatternExecutor extends TestCase {
     }
 
     private class MockDataObject implements DataObject {
-        private Collection<DataField> fields;
+        private List<DataField> fields;
 
         public MockDataObject(){
             fields = new ArrayList<DataField>();
@@ -262,7 +262,7 @@ public class TestPopulousPatternExecutor extends TestCase {
 
         }
         @Override
-        public Collection<DataField> getDataFields() {
+        public List<DataField> getDataFields() {
 
             return fields;
         }
@@ -291,10 +291,10 @@ public class TestPopulousPatternExecutor extends TestCase {
             return null;
         }
 
-        @Override
-        public String getIRI() {
-            return null;
-        }
+//        @Override
+//        public String getIRI() {
+//            return null;
+//        }
 
         @Override
         public int getIndex(){

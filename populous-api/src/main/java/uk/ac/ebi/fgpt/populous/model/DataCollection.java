@@ -1,6 +1,6 @@
 package uk.ac.ebi.fgpt.populous.model;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by dwelter on 26/06/14.
@@ -15,7 +15,7 @@ public interface DataCollection {
 
     int getDataAttributeCount();
 
-    Collection<DataAttribute> getDataAttributes();
+    List<DataAttribute> getDataAttributes();
 
-    Collection<DataObject> getDataObjects();
+    List<DataObject> getDataObjects();
 }
