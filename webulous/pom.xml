@@ -10,6 +10,94 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>webulous</artifactId>
+    <packaging>war</packaging>
+
+
+    <build>
+        <finalName>webulous</finalName>
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>buildnumber-maven-plugin</artifactId>-->
+                <!--<version>1.1</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>generate-buildnumber</id>-->
+                        <!--<phase>validate</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>create</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<revisionOnScmFailure>[unknown]</revisionOnScmFailure>-->
+                            <!--<buildNumberPropertyName>buildRevision</buildNumberPropertyName>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                    <!--<execution>-->
+                        <!--<id>generate-timestamp</id>-->
+                        <!--<phase>validate</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>create</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<format>{0,date,dd-MM-yyyy}</format>-->
+                            <!--<items>-->
+                                <!--<item>timestamp</item>-->
+                            <!--</items>-->
+                            <!--<buildNumberPropertyName>releaseDate</buildNumberPropertyName>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<doCheck>false</doCheck>-->
+                    <!--<doUpdate>false</doUpdate>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    </build>
+
+    <dependencies>
+        <!-- spring webmvc framework -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>3.2.2.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- logging dependencies -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>runtime</scope>
+            <version>1.2.16</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+            <version>1.7.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.fgpt</groupId>
+            <artifactId>populous-service</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 
 </project>

@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.populous.entity.CustomOWLEntityFactory;
 import uk.ac.ebi.fgpt.populous.exception.OWLEntityCreationException;
 import uk.ac.ebi.fgpt.populous.model.*;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /* THIS IS JUPP'S MAGIC CLASS*/
@@ -145,6 +147,7 @@ public class PopulousPatternExecutionService {
             }
             ontologyManager.applyChanges(changes);
         }
+
     }
 
     private VariableTypeVisitorEx variableVisitor = new VariableTypeVisitorEx ()
@@ -287,16 +290,29 @@ public class PopulousPatternExecutionService {
 
 //save the ontology to the designated location
     public void saveOntology(IRI file) throws OWLOntologyStorageException {
-        ontologyManager.saveOntology(activeOntology, file);
+                ontologyManager.saveOntology(activeOntology, file);
     }
 
+//save the ontology based on the output location specified in the properties file
+    public void saveOntology() throws OWLOntologyStorageException {
+
+        String location = populousModel.getSourceOntologyOutputLocation();
+
+
+        Date date = new Date() ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss") ;
+
+        String outputFileName = location.concat(dateFormat.format(date)).concat(".owl");
+
+        ontologyManager.saveOntology(activeOntology, IRI.create(outputFileName));
+    }
 
 //acquire all the OWLEntities associated with this data field
     private Set<OWLEntity> getOWLEntities(DataField field, Integer type) {
         Set<OWLEntity> entities = new HashSet<OWLEntity>();
 
         String value = field.getValue();
-        if (!value.equals("")) {
+        if (value != null && !value.equals("")) {
             String [] values = value.split("\\s*\\|\\s*");
             for (String s : values) {
                 s = s.trim();

@@ -18,6 +18,7 @@ public class SimplePopulousModel implements PopulousModel{
     private IRI sourceOntologyIRI;
 
     private IRI sourceOntologyPhysicalIRI;
+    private String sourceOntologyOutputLocation;
     private Set<IRI> importedOntologies;
 
     private  LinkedHashMap<Integer, String> variableBinding;
@@ -25,6 +26,8 @@ public class SimplePopulousModel implements PopulousModel{
     private Set<PopulousPattern> simplePopulousPattern;
     private Set<String> variables;
     private boolean isNewSourceOntology = true;
+
+    private Map<Integer, PopulousDataRestriction> restrictions;
 
     private EntityCreation entityPrefs;
 
@@ -105,6 +108,15 @@ public class SimplePopulousModel implements PopulousModel{
     public void setVariables(Set<String> variables){
         this.variables = variables;
     }
+
+    public Map<Integer, PopulousDataRestriction> getRestrictions() {
+        return restrictions;
+    }
+
+    public void setRestrictions(Map<Integer, PopulousDataRestriction> restrictions) {
+        this.restrictions = restrictions;
+    }
+
 
 //    @Override
 //    public void loadProperties (File file) throws IOException {
@@ -221,6 +233,16 @@ public class SimplePopulousModel implements PopulousModel{
     public void saveModel (File file) throws IOException {
 
         getPopulousModelProperties().storeToXML(new FileOutputStream(file), "populous model");
+    }
+
+    @Override
+    public String getSourceOntologyOutputLocation() {
+        return sourceOntologyOutputLocation;
+    }
+
+
+    public void setSourceOntologyOutputLocation(String sourceOntologyOutputLocation) {
+        this.sourceOntologyOutputLocation = sourceOntologyOutputLocation;
     }
 
 //    public static void main(String[] args) {

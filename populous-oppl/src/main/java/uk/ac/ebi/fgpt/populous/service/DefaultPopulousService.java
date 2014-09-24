@@ -1,10 +1,10 @@
 package uk.ac.ebi.fgpt.populous.service;
 
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import uk.ac.ebi.fgpt.populous.entity.SimpleEntityCreation;
 import uk.ac.ebi.fgpt.populous.model.DataCollection;
 import uk.ac.ebi.fgpt.populous.model.PopulousModel;
-import uk.ac.ebi.fgpt.populous.model.SimplePopulousModel;
 import uk.ac.ebi.fgpt.populous.utils.OntologyConfiguration;
 
 /**
@@ -13,44 +13,32 @@ import uk.ac.ebi.fgpt.populous.utils.OntologyConfiguration;
  * Default implementation of the PopulousService interface. The default implementation takes data coming in from a converter that processes it into the correct format.
  *
  */
-public class DefaultPopulousService implements PopulousService{ //<SimplePopulousModel, SimpleDataCollection> {
+public class DefaultPopulousService implements PopulousService<PopulousModel, DataCollection> {
 
 
-    private OntologyConfiguration config;
     private DataCollection dataCollection;
-    private SimplePopulousModel populousModel;
+    private PopulousModel populousModel;
     private SimpleEntityCreation creationStrategy;
+    private OntologyConfiguration configuration;
 
-    public DefaultPopulousService(DataCollection collection){
+    public DefaultPopulousService(DataCollection collection, PopulousModel model){
 
 
         this.dataCollection = collection;
-        setUpOntologyConfiguration();
+        this.populousModel = model;
+//        setUpOntologyConfiguration();
 
-        setEntityCreationStrategy();
-        createPopulousModel();
-
-        setUpPatternExecutor(populousModel, dataCollection);
-
-
+        if(populousModel.getEntity() == null){
+            setEntityCreationStrategy();
+        }
 
     }
 
-    @Override
-    public void createPopulousModel() {
-       populousModel = new SimplePopulousModel();
-
-
-    }
-
-
-    @Override
-    public void setUpOntologyConfiguration(){
-
-    }
 
     @Override
     public void setEntityCreationStrategy() {
+
+        /**this is where the URiGEN tie-in should go*/
         creationStrategy = new SimpleEntityCreation();
 
 
@@ -60,11 +48,18 @@ public class DefaultPopulousService implements PopulousService{ //<SimplePopulou
     @Override
     public void setUpPatternExecutor(PopulousModel populousModel, DataCollection data) {
         try {
-            PopulousPatternExecutionService executor = new PopulousPatternExecutionService(data, config.getOntologyManager(), populousModel, creationStrategy);
+            PopulousPatternExecutionService executor = new PopulousPatternExecutionService(data, configuration.getOntologyManager(), populousModel, creationStrategy);
+            executor.executeOPPLPatterns();
+            executor.saveOntology();
         } catch (OWLOntologyCreationException e) {
+            e.printStackTrace();
+        } catch (OWLOntologyStorageException e) {
             e.printStackTrace();
         }
     }
 
 
+    public void setConfiguration(OntologyConfiguration configuration) {
+        this.configuration = configuration;
+    }
 }

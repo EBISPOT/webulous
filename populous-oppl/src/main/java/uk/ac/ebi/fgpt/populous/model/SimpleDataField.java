@@ -6,9 +6,10 @@ package uk.ac.ebi.fgpt.populous.model;
 public class SimpleDataField implements DataField{
 
     private String value, type;//, typeIRI;
-    private int columnIndex, restrictionIndex;
+    private int columnIndex;
+    private Integer restrictionIndex;
 
-    public SimpleDataField(String value, String type, int restriction, int ind){
+    public SimpleDataField(String value, String type, Integer restriction, int ind){
         this.value = value;
         this.type = type;
    //     this.typeIRI = typeIRI;
@@ -37,7 +38,7 @@ public class SimpleDataField implements DataField{
         return columnIndex;
     }
 
-    public int getRestrictionIndex(){
+    public Integer getRestrictionIndex(){
         return restrictionIndex;
     }
 }

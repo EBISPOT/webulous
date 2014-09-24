@@ -1,8 +1,13 @@
 package uk.ac.ebi.fgpt.populous.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import uk.ac.ebi.fgpt.populous.service.WebulousDataConverter;
+import uk.ac.ebi.fgpt.populous.model.DataCollection;
+import uk.ac.ebi.fgpt.populous.model.PopulousModel;
+import uk.ac.ebi.fgpt.populous.service.DefaultPopulousService;
+import uk.ac.ebi.fgpt.populous.service.WebulousDataConversionService;
+import uk.ac.ebi.fgpt.populous.utils.OntologyConfiguration;
 
 import java.io.IOException;
 import java.util.*;
@@ -26,23 +31,42 @@ import java.util.*;
  */
 
 @Controller
-@RequestMapping("/webulous")
+//@RequestMapping("/webulous")
 public class PopulousController {
+
+    private OntologyConfiguration ontologyConfiguration;
+
+
+    @RequestMapping(value = "/test")
+    public @ResponseBody String helloWorld(){
+        return ontologyConfiguration.getOntologyManager().toString();
+    }
+
+    @RequestMapping(value = "/source")
+    public @ResponseBody String helloSource(){
+        return "You want a source";
+    }
+
+    @RequestMapping(value = "/sourcetest/{ontology}")
+    public @ResponseBody String helloSpecificSource(@PathVariable String ontology){
+        return "You want the source " + ontology;
+    }
 
 
 
     @RequestMapping(value = "/source/{ontology}")
-    public @ResponseBody Map<String, Object> getSourceOntologyParameters(@PathVariable String ontologyID){
+    public @ResponseBody Map<String, Object> getSourceOntologyParameters(@PathVariable String ontology){
+        String ontologyID = ontology.toLowerCase();
         Properties ontologyConfig = new Properties();
         boolean status = true;
 
         try {
-            ontologyConfig.load(getClass().getClassLoader().getResource(ontologyID+".properties").openStream());
+            ontologyConfig.load(getClass().getClassLoader().getResource(ontologyID +".properties").openStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
         catch (NullPointerException e){
-            System.out.println("There is no config file for this ontology");
+            System.out.println("There is no config file for ontology " + ontologyID);
             status = false;
         }
 
@@ -52,7 +76,7 @@ public class PopulousController {
         }
         else{
             sourceParameters = new HashMap<String, Object>();
-            sourceParameters.put("status", "No config parameters available for " + ontologyID);
+            sourceParameters.put("status", "No config parameters available for " + ontology);
         }
 
         return sourceParameters;
@@ -62,14 +86,32 @@ public class PopulousController {
     @RequestMapping(value = "/data/all", method = RequestMethod.POST, consumes = "application/json")
     public @ResponseBody String processDataSubmission(@RequestBody String data){
 
-        WebulousDataConverter converter = new WebulousDataConverter(data);
+        if(data == ""){
+            return "Data, I need data!";
+        }
+
+
+        System.out.println(data);
+
+
+        WebulousDataConversionService converter = new WebulousDataConversionService(data, getOntologyConfiguration());
 
         converter.processInput();
 
+        PopulousModel populousModel = converter.getConfigInformation();
+        DataCollection processedData = converter.getData();
+
+
+        DefaultPopulousService populousService = new DefaultPopulousService(processedData, populousModel);
+        populousService.setConfiguration(getOntologyConfiguration());
+        populousService.setUpPatternExecutor(populousModel, processedData);
+
+/**TO DO: do something useful with this status message!!!!**/
         String status = converter.getStatusMessage();
 
         return status;
     }
+
 
 
 //    @RequestMapping(value = "/validate/{opplPattern}")
@@ -136,5 +178,14 @@ public class PopulousController {
         sourceParameters.put("opplPatterns", patterns);
 
         return sourceParameters;
+    }
+
+    public OntologyConfiguration getOntologyConfiguration() {
+        return ontologyConfiguration;
+    }
+
+    @Autowired
+    public void setOntologyConfiguration(OntologyConfiguration ontologyConfiguration) {
+        this.ontologyConfiguration = ontologyConfiguration;
     }
 }

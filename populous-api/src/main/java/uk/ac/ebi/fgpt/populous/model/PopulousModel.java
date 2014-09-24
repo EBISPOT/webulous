@@ -45,4 +45,5 @@ public interface PopulousModel {
 
     public void saveModel (File file) throws IOException ;
 
+    String getSourceOntologyOutputLocation();
 }
