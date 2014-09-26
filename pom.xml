@@ -104,20 +104,20 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>Sonatype repository</id>
-            <name>Sonatype's Maven repository</name>
-            <url>https://oss.sonatype.org/content/repositories/releases/</url>
-        </repository>
+        <!--&lt;!&ndash;<repository>&ndash;&gt;-->
+            <!--&lt;!&ndash;<id>Sonatype repository</id>&ndash;&gt;-->
+            <!--&lt;!&ndash;<name>Sonatype's Maven repository</name>&ndash;&gt;-->
+            <!--&lt;!&ndash;<url>https://oss.sonatype.org/content/repositories/releases/</url>&ndash;&gt;-->
+        <!--&lt;!&ndash;</repository>&ndash;&gt;-->
 
-        <repository>
-            <id>coconut.ebi.ac.uk</id>
-            <name>EBI Artifactory</name>
-            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+        <!--<repository>-->
+            <!--<id>coconut.ebi.ac.uk</id>-->
+            <!--<name>EBI Artifactory</name>-->
+            <!--<url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo/</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
     </repositories>
 
 
