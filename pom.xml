@@ -95,6 +95,31 @@
         </plugins>
     </reporting>
 
+    <!-- To keep things minimal, we only fetch from the GOCI maven repo -->
+    <repositories>
+        <repository>
+            <id>webulous-repo</id>
+            <url>http://www.ebi.ac.uk/~dwelter/webulous/maven/repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>Sonatype repository</id>
+            <name>Sonatype's Maven repository</name>
+            <url>https://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+
+        <repository>
+            <id>coconut.ebi.ac.uk</id>
+            <name>EBI Artifactory</name>
+            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
 
     <dependencies>
         <dependency>
