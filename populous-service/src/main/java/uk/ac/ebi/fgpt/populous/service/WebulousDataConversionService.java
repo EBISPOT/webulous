@@ -95,15 +95,16 @@ public class WebulousDataConversionService {
     }
 
     public void processRestrictions(JsonNode restrictions) {
+
         Map<Integer, PopulousDataRestriction> dataRestrictions = new HashMap<Integer, PopulousDataRestriction>();
 
-        if(restrictions.get(0).getTextValue().equals("No restrictions available")){
+        if(restrictions.get(0).isTextual() && restrictions.get(0).getTextValue().equals("No restrictions available")){
             System.out.println("No data restrictions provided");
         }
 
         else{
+            System.out.println("There are some data restrictions");
             for(JsonNode restriction : restrictions){
-
                 PopulousDataRestriction dataRestriction = new PopulousDataRestriction();
                 int index = restriction.get("restrictionIndex").getIntValue();
                 dataRestriction.setRestrictionIndex(index);
