@@ -37,7 +37,7 @@ public class WebulousDataConversionService {
         populousModel = new SimplePopulousModel();
         validationService = new OntologyTermValidationService(allData.get("configuration").get("sourceOntology").getTextValue().toLowerCase(), configuration);
 
-        statusMessage= "Thank you for the input, we're doing our best to process it";
+        statusMessage= "Thank you for the input, it has been processed successfully";
     }
 
     public String getStatusMessage(){

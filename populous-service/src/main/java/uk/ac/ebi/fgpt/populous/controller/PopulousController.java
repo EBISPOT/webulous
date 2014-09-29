@@ -87,27 +87,34 @@ public class PopulousController {
     public @ResponseBody String processDataSubmission(@RequestBody String data){
 
         if(data == ""){
-            return "Data, I need data!";
+            return "Data, data, data, give me data. I cannot make bricks without clay.";
         }
 
 
         System.out.println(data);
+        String status;
+        try{
+            WebulousDataConversionService converter = new WebulousDataConversionService(data, getOntologyConfiguration());
+
+            converter.processInput();
+
+            PopulousModel populousModel = converter.getConfigInformation();
+            DataCollection processedData = converter.getData();
 
 
-        WebulousDataConversionService converter = new WebulousDataConversionService(data, getOntologyConfiguration());
+            DefaultPopulousService populousService = new DefaultPopulousService(processedData, populousModel);
+            populousService.setConfiguration(getOntologyConfiguration());
+            populousService.setUpPatternExecutor(populousModel, processedData);
 
-        converter.processInput();
+    /**TO DO: do something useful with this status message!!!!**/
+            status = converter.getStatusMessage();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            status = "Apologies, something went wrong while processing your input. Please ensure that you submitted the data correctly.";
 
-        PopulousModel populousModel = converter.getConfigInformation();
-        DataCollection processedData = converter.getData();
+        }
 
-
-        DefaultPopulousService populousService = new DefaultPopulousService(processedData, populousModel);
-        populousService.setConfiguration(getOntologyConfiguration());
-        populousService.setUpPatternExecutor(populousModel, processedData);
-
-/**TO DO: do something useful with this status message!!!!**/
-        String status = converter.getStatusMessage();
 
         return status;
     }
