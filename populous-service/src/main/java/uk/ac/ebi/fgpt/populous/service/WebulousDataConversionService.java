@@ -97,24 +97,31 @@ public class WebulousDataConversionService {
     public void processRestrictions(JsonNode restrictions) {
         Map<Integer, PopulousDataRestriction> dataRestrictions = new HashMap<Integer, PopulousDataRestriction>();
 
-        for(JsonNode restriction : restrictions){
-            PopulousDataRestriction dataRestriction = new PopulousDataRestriction();
-            int index = restriction.get("restrictionIndex").getIntValue();
-            dataRestriction.setRestrictionIndex(index);
+        if(restrictions.get(0).getTextValue().equals("No restrictions available")){
+            System.out.println("No data restrictions provided");
+        }
 
-            String ontology = restriction.get("restrictionOntology").getTextValue();
-            dataRestriction.setRestrictionOntology(ontology);
+        else{
+            for(JsonNode restriction : restrictions){
 
-            String type = restriction.get("restrictionType").getTextValue();
-            dataRestriction.setRestrictionType(type);
+                PopulousDataRestriction dataRestriction = new PopulousDataRestriction();
+                int index = restriction.get("restrictionIndex").getIntValue();
+                dataRestriction.setRestrictionIndex(index);
 
-            String name = restriction.get("restrictionName").getTextValue();
-            dataRestriction.setRestrictionParentName(name);
+                String ontology = restriction.get("restrictionOntology").getTextValue();
+                dataRestriction.setRestrictionOntology(ontology);
 
-            String uri = restriction.get("restrictionURI").getTextValue();
-            dataRestriction.setRestrictionParentURI(uri);
+                String type = restriction.get("restrictionType").getTextValue();
+                dataRestriction.setRestrictionType(type);
 
-            dataRestrictions.put(index, dataRestriction);
+                String name = restriction.get("restrictionName").getTextValue();
+                dataRestriction.setRestrictionParentName(name);
+
+                String uri = restriction.get("restrictionURI").getTextValue();
+                dataRestriction.setRestrictionParentURI(uri);
+
+                dataRestrictions.put(index, dataRestriction);
+            }
         }
 
         populousModel.setRestrictions(dataRestrictions);
