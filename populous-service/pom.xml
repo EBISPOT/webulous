@@ -11,6 +11,9 @@
 
     <artifactId>populous-service</artifactId>
 
+    <build>
+        <finalName>populous-service</finalName>
+    </build>
 
     <dependencies>
         <!-- spring webmvc framework -->
@@ -47,12 +50,12 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <build>
-                <resources>
-                    <resource>
+                <testResources>
+                    <testResource>
                         <filtering>true</filtering>
                         <directory>src/test/resources</directory>
-                    </resource>
-                </resources>
+                    </testResource>
+                </testResources>
             </build>
         </profile>
 
@@ -62,12 +65,12 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
-                <resources>
-                    <resource>
+                <testResources>
+                    <testResource>
                         <filtering>true</filtering>
                         <directory>src/test/resources</directory>
-                    </resource>
-                </resources>
+                    </testResource>
+                </testResources>
             </build>
         </profile>
     </profiles>
