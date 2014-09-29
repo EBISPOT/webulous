@@ -196,6 +196,7 @@
 
             <properties>
                 <ontology.location>/home/dwelter/CodeCellar/webpopulous/webulous/src/main/resources</ontology.location>
+                <test.ontology.location>/home/dwelter/CodeCellar/webpopulous/webulous/src/main/resources</test.ontology.location>
             </properties>
         </profile>
 
@@ -206,6 +207,18 @@
             </activation>
             <properties>
                 <ontology.location>/ebi/microarray/home/fgpt/sw/webulous</ontology.location>
+                <test.ontology.location>/ebi/microarray/home/fgpt/sw/webulous</test.ontology.location>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <ontology.location>/nfs/public/rw/fg/fgpt/webulous</ontology.location>
+                <test.ontology.location>/ebi/microarray/home/fgpt/sw/webulous</test.ontology.location>
             </properties>
         </profile>
 
