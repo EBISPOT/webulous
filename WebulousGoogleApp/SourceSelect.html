@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+
+<div>
+
+    <b>Please select a source ontology from the dropdown</b>
+    <br>
+    <br>
+    <div align="center">
+
+        <select class="ontologySelect" >
+            <option value="EFO">Experimental Factor Ontology (EFO)</option>
+            <!--      <option value="CLO">Cell Line Ontology (CLO)</option>
+                  <option value="GO">Gene Ontology (GO)</option> -->
+        </select>
+    </div>
+    <br>
+    <br>
+    <div align="center">
+        <table>
+            <tr>
+                <td style="width:100px"><input type="button" value="Set source" onclick="google.script.run.withSuccessHandler(onSuccess).setSource($('.ontologySelect').val());" /></td>
+                <td><input type="button" value="Cancel" onclick="google.script.host.close();" /></td>
+            </tr>
+        </table>
+    </div>
+
+    <!--TO DO: link this drop down to different servers--->
+    <!-- for now, this is going to have to be a manually populated list. A different group using Webulous
+       will have to build their own list -->
+
+
+</div>
+
+<script>
+
+    function onSuccess(){
+        google.script.host.close();
+        google.script.run.showSidebar();
+    }
+
+
+</script>

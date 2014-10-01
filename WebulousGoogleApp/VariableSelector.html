@@ -1,0 +1,112 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css" />
+
+<div>
+        <b>Assign each variable to the appropriate column</b> <br>
+        <table id ='varColPairs'>
+
+            <tr><td style="width:100px">Variable</td> <td> Column </td></tr>
+
+            <? var varSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Variables");
+             var cols = getSelected();
+             var variables = [];
+             var unique = [];
+             var varSets = varSheet.getRange(1, 1, varSheet.getLastRow(),2).getValues();
+
+             if(cols.length != 0){
+               var source = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SourceData");
+               for(var c=0; c<cols.length; c++){
+                 var patternVars = source.getRange(4, cols[c], source.getLastRow()).getValues();
+                 for(var p=0; p<patternVars.length; p++){
+                   var current = (patternVars[p][0].split(":"))[0];
+                   if((unique.indexOf(current) == -1) && (current!='')){
+                      var index;
+                      for(var i=0; i<varSets.length; i++){
+                          if(varSets[i][0] == current){
+                            index = i;
+                            Logger.log(i);
+                          }
+                       }
+                     var v1 ={};
+                     v1.name = varSets[index][0];
+                     v1.column = varSets[index][1];
+                     variables.push(v1);
+                     unique.push(v1.name);
+
+                   }
+                 }
+              }
+            }
+            else{
+              for(var k=0; k<varSets.length; k++){
+                var v1 = {};
+                v1.name = varSets[k][0];
+                v1.column = varSets[k][1];
+                variables.push(v1);
+              }
+            }
+
+            var colNo = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().getLastColumn();
+           for(var s=0; s<variables.length; s++){
+              ?>
+            <tr><td> <?= variables[s].name; ?> </td>
+                <td><select>
+                    <? if(variables[s].column == ""){  ?>
+                    <option value="" selected="selected"></option>
+                    <?}
+                  else{?>
+                    <option value="" ></option>
+                    <? }
+                for(var t=0; t< colNo; t++){
+                  var char = 65+t;
+                  var col = String.fromCharCode(char);
+
+                  if(variables[s].column == col){
+                ?>
+                    <option value="<?= col; ?>" selected="selected"><?= col; ?></option> <?}
+                else {?>
+                    <option value="<?= col; ?>"><?= col; ?></option> <?}} ?>
+
+                </select>  </td></tr>
+            <?
+         }?>
+        </table>
+        <br>
+        <br>
+        <table>
+            <tr>
+                <td style="width:100px">     <input type="button" value="Apply" onclick="processTable()" /> </td>
+                <td>     <input type="button" value="Cancel" onclick="google.script.host.close()" />    </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <script>
+        function processTable(){
+            var varTab = document.getElementById('varColPairs');
+
+//gets rows of table
+            var rowNum = varTab.rows.length;
+
+            var key = [];
+            var map = []
+
+            //loops through rows
+            for (var i = 1; i < rowNum; i++){
+                var row = varTab.rows[i];
+
+                //gets cells of current row
+
+                var fields = row.cells;
+
+                var varName = fields[0].innerHTML;
+                var colSelect = fields[1].getElementsByTagName("select")[0];
+                var colName = colSelect.options[colSelect.selectedIndex].value;
+                key[i-1] = varName;
+                map[i-1] = colName;
+            }
+            google.script.run.assignVariables(key,map);
+            google.script.host.close();
+
+        }
+    </script>
