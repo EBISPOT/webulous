@@ -93,14 +93,14 @@ function getOntologyTerms(ontology, cls, type){
 
         var ontologies = "http://data.bioontology.org/ontologies/";
         var clses = "/clses/";
-        var parameters = "?apikey=73c9dd31-4bc1-42cc-9b78-cf30741a9723&no_links=true&no_context=true&include=prefLabel,synonym";
+        var parameters = "?apikey=73c9dd31-4bc1-42cc-9b78-cf30741a9723&no_links=true&no_context=true&include=prefLabel,synonym&pagesize=500";
 
         var query = ontologies + ontology + clses + encoded + "/" + type + parameters;
         Logger.log(query);
         var text = UrlFetchApp.fetch(query).getContentText();
         var doc = JSON.parse(text);
 
-        if(parseInt(doc.pageCount) > 30){
+        if(parseInt(doc.pageCount) > 50){
             SpreadsheetApp.getUi().alert(cls + " has too many " + type + " in " + ontology + " to process. You can apply different restrictions to different cells in the same column, eg \"cardiovascular disease\" instead of \"disease\".");
         }
 
@@ -178,7 +178,7 @@ function getParentID(ontology, cls){
             Logger.log(uri);
             break;
         }
-    else{
+        else{
             var synonyms = record.synonym;
 
             if(synonyms != null && synonyms.indexOf(cls) == -1){
@@ -191,7 +191,7 @@ function getParentID(ontology, cls){
                 }
                 Logger.log(label + " does not match " + cls);
             }
-        else{
+            else{
                 uri = record["@id"];
                 Logger.log(uri);
                 break;

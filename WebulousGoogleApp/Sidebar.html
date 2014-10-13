@@ -12,7 +12,7 @@
         <div class="ontologyDropdown">
             <? var source = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SourceData");
          var max = source.getLastRow();
-         var data = source.getRange(1, 1, max, 2)?>
+         var data = source.getRange(2, 1, max, 2)?>
             <select class="ontologySelect">
                 <?  for(var i=0; i < max; i++){
                if(data.getCell(i+1, 1).getValue() != ""){ ?>

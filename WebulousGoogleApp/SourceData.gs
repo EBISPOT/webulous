@@ -1,3 +1,5 @@
+//wwwdev.ebi.ac.uk/fgpt/webulous/api/source/EFO
+
 function setSource(ontology){
     var sourceData = getSourceData(ontology);
 
@@ -9,11 +11,15 @@ function setSource(ontology){
 
     sourceSheet.hideSheet();
 
-//this sets the source ontology, which be default goes into cells A1 (acronym) and B1 (full name)
-    var source = sourceSheet.getRange("A1");
+    var baseURI = sourceSheet.getRange("A1");
+    var uri = ontology.replace("source/"+sourceData.sourceOntology.acronym, "");
+    baseURI.setValue(uri);
+
+//this sets the source ontology, which be default goes into cells A2 (acronym) and B2 (full name)
+    var source = sourceSheet.getRange("A2");
     source.setValue(sourceData.sourceOntology.acronym);
 
-    var name = sourceSheet.getRange("B1");
+    var name = sourceSheet.getRange("B2");
     name.setValue(sourceData.sourceOntology.name);
 
     Logger.log(sourceData.sourceOntology.acronym);
@@ -24,10 +30,10 @@ function setSource(ontology){
     var imports = sourceData.importOntologies;
 
     for(var s=0; s<imports.length; s++){
-        var acro = sourceSheet.getRange(s+2, 1);
+        var acro = sourceSheet.getRange(s+3, 1);
         acro.setValue(imports[s].acronym);
 
-        var name = sourceSheet.getRange(s+2, 2);
+        var name = sourceSheet.getRange(s+3, 2);
         name.setValue(imports[s].name);
     }
 
@@ -60,7 +66,7 @@ function getSourceData(ontology){
 
     //TO DO - API call goes here
 
-    var apiCall = "http://wwwdev.ebi.ac.uk/fgpt/webulous/api/source/" + ontology
+    var apiCall = "http://" + ontology
     Logger.log(apiCall);
     var result = UrlFetchApp.fetch(apiCall).getContentText();
 

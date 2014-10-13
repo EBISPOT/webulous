@@ -5,7 +5,9 @@ function submitData() {
     var output = {};
 
     var sourceSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SourceData");
-    var source = sourceSheet.getRange(1, 1).getValue();
+    var source = sourceSheet.getRange(2, 1).getValue();
+
+    var baseURI = sourceSheet.getRange(1,1).getValue();
 
     output.configuration = {};
     output.configuration.sourceOntology = source;
@@ -24,7 +26,7 @@ function submitData() {
 
         var payload = JSON.stringify(output);
 
-        var url = "http://wwwdev.ebi.ac.uk/fgpt/webulous/api/data/all";
+        var url = "http://" + baseURI + "data/all";
         var options = { "method":"POST",
             "contentType" : "application/json",
             "payload" : payload
