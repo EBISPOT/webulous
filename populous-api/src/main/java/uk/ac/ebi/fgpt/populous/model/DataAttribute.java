@@ -23,4 +23,5 @@ public interface DataAttribute {
     int getIndex();
 
 
+    List<PopulousDataRestriction> getDataRestrictions();
 }

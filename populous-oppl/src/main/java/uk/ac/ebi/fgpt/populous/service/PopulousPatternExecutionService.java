@@ -317,7 +317,7 @@ public class PopulousPatternExecutionService {
             for (String s : values) {
                 s = s.trim();
                 logger.debug("Looking up:" + s);
-                entities.addAll(getEntityShortForms(s, type, field.getIndex()));
+                entities.addAll(getEntityShortForms(s, type, field.getIndex(), field.getRestrictionIndex()));
             }
         }
 
@@ -325,7 +325,7 @@ public class PopulousPatternExecutionService {
     }
 
 //get the OWLEntities for data value shortForm, looking first in the list of valid ontology terms for this column, then in all ontologies, then if not found, create a new OWLEntity
-    private Set<OWLEntity> getEntityShortForms(String shortForm, Integer type, Integer index) {
+    private Set<OWLEntity> getEntityShortForms(String shortForm, Integer type, Integer index, Integer restrictionIndex) {
         Set<OWLEntity> entities = new HashSet<OWLEntity>();
 
         // first look in the validation list
@@ -362,7 +362,7 @@ public class PopulousPatternExecutionService {
 
         // finally create a new entity
         if (entities.isEmpty()) {
-            OWLEntity e = getNewEntities(shortForm, type);
+            OWLEntity e = getNewEntities(shortForm, type, index, restrictionIndex);
             entities.add(e);
         }
         return entities;
@@ -370,14 +370,47 @@ public class PopulousPatternExecutionService {
 
 
 //create a new OWLEntity (class or individual) for the term newTerm
-    private OWLEntity getNewEntities(String newTerm, Integer type) {
+    private OWLEntity getNewEntities(String newTerm, Integer type, Integer index, Integer restrictionIndex) {
 
         logger.debug("Creating new term:" + newTerm);
 
         if (type == 1) {
+            boolean hasRestriction = false;
+            String parent = null;
+
+            if(restrictionIndex != null){
+
+                for(DataAttribute attribute : dataCollection.getDataAttributes()){
+                    if(!hasRestriction){
+                        if(attribute.getIndex() == index){
+                            System.out.println("Attribute index is " + index);
+                            if(attribute.getDataRestrictions() != null){
+                                for(PopulousDataRestriction restriction : attribute.getDataRestrictions()){
+                                    if(restriction != null && restriction.getRestrictionIndex() == restrictionIndex){
+                                        parent = restriction.getRestrictionParentURI();
+                                        hasRestriction = true;
+                                    }
+                                }
+                            }
+                            else {
+                                System.out.println("Attribute " + index + " has no restricitons");
+
+                            }
+
+                        }
+                    }
+                }
+            }
+
+
             OWLEntityCreationSet<OWLClass> ecs = null;
             try {
-                ecs = cf.createOWLClass(newTerm, entityCreation.getDefaultBaseURI());
+                if(hasRestriction){
+                    ecs = cf.createOWLClass(newTerm, entityCreation.getDefaultBaseURI(), ontologyManager.getOWLDataFactory().getOWLClass(IRI.create(parent)));
+                }
+                else{
+                    ecs = cf.createOWLClass(newTerm, entityCreation.getDefaultBaseURI());
+                }
             } catch (OWLEntityCreationException e) {
                 e.printStackTrace();
             }

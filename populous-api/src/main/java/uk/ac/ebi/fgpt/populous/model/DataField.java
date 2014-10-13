@@ -18,4 +18,6 @@ public interface DataField {
 //    String getIRI();
 
     int getIndex();
+
+    Integer getRestrictionIndex();
 }

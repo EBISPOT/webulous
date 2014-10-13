@@ -225,6 +225,11 @@ public class TestPopulousPatternExecutor extends TestCase {
         public int getIndex() {
             return index;
         }
+
+        @Override
+        public List<PopulousDataRestriction> getDataRestrictions() {
+            return null;
+        }
     }
 
 
@@ -299,6 +304,11 @@ public class TestPopulousPatternExecutor extends TestCase {
         @Override
         public int getIndex(){
             return index;
+        }
+
+        @Override
+        public Integer getRestrictionIndex() {
+            return null;
         }
     }
 }
