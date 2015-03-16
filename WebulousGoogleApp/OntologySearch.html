@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css" />
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+
+<div style="margin-left: 10px; margin-top: 20px" id="dataRestriction">
+   <h3>BioPortal Search</h3>
+    <div id="importOntology">
+      <div class="ontologyDropdown">
+         <select class="ontologySelect">
+         </select>
+     </div>
+    <form>
+     <input name="query" style="width:100%"/>
+
+    </form>
+
+
+    </div>
+    <b>Add restriction</b> <br>
+    <div id="allowedValues">
+ <!--     <input type="radio" name="restrictionType" value="freeText" checked/>Free text<br> -->
+      <input type="radio" class="restrictionType" name="restrictionType" value="children" />Direct subclasses<br>
+      <input type="radio" class="restrictionType" name="restrictionType" value="descendants" />Subclasses<br>
+ <!--     <input type="radio" name="restrictionType" value="directInstance" />Direct instances<br>
+      <input type="radio" name="restrictionType" value="instance" />Instances<br> -->
+      </div>
+     <br>
+     <br>
+      <div align="center">
+        <input type="button" value="Apply"  onclick="setRestrictions()"/>
+      </div>
+
+   <br>
+   <br>
+   <div align="center">
+        <input type="button" value="Remove restriction"  onclick="google.script.run.removeRestriction()"/>
+      </div>
+
+   <br>
+   <br>
+   <div class="status"> </div>
+ </div>
+
+<script>
+
+
+
+
+function setRestrictions(){
+
+   var ontology = $('.ontologySelect').val();
+   var term = $(".restrictionParent").val();
+   var restrict = $('input[name="restrictionType"]:checked').val();
+   google.script.run.withSuccessHandler(onSuccess).getRestrictionValues(ontology, term, restrict);
+   $("div.status").html("Restriction submitted. If " + term + " has lots of " + restrict + ", this could take a few moments.");
+}
+
+function onSuccess(){
+   $("div.status").html("");
+}
+ </script>

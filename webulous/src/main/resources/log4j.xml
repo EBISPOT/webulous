@@ -18,12 +18,12 @@
 
 
     <logger name="org.springframework" additivity="false">
-        <level value="WARN" />
+        <level value="ERROR" />
         <appender-ref ref="console" />
     </logger>
 
     <root>
-        <priority value="TRACE" />
+        <priority value="ERROR" />
         <appender-ref ref="console" />
     </root>
 

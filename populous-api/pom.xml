@@ -11,11 +11,7 @@
 
     <artifactId>populous-api</artifactId>
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>net.sourceforge.owlapi</groupId>-->
-            <!--<artifactId>owlapi-api</artifactId>-->
-            <!--<version>3.4.4</version>-->
-        <!--</dependency>-->
+
     </dependencies>
 
 

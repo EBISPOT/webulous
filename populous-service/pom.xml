@@ -11,16 +11,39 @@
 
     <artifactId>populous-service</artifactId>
 
-    <build>
-        <finalName>populous-service</finalName>
-    </build>
-
     <dependencies>
-        <!-- spring webmvc framework -->
+        <!--<dependency>-->
+            <!--&lt;!&ndash; Import dependency management from Spring Boot &ndash;&gt;-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starters</artifactId>-->
+            <!--<version>1.2.0.RELEASE</version>-->
+            <!--<type>pom</type>-->
+            <!--<scope>import</scope>-->
+        <!--</dependency>-->
+
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>3.2.2.RELEASE</version>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-data-mongodb</artifactId>
+          <version>1.2.0.RELEASE</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-webmvc</artifactId>
+            <version>2.2.1.RELEASE</version>
+        </dependency>
+
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-thymeleaf</artifactId>
+          <version>1.2.0.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -35,60 +58,14 @@
             <version>0.1-SNAPSHOT</version>
         </dependency>
 
+
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.9</version>
+            <version>1.9.13</version>
         </dependency>
+
+
     </dependencies>
-
-
-    <profiles>
-        <profile>
-            <id>localdev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <testResources>
-                    <testResource>
-                        <filtering>true</filtering>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <testResources>
-                    <testResource>
-                        <filtering>true</filtering>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-
-        <profile>
-            <id>test</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <testResources>
-                    <testResource>
-                        <filtering>true</filtering>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-    </profiles>
-
 
 </project>

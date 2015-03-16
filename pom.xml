@@ -132,19 +132,21 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.6</version>
-            <scope>runtime</scope>
+            <version>1.7.7</version>
+            <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.6</version>
+            <version>1.7.7</version>
         </dependency>
 
         <dependency>
@@ -159,6 +161,7 @@
             <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
+
   </dependencies>
 
 
@@ -169,30 +172,30 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
 
-            <build>
-                <plugins>
-                    <!-- Handy enforce plugin to check dependency convergence.  Currently only problems in third party libs -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>1.3</version>
-                        <executions>
-                            <execution>
-                                <id>enforce</id>
-                                <configuration>
-                                    <rules>
-                                        <DependencyConvergence/>
-                                    </rules>
-                                </configuration>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <phase>validate</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+            <!--<build>-->
+                <!--<plugins>-->
+                    <!--&lt;!&ndash; Handy enforce plugin to check dependency convergence.  Currently only problems in third party libs &ndash;&gt;-->
+                    <!--<plugin>-->
+                        <!--<groupId>org.apache.maven.plugins</groupId>-->
+                        <!--<artifactId>maven-enforcer-plugin</artifactId>-->
+                        <!--<version>1.3</version>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<id>enforce</id>-->
+                                <!--<configuration>-->
+                                    <!--<rules>-->
+                                        <!--<DependencyConvergence/>-->
+                                    <!--</rules>-->
+                                <!--</configuration>-->
+                                <!--<goals>-->
+                                    <!--<goal>enforce</goal>-->
+                                <!--</goals>-->
+                                <!--<phase>validate</phase>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    <!--</plugin>-->
+                <!--</plugins>-->
+            <!--</build>-->
 
             <properties>
                 <ontology.location>/home/dwelter/CodeCellar/webpopulous/webulous/src/main/resources</ontology.location>
