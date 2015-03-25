@@ -54,7 +54,7 @@ public class TestPopulousPatternExecutor extends TestCase {
         Set<PopulousPattern> mockPatterns = new HashSet<PopulousPattern>();
         mockPatterns.add(mockPattern);
 
-        populousModel = mock(SimplePopulousModel.class);
+        populousModel = mock(PropertyBasedPopulousModel.class);
 
         LinkedHashMap<Integer, String> variableMap = new LinkedHashMap<Integer, String>();
 
@@ -249,15 +249,6 @@ public class TestPopulousPatternExecutor extends TestCase {
                     "END;";
         }
 
-        @Override
-        public String getPatternID() {
-            return null;
-        }
-
-        @Override
-        public Map<String, Integer> getVariableToColumnMap() {
-            return null;
-        }
     }
 
     private class MockDataObject implements DataObject {

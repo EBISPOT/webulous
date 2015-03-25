@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html   xmlns:th="http://www.thymeleaf.org"
+        xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Webulous template</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/spacelab.bootstrap.min.css" th:href="@{../css/spacelab.bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{../css/main.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/main.js" th:href="@{../js/main.js}"></script>
+
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">iPopulous</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/templates">Home</a></li>
+                <li><a href="/templates/new">New template<span class="sr-only">(current)</span></a></li>
+                <li><a href="/restrictions">Restriction updates</a></li>
+                <li><a href="/submissions">Data submissions</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search"/>
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Help</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="col-lg-8">
+    <div class="well bs-componenent">
+
+
+        <!--@thymesVar id="populousTemplateDocument" type="uk.ac.ebi.spot.webulous.model.PopulousTemplateDocument"-->
+        <form method="post" class="form-horizontal" th:object="${populousTemplateDocument}">
+            <fieldset>
+                <legend>Webulous template <span th:text="${populousTemplateDocument.id}"></span> </legend>
+
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+
+                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+                </div>
+
+                <!--@thymesVar id="message" type="String"-->
+                <div class="alert alert-dismissible alert-success" th:if="${message}">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong th:text="${message}">Success message goes here</strong>.
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <a th:href="'/restrictions?templateId=' + ${populousTemplateDocument.id}" class="btn btn-primary">Restriction updates</a>
+                        <a th:href="'/submissions/' + ${populousTemplateDocument.id}" style="margin-left:1px;" class="btn btn-primary">Data submissions</a>
+
+                        <button type="reset" style="margin-left:1px;" class="btn btn-default pull-right">Reset</button>
+                        <button type="submit" style="margin-left:1px;" class="btn btn-danger pull-right">Delete</button>
+                        <button type="submit" style="margin-left:1px;" class="btn btn-success pull-right">Save</button>
+                    </div>
+                </div>
+                <div th:if="${populousTemplateDocument.id}">
+                    <input type="hidden" name="id" th:value="${populousTemplateDocument.id}"/>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="col-lg-2 control-label">Description</label>
+                    <div class="col-lg-10" th:class="${#fields.hasErrors('description')} ? 'col-lg-10 has-error' : 'col-lg-10'">
+                        <input type="text" class="form-control" id="description" name="description" th:field="*{description}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="adminEmailAddress" class="col-lg-2 control-label">Admin e-mail</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="adminEmailAddress" th:field="*{adminEmailAddress}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="isActive" class="col-lg-2 control-label">Is Active</label>
+                    <div class="col-lg-10">
+                        <select class="form-control" id="isActive" name="isActive">
+                            <option th:selected="${ populousTemplateDocument.active==true }" value="true">true</option>
+                            <option th:selected="${ populousTemplateDocument.active==false }" value="false">false</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="defaultNumberOfRows" class="col-lg-2 control-label">Default number of rows</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="defaultNumberOfRows" th:field="*{defaultNumberOfRows}" value="100"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="urigenserver" class="col-lg-2 control-label">UriGen server</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="urigenserver" th:field="*{urigenserver}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="activeOntology" class="col-lg-2 control-label">New ontology URI</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="activeOntology" th:field="*{activeOntology}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ontologyImports" class="col-lg-2 control-label">Imported ontology URIs</label>
+                    <div class="col-lg-10"  id="ontologyImports">
+                        <div id="import">
+                            <input type="text" name="ontologyImports" class="form-control ontologyImport" th:each="import : ${populousTemplateDocument.getOntologyImports()}" th:value="${import}"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-12">
+                        <button id="removeOntologyImportInput" type="button" style="margin-left: 2px;" class="btn removeButton btn-danger btn-sm pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove ontology">X</button>
+                        <button id="addOntologyImportInput" type="button" class="btn addButton btn-link pull-right">Add ontology</button>
+                    </div>
+                </div>
+
+
+                <legend>Data Restrictions</legend>
+
+                <div id="restrictions">
+
+                    <div class="restriction-div" th:each="restriction,iterStat : ${populousTemplateDocument.dataRestrictions}">
+
+                        <h4 th:text="'Restriction ' + ${iterStat.count}" >Restriction #</h4>
+                        <div class="form-group">
+
+
+                            <label th:for="'dataRestrictions-name-' + ${iterStat.index}" for="dataRestrictions-name" class="col-lg-2 control-label">Name</label>
+                            <div class="col-lg-10" th:id="'dataRestrictions-name-' + ${iterStat.index}" id="dataRestrictions-name">
+                                <input type="text" th:field="*{dataRestrictions[__${iterStat.index}__].restrictionName}" name="dataRestrictions-name" class="form-control"/>
+                            </div>
+
+                            <label th:for="'dataRestrictions-variableName-' + ${iterStat.index}" for="variableName" class="col-lg-2 control-label">Variable Name</label>
+                            <div class="col-lg-10" th:id="'dataRestrictions-variableName-' + ${iterStat.index}" id="variableName">
+                                <input type="text" th:field="*{dataRestrictions[__${iterStat.index}__].variableName}" name="variableName" class="form-control"/>
+                            </div>
+
+                            <label th:for="'dataRestrictions-columnIndex-' + ${iterStat.index}" for="columnIndex" class="col-lg-2 control-label">Column Index</label>
+                            <div class="col-lg-10" th:id="'dataRestrictions-columnIndex-' + ${iterStat.index}" id="columnIndex">
+                                <input type="text" th:field="*{dataRestrictions[__${iterStat.index}__].columnIndex}" name="columnIndex" class="form-control" />
+                            </div>
+
+                            <label th:for="'dataRestrictions-classExpression-' + ${iterStat.index}" for="classExpression" class="col-lg-2 control-label">Class Expression</label>
+                            <div class="col-lg-10" th:id="'dataRestrictions-classExpression-' + ${iterStat.index}" id="classExpression">
+                                <input type="text" th:field="*{dataRestrictions[__${iterStat.index}__].classExpression}" name="classExpression" class="form-control"/>
+                            </div>
+
+                            <label th:for="'dataRestrictions-restrictionType-' + ${iterStat.index}" for="restrictionType" class="col-lg-2 control-label">Restriction Type</label>
+                            <div class="col-lg-10" th:id="'dataRestrictions-restrictionType-' + ${iterStat.index}" id="restrictionType">
+                                <select class="form-control" th:field="*{dataRestrictions[__${iterStat.index}__].restrictionType}" name="restriction-type">
+                                    <option th:class="'dataRestrictions[' + ${iterStat.index} + '].restrictionType'" th:each="type : ${T(uk.ac.ebi.spot.webulous.model.RestrictionType).values()}" th:value="${type}" th:text="${type}" th:selected="${ type==restriction.restrictionType }">Subclasses</option>
+                                </select>
+                            </div>
+
+                            <label th:for="'dataRestrictions-defaultValue-' + ${iterStat.index}" for="defaultValue" class="col-lg-2 control-label">Default value</label>
+                            <div class="col-lg-10" th:id="'dataRestrictions-defaultValue-' + ${iterStat.index}" id="defaultValue">
+                                <input type="text" th:field="*{dataRestrictions[__${iterStat.index}__].defaultValue}" name="defaultValue" class="form-control"/>
+                            </div>
+
+                            <label th:for="'dataRestrictions-multivalueField-' + ${iterStat.index}" for="multivalueField" class="col-lg-2 control-label">Multivalue field</label>
+                            <div class="col-lg-10" th:id="'dataRestrictions-multivalueField-' + ${iterStat.index}" id="multivalueField">
+                                <select class="form-control"  th:field="*{dataRestrictions[__${iterStat.index}__].multivalueField}" name="multivalueField">
+                                    <option th:selected="${ restriction.multivalueField==true }" value="true">true</option>
+                                    <option th:selected="${ restriction.multivalueField==false }" value="false">false</option>
+                                </select>
+                            </div>
+
+                            <label th:for="'dataRestrictions-required-' + ${iterStat.index}" for="required" class="col-lg-2 control-label">Required</label>
+                            <div class="col-lg-10" th:id="'dataRestrictions-required-' + ${iterStat.index}" id="required">
+                                <select  class="form-control" th:field="*{dataRestrictions[__${iterStat.index}__].required}" name="required">
+                                    <option th:selected="${ restriction.required==true }" value="true">true</option>
+                                    <option th:selected="${ restriction.required==false }" value="false">false</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <button name="removeDataRestriction" th:value="${iterStat.index}" type="submit" style="margin-left:2px;" class="btn btn-danger btn-sm pull-right" data-placement="top" title="" data-original-title="Remove restriction">X</button>
+                                <a th:href="'/templates/' + ${populousTemplateDocument.id} + '/restrictions/' + ${iterStat.index} + ''" class="btn btn-primary btn-sm pull-right">View values</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-lg-12">
+                        <button type="submit" name="addDataRestriction" class="btn btn-link pull-right">Add new restriction</button>
+                    </div>
+                </div>
+
+                <legend>OPPL Patterns</legend>
+
+                <div id="patterns">
+                    <div class="pattern-div" th:each="pattern,iterStat : ${populousTemplateDocument.patterns}">
+                        <h4 th:text="'Pattern ' + ${iterStat.count}" >Pattern #</h4>
+                        <div class="form-group">
+
+                            <label th:for="'patternName-' + ${iterStat.index}" for="patternName" class="col-lg-2 control-label">Pattern Name</label>
+                            <div class="col-lg-10" th:id="'patternName-' + ${iterStat.index}" id="patternName">
+                                <input type="text" th:field="*{patterns[__${iterStat.index}__].patternName}" name="patternName" class="form-control"/>
+                            </div>
+
+                            <label th:for="'patternValue-' + ${iterStat.index}" for="patternValue" class="col-lg-2 control-label">Pattern Value</label>
+                            <div class="col-lg-10" th:id="'patternValue-' + ${iterStat.index}" id="patternValue">
+                                <textarea th:field="*{patterns[__${iterStat.index}__].patternValue}" name="patternValue" class="form-control">
+
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <button name="removePattern" th:value="${iterStat.index}" type="submit" class="btn btn-danger btn-sm pull-right" data-placement="top" title="" data-original-title="Remove pattern">X</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-12">
+                        <button type="submit" name="addPattern" class="btn  btn-link pull-right">Add new pattern</button>
+                    </div>
+                </div>
+
+
+
+
+            </fieldset>
+        </form>
+    </div>
+</div>
+</body>
+</html>

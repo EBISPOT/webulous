@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.webulous.model;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,10 +35,8 @@ import java.util.UUID;
  */
 public class SimplePopulousPattern implements PopulousPattern {
 
-    private String patternID;
     private String patternName;
     private String patternValue;
-    
 
     public String getPatternName() {
         return patternName;
@@ -55,28 +54,13 @@ public class SimplePopulousPattern implements PopulousPattern {
         this.patternValue = patternValue;
     }
 
-    public String getPatternID() {
-
-        return patternID;
-    }
-
-    @Override
-    public Map<String, Integer> getVariableToColumnMap() {
-        return null;
-    }
-
-    public void setPatternID(String patternID) {
-        this.patternID = patternID;
-    }
 
     public SimplePopulousPattern(String patternName, String patternValue) {
-        this.patternID = UUID.randomUUID().toString();
         this.patternName = patternName;
         this.patternValue = patternValue;
     }
 
     public SimplePopulousPattern() {
-        this.patternID = UUID.randomUUID().toString();
 
     }
 

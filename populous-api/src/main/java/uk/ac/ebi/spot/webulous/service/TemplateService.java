@@ -9,8 +9,11 @@ import java.util.List;
  * @date 16/03/2015
  * Samples, Phenotypes and Ontologies Team, EMBL-EBI
  */
-public interface TemplateService<T extends PopulousTemplate> {
+public interface TemplateService<T extends PopulousTemplate,Q> {
 
     public List<T> findAll();
 
+    T findOne(String templateId);
+
+    public Q refresh(String id, boolean force);
 }

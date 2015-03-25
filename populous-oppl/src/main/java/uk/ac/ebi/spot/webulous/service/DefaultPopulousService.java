@@ -59,6 +59,7 @@ public class DefaultPopulousService implements PopulousService<PopulousModel, Da
     }
 
 
+
     public void setConfiguration(OntologyConfiguration configuration) {
         this.configuration = configuration;
     }

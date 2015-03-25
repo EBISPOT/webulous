@@ -20,7 +20,7 @@ public class WebulousDataConversionService {
 
     private String statusMessage;
     private JsonNode allData;
-    private SimplePopulousModel populousModel;
+    private PropertyBasedPopulousModel populousModel;
     private SimpleDataCollection dataCollection;
     private OntologyTermValidationService validationService;
 
@@ -34,7 +34,7 @@ public class WebulousDataConversionService {
             e.printStackTrace();
         }
 
-        populousModel = new SimplePopulousModel();
+        populousModel = new PropertyBasedPopulousModel();
         validationService = new OntologyTermValidationService(allData.get("configuration").get("sourceOntology").getTextValue().toLowerCase(), configuration);
 
         statusMessage= "Thank you for the input, it has been processed successfully";

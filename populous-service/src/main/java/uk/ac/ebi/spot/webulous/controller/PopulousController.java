@@ -85,9 +85,7 @@ public class PopulousController {
     @RequestMapping(value = "/data/all", method = RequestMethod.POST, consumes = "application/json")
     public @ResponseBody String processDataSubmission(@RequestBody String data){
 
-        if(data == ""){
-            return "Data, data, data, give me data. I cannot make bricks without clay.";
-        }
+
 
 
         System.out.println(data);

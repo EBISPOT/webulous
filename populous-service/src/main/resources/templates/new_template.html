@@ -2,7 +2,7 @@
 <html   xmlns:th="http://www.thymeleaf.org"
         xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Create populous template</title>
+    <title>New Webulous Template</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="../static/css/spacelab.bootstrap.min.css" th:href="@{../css/spacelab.bootstrap.min.css}"/>
     <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{../css/main.css}"/>
@@ -13,58 +13,67 @@
 </head>
 <body>
 
-<form class="form-horizontal">
-    <fieldset>
-        <legend>Webulous template creator</legend>
-        <div class="form-group">
-            <label for="description" class="col-lg-2 control-label">Description</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="description" placeholder="Name this template"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="isActive" class="col-lg-2 control-label">Is Active</label>
-            <div class="col-lg-10">
-                <select class="form-control" id="isActive">
-                    <option selected="selected">True</option>
-                    <option>False</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="defaultNumberOfRows" class="col-lg-2 control-label">Default number of rows</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="defaultNumberOfRows" value="100"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="urigenserver" class="col-lg-2 control-label">UriGen server</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="urigenserver" placeholder="URL to the UriGen server if applicable"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="activeOntology" class="col-lg-2 control-label">New ontology URI</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="activeOntology" placeholder="URI for the new ontology that will be created"/>
-            </div>
-        </div>
+<div class="col-lg-6">
+    <div class="well bs-componenent">
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Webulous template creator</legend>
+                <div class="form-group">
+                    <label for="description" class="col-lg-2 control-label">Description</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="description" placeholder="Name this template"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="isActive" class="col-lg-2 control-label">Is Active</label>
+                    <div class="col-lg-10">
+                        <select class="form-control" id="isActive">
+                            <option selected="selected" value="true">true</option>
+                            <option value="false">false</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="defaultNumberOfRows" class="col-lg-2 control-label">Default number of rows</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="defaultNumberOfRows" value="100"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="urigenserver" class="col-lg-2 control-label">UriGen server</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="urigenserver" placeholder="URL to the UriGen server if applicable"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="activeOntology" class="col-lg-2 control-label">New ontology URI</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="activeOntology" placeholder="URI for the new ontology that will be created"/>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label class="col-lg-2 control-label" for="field1">Imported ontology URIs</label>
-            <div class="col-lg-10,controls" id="ontologyImports">
-                    <input class="input" id="field1" name="ontologyImports" type="text" placeholder="URIs for ontologies that need loading" data-items="8"/><button id="b1" class="btn add-more" type="button">+</button>
-            </div>
+                <div class="form-group">
+                    <label class="col-lg-2" for="field1">Imported ontology URIs</label>
+                    <div class="input-group col-lg-10" id="ontologyImports">
+                        <div class="input-group">
+                            <input class="form-control" id="field1" name="ontologyImports" type="text" placeholder="URIs for ontologies that need loading" data-items="8"/>
+                        <span class="input-group-btn">
+                            <button  id="b1" class="btn add-more" type="button">+</button>
+                        </span>
+                        </div>
+                    </div>
 
-        </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-lg-10 col-lg-offset-2">
-                <button type="reset" class="btn btn-default">Cancel</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
-    </fieldset>
-</form>
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <button type="reset" class="btn btn-default">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
 </body>
 </html>

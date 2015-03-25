@@ -13,7 +13,7 @@ import java.util.*;
  * The University of Manchester<br>
  * Bio-Health Informatics Group<br>
  */
-public class SimplePopulousModel implements PopulousModel{
+public class PropertyBasedPopulousModel implements PopulousModel{
 
     private IRI sourceOntologyIRI;
 
@@ -31,7 +31,7 @@ public class SimplePopulousModel implements PopulousModel{
 
     private EntityCreation entityPrefs;
 
-    public SimplePopulousModel() {
+    public PropertyBasedPopulousModel() {
         importedOntologies = new HashSet<IRI> ();
         simplePopulousPattern = new HashSet<PopulousPattern>();
         variables = new HashSet<String>();
@@ -183,7 +183,7 @@ public class SimplePopulousModel implements PopulousModel{
 //
 //    }
 
-    @Override
+//    @Override
     public Properties getPopulousModelProperties () {
 
         Properties prop = new Properties();
@@ -204,9 +204,9 @@ public class SimplePopulousModel implements PopulousModel{
 
         Integer j = 0;
         for (PopulousPattern p : simplePopulousPattern) {
-            prop.setProperty("pattern.id." + j , p.getPatternID());
-            prop.setProperty("pattern.name." + p.getPatternID(), p.getPatternName());
-            prop.setProperty("pattern.value." + p.getPatternID(), p.getPatternValue());
+//            prop.setProperty("pattern.id." + j , p.getPatternID());
+//            prop.setProperty("pattern.name." + p.getPatternID(), p.getPatternName());
+//            prop.setProperty("pattern.value." + p.getPatternID(), p.getPatternValue());
             j++;
         }
 

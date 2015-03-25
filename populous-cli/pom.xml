@@ -10,6 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>populous-cli</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>../restriction-loader-app</module>
+        <module>restriction-loader-app</module>
+    </modules>
 
 
 </project>

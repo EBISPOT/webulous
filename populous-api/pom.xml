@@ -12,6 +12,12 @@
     <artifactId>populous-api</artifactId>
     <dependencies>
 
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-distribution</artifactId>
+            <version>3.4.8</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 

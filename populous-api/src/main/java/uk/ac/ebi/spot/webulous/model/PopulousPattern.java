@@ -11,7 +11,4 @@ public interface PopulousPattern {
 
     String getPatternValue();
 
-    String getPatternID();
-
-    Map<String, Integer> getVariableToColumnMap();
 }

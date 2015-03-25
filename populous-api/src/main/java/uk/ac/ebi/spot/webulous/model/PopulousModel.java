@@ -41,7 +41,7 @@ public interface PopulousModel {
 //    public void loadProperties (File file) throws IOException;
 
 
-    public Properties getPopulousModelProperties () ;
+//    public Properties getPopulousModelProperties () ;
 
     public void saveModel (File file) throws IOException ;
 

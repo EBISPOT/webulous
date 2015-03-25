@@ -14,6 +14,7 @@
 
     <modules>
         <module>populous-oppl</module>
+        <module>ontology-api</module>
         <module>populous-api</module>
         <module>populous-cli</module>
         <module>populous-service</module>
@@ -147,12 +148,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sourceforge.owlapi</groupId>
-            <artifactId>owlapi-distribution</artifactId>
-            <version>3.4.10</version>
         </dependency>
 
         <dependency>
