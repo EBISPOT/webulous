@@ -7,6 +7,8 @@ import org.coode.oppl.variabletypes.*;
 import org.coode.parsers.BidirectionalShortFormProviderAdapter;
 import org.coode.parsers.ErrorListener;
 import org.coode.parsers.common.ErrorCollector;
+import org.coode.parsers.common.QuickFailErrorListener;
+import org.coode.parsers.common.SystemErrorEcho;
 import org.coode.patterns.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
@@ -35,6 +37,7 @@ public class OpplPatternExecutionService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static final String SEPERATOR = "||";
     private String[][] dataCollection;
 
     private PopulousTemplate populousTemplate;
@@ -54,29 +57,29 @@ public class OpplPatternExecutionService {
 
     private CustomOWLEntityFactory cf;
 
-    private ErrorCollector errorCollector;
 
-    public OpplPatternExecutionService(String[][] data, PopulousTemplate populousTemplate, EntityCreation entityCreation, ErrorListener errorListener) throws OWLOntologyCreationException {
+    public OWLOntology executeOPPLPatterns(String[][] data, PopulousTemplate populousTemplate, EntityCreation entityCreation, List<String> errorCollector) throws OWLOntologyCreationException {
+
         logger.debug("Starting Pattern Executor");
         this.dataCollection = data;
         this.populousTemplate = populousTemplate;
-
-
-
         this.ontologyManager = OWLManager.createOWLOntologyManager();
+        this.entityCreation = entityCreation;
 
         logger.debug("creating new ontology " + populousTemplate.getActiveOntology());
         this.activeOntology = ontologyManager.createOntology(IRI.create(populousTemplate.getActiveOntology()));
 
+        for (String iri: populousTemplate.getOntologyImports())  {
+            ontologyManager.loadOntology(IRI.create(iri));
+        }
         //set up an OWLEntityFactory
         this.cf = new CustomOWLEntityFactory(ontologyManager, activeOntology, entityCreation);
 
         //set up an OPPL ParserFactory
-//        this.errorCollector = new ErrorCollector();
         this.pf = new ParserFactory(activeOntology, ontologyManager);
-        this.parser = pf.build(errorListener);
+        this.parser = pf.build(new QuickFailErrorListener());
 
-// set up short form provider
+        // set up short form provider
         IRI iri = OWLRDFVocabulary.RDFS_LABEL.getIRI();
         OWLAnnotationProperty prop = ontologyManager.getOWLDataFactory().getOWLAnnotationProperty(iri);
         props = new ArrayList<OWLAnnotationProperty>();
@@ -85,71 +88,86 @@ public class OpplPatternExecutionService {
         shortFormProvider = new BidirectionalShortFormProviderAdapter(ontologyManager, ontologyManager.getOntologies(), provider);
         shortFromMapper = createShortFormMapper(populousTemplate.getDataRestrictions());
 
+        QuickFailRuntimeExceptionHandler handler = new QuickFailRuntimeExceptionHandler();
+
+        try {
+            validateAllPatterns(parser, populousTemplate.getPatterns());
+
+
+            for (PopulousPattern pattern : populousTemplate.getPatterns()) {
+                logger.debug("Got pattern: " + pattern.getPatternName() + "\n" + pattern.getPatternValue());
+
+                //pass the OPPL pattern string to the parser for processing
+                PatternModel patternModel = parser.parse(pattern.getPatternValue());
+
+                List<OWLAxiomChange> changes = new ArrayList<OWLAxiomChange>();
+
+                // get the pattern variables
+                if (!patternModel.getInputVariables().isEmpty()) {
+
+                    //create a map of the input variable names, eg "?disease" and the actual variable
+                    Map<String, Variable> opplVariableMap = createOPPLVariableMap(patternModel);
+
+                    int done = 0;
+                    logger.debug("About to read " + dataCollection.length + " rows");
+                    //process each row in the DataCollection, one by one
+                    for (int x =0 ; x < dataCollection.length; x ++) {
+                        // for (DataObject row : dataCollection.getDataObjects()) {
+                        logger.debug("Reading row: " + x);
+                        try {
+                            //create an instantiated pattern model based on the data in the row
+                            InstantiatedPatternModel ipm =  processDataRow(dataCollection[x], opplVariableMap, handler, patternModel);
+
+                            //pass the instantiated pattern model to a patternExecutor and add the changes to the list of all changes for this model
+                            NonClassPatternExecutor patternExecutor = new NonClassPatternExecutor(ipm, activeOntology, ontologyManager, IRI.create("http://e-lico.eu/populous#OPPL_pattern"), handler);
+                            changes.addAll(patternExecutor.visit(patternModel));
+                            done++;
+                        } catch (RuntimeException e) {
+                            // todo collect this error
+                            errorCollector.add(e.getMessage());
+                            logger.error("Error processing row " + done + ": " + e.getMessage(), e);
+                        }
+                    }
+
+                }
+                //if there are no input variables in the OPPL pattern, create an instantiated pattern model without data
+                else {
+                    InstantiatedPatternModel ipm = pf.getPatternFactory().createInstantiatedPatternModel(patternModel, handler);
+
+                    NonClassPatternExecutor patternExecutor = new NonClassPatternExecutor(ipm, activeOntology, ontologyManager, IRI.create("http://e-lico.eu/populous#OPPL_pattern"), handler);
+                    changes.addAll(patternExecutor.visit(ipm.getPatternModel().getOpplStatement()));
+
+
+                }
+                //print a list of all the changes, then apply them to the ontology
+                for (OWLAxiomChange change : changes) {
+                    logger.debug(change.toString());
+                }
+                ontologyManager.applyChanges(changes);
+            }
+        } catch (Exception e ) {
+            errorCollector.add(e.getMessage());
+        }
+
+        return activeOntology;
 
     }
 
-    public void executeOPPLPatterns() {
-
-        QuickFailRuntimeExceptionHandler handler = new QuickFailRuntimeExceptionHandler();
-
-        for (PopulousPattern pattern : populousTemplate.getPatterns()) {
-            System.err.println("Got pattern: " + pattern.getPatternName() + "\n" + pattern.getPatternValue());
-
-            //pass the OPPL pattern string to the parser for processing
-            PatternModel patternModel = parser.parse(pattern.getPatternValue());
-
-            List<OWLAxiomChange> changes = new ArrayList<OWLAxiomChange>();
-
-            // get the pattern variables
-            if (!patternModel.getInputVariables().isEmpty()) {
-
-                //create a map of the input variable names, eg "?disease" and the actual variable
-                Map<String, Variable> opplVariableMap = createOPPLVariableMap(patternModel);
-
-                // for each column, create a new short form mapper for the values that are allowed in that column
-                // shortFromMapper = createShortFormMapper();
-
-                logger.debug("Processing model");
-
-                int done = 0;
-
-//process each row in the DataCollection, one by one
-                for (int x =0 ; x < dataCollection.length; x ++) {
-//                for (DataObject row : dataCollection.getDataObjects()) {
-                    logger.debug("Reading row: " + done+1);
-
-//create an instantiated pattern model based on the data in the row
-                    InstantiatedPatternModel ipm =  processDataObject(dataCollection[x], opplVariableMap, handler, patternModel);
-
-//pass the instantiated pattern model to a patternExecutor and add the changes to the list of all changes for this model
-                    NonClassPatternExecutor patternExecutor = new NonClassPatternExecutor(ipm, activeOntology, ontologyManager, IRI.create("http://e-lico.eu/populous#OPPL_pattern"), handler);
-                    changes.addAll(patternExecutor.visit(patternModel));
-                    done++;
-                }
-
+    private void validateAllPatterns(OPPLPatternParser parser, List<PopulousPattern> patterns) {
+        for (PopulousPattern pattern : patterns) {
+            try {
+                parser.parse(pattern.getPatternValue());
+            } catch (Exception e) {
+                logger.error("Failed to validate pattern: " + pattern.getPatternName(), e);
+                throw new RuntimeException("Failed to validate pattern: " + pattern.getPatternName() + ": " + e.getMessage());
             }
-//if there are no input variables in the OPPL pattern, create an instantiated pattern model without data
-            else {
-                InstantiatedPatternModel ipm = pf.getPatternFactory().createInstantiatedPatternModel(patternModel, handler);
-
-                NonClassPatternExecutor patternExecutor = new NonClassPatternExecutor(ipm, activeOntology, ontologyManager, IRI.create("http://e-lico.eu/populous#OPPL_pattern"), handler);
-                changes.addAll(patternExecutor.visit(ipm.getPatternModel().getOpplStatement()));
-
-
-            }
-//print a list of all the changes, then apply them to the ontology
-            for (OWLAxiomChange change : changes) {
-                System.err.println(change.toString());
-            }
-            ontologyManager.applyChanges(changes);
         }
-
     }
 
     public Map<String, Variable> createOPPLVariableMap(PatternModel patternModel){
         Map<String, Variable> opplVariableMap = new HashMap<String, Variable>();
         for (Variable v : patternModel.getInputVariables()) {
-            System.err.println("Loading input variables:" + v.getName());
+            logger.debug("Loading input variables:" + v.getName());
             opplVariableMap.put(v.getName(), v);
         }
         return opplVariableMap;
@@ -170,34 +188,38 @@ public class OpplPatternExecutionService {
                 }
             }
 
-            sfMapper.put(restriction.getColumnIndex(), labelToUriMap);
+            int columnIndex = (restriction.getColumnIndex() - 1);
+            sfMapper.put(columnIndex, labelToUriMap);
         }
         return sfMapper;
     }
 
 
-    public InstantiatedPatternModel processDataObject(String [] row, Map<String, Variable> opplVariableMap, QuickFailRuntimeExceptionHandler handler, PatternModel patternModel){
+    public InstantiatedPatternModel processDataRow(String[] row, Map<String, Variable> opplVariableMap, QuickFailRuntimeExceptionHandler handler, PatternModel patternModel) {
 
         InstantiatedPatternModel ipm = pf.getPatternFactory().createInstantiatedPatternModel(patternModel, handler);
 
         for (PopulousDataRestriction populousDataRestriction : populousTemplate.getDataRestrictions()) {
 
-            int columnIndex = populousDataRestriction.getColumnIndex();
+            int columnIndex = populousDataRestriction.getColumnIndex() - 1;
 
+            logger.debug("reading col " + columnIndex);
             // see if the row has a value
             if (columnIndex < row.length) {
                 String cellValue = row[columnIndex];
+                logger.debug("Cell value: "  + cellValue);
                 if (!StringUtils.isBlank(cellValue)) {
                     String variable = populousDataRestriction.getVariableName();
 
                     //check that the variable matches an OPPL pattern input variable
+                    // if not we just ignore this column
                     if (opplVariableMap.keySet().contains(variable)) {
                         Variable v = opplVariableMap.get(variable);
                         VariableType type = v.getType();
 
                         //determine the type of the input variable: OWLClass, OWLIndividual or constant, then instantiate as appropriate
                         if (type.accept(variableVisitor).equals(5)) {
-                            logger.trace("instantiating variable:" + opplVariableMap.get(variable).getName() + " to " + cellValue);
+                            logger.debug("instantiating variable as constant:" + opplVariableMap.get(variable).getName() + " to " + cellValue);
                             String [] values = cellValue.split("\\s*\\||\\s*");
                             for (String s : values) {
                                 s = s.trim();
@@ -217,11 +239,16 @@ public class OpplPatternExecutionService {
                             }
                         }
                     }
+                    else {
+                        continue;
+                    }
                 }
                 else if (populousDataRestriction.isRequired()) {
-                    // todo throw an exception here
+                    throw new RuntimeException("Missing value at " + columnIndex+ ", which is a required restriction");
                 }
-
+            }
+            else {
+                throw new RuntimeException("Failed to process row as the number of restricted column index " + columnIndex+ " is greater than the number of columns in the data " + row.length);
             }
         }
         return ipm;
@@ -229,15 +256,23 @@ public class OpplPatternExecutionService {
 
     private Set<OWLEntity> createOWLEntitiesFromValue(String value, int type, PopulousDataRestriction populousDataRestriction) {
         Set<OWLEntity> entities = new HashSet<OWLEntity>();
-
-        if (!StringUtils.isBlank(value)) {
-            String[] values = value.split("\\s*\\||\\s*");
+        if (StringUtils.isNoneBlank(value)) {
+            String[] values = value.split("\\s*\\|\\|\\s*");
             for (String s : values) {
                 s = s.trim();
                 logger.debug("Looking up:" + s);
-                entities.addAll(createOWLEntitiesFromValue(s, type, populousDataRestriction));
-
-
+                OWLEntity entity = getEntityForValue(s, type, populousDataRestriction);
+                if (entity !=null) {
+                    entities.add(entity) ;
+                }
+            }
+        }
+        else {
+            if (!StringUtils.isBlank(populousDataRestriction.getDefaultValue())) {
+                OWLEntity entity = getEntityForValue(populousDataRestriction.getDefaultValue(), type, populousDataRestriction);
+                if (entity !=null) {
+                    entities.add(entity) ;
+                }
             }
         }
         return entities;
@@ -251,7 +286,7 @@ public class OpplPatternExecutionService {
     //save the ontology based on the output location specified in the properties file
     public void saveOntology() throws OWLOntologyStorageException {
 
-//        String location = populousTemplate.getSourceOntologyOutputLocation();
+        // String location = populousTemplate.getSourceOntologyOutputLocation();
 
 
         Date date = new Date() ;
@@ -281,33 +316,31 @@ public class OpplPatternExecutionService {
 
     //get the OWLEntities for data value shortForm, looking first in the list of valid ontology terms for this column, then in all ontologies, then if not found, create a new OWLEntity
     private OWLEntity getEntityForValue(String shortForm, Integer type, PopulousDataRestriction populousDataRestriction) {
-        OWLEntity entity = null;
 
         String cleaned = shortForm.trim();
-        cleaned = shortForm.toLowerCase();
-        if (shortFromMapper.get(populousDataRestriction.getColumnIndex()).containsKey(cleaned)) {
+        cleaned = cleaned.toLowerCase();
+        int columnIndex = (populousDataRestriction.getColumnIndex() - 1);
+        if (shortFromMapper.get(columnIndex).containsKey(cleaned)) {
 
             if (type == 1) {
-                return  ontologyManager.getOWLDataFactory().getOWLClass(shortFromMapper.get(populousDataRestriction.getColumnIndex()).get(cleaned));
+                return  ontologyManager.getOWLDataFactory().getOWLClass(shortFromMapper.get(columnIndex).get(cleaned));
             }
             else if (type == 4) {
-                return ontologyManager.getOWLDataFactory().getOWLNamedIndividual(shortFromMapper.get(populousDataRestriction.getColumnIndex()).get(cleaned));
+                return ontologyManager.getOWLDataFactory().getOWLNamedIndividual(shortFromMapper.get(columnIndex).get(cleaned));
             }
         }
 
 //        // then look in the all the ontologies
-//        if (entities.isEmpty()) {
-//            for (String s : shortFormProvider.getShortForms()) {
-//                if (s.toLowerCase().equals(shortForm.toLowerCase())) {
-//                    logger.debug("Entity found:" + s.toLowerCase());
-//                    entities.addAll(shortFormProvider.getEntities(s));
-//                }
-//                else if (s.toLowerCase().equals(shortForm.toLowerCase().replaceAll(" ", "_")) ) {
-//                    logger.debug("Entity found:" + s.toLowerCase());
-//                    entities.addAll(shortFormProvider.getEntities(s));
-//                }
-//            }
-//        }
+        for (String s : shortFormProvider.getShortForms()) {
+            if (s.toLowerCase().equals(shortForm.toLowerCase())) {
+                logger.debug("Entity found:" + s.toLowerCase());
+                return shortFormProvider.getEntity(s);
+            }
+            else if (s.toLowerCase().equals(shortForm.toLowerCase().replaceAll(" ", "_")) ) {
+                logger.debug("Entity found:" + s.toLowerCase());
+                return shortFormProvider.getEntity(s);
+            }
+        }
 
         // finally create a new entity
         return createNewEntity(shortForm, type, populousDataRestriction);
@@ -319,6 +352,7 @@ public class OpplPatternExecutionService {
 
         logger.debug("Creating new term:" + shortForm);
 
+        OWLEntity entity = null;
         if (type == 1) {
 
             boolean hasRestriction = false;
@@ -334,12 +368,13 @@ public class OpplPatternExecutionService {
                     ecs = cf.createOWLClass(shortForm, entityCreation.getDefaultBaseURI(), parent);
                 }
                 else{
+                    logger.info("creating owl class with base URI" + entityCreation.getDefaultBaseURI());
                     ecs = cf.createOWLClass(shortForm, entityCreation.getDefaultBaseURI());
                 }
                 if (ecs.getOntologyChanges() != null) {
                     ontologyManager.applyChanges(ecs.getOntologyChanges());
                     shortFormProvider.add(ecs.getOWLEntity());
-                    return ecs.getOWLEntity();
+                    entity = ecs.getOWLEntity();
                 }
             } catch (OWLEntityCreationException e) {
                 e.printStackTrace();
@@ -353,12 +388,14 @@ public class OpplPatternExecutionService {
                     ontologyManager.applyChanges(ecs.getOntologyChanges());
                 }
                 shortFormProvider.add(ecs.getOWLEntity());
-                return ecs.getOWLEntity();
+                entity = ecs.getOWLEntity();
             } catch (OWLEntityCreationException e) {
                 e.printStackTrace();
             }
         }
-        return null;
+        logger.info("new term created with URI " + entity.getIRI());
+
+        return entity;
     }
 
     private VariableTypeVisitorEx variableVisitor = new VariableTypeVisitorEx ()

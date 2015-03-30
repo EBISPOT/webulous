@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.webulous.model.PopulousDataRestriction;
+import uk.ac.ebi.spot.webulous.model.PopulousPattern;
 import uk.ac.ebi.spot.webulous.model.PopulousTemplateDocument;
-import uk.ac.ebi.spot.webulous.model.RestrictionRunDocument;
-import uk.ac.ebi.spot.webulous.model.SimplePopulousPattern;
 import uk.ac.ebi.spot.webulous.service.WebulousTemplateService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,8 +54,12 @@ public class TemplateController {
     }
 
     @RequestMapping(value = "/{templateId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getTemplateById(Model model, @PathVariable String templateId) {
+    public String getTemplateById(Model model, @PathVariable String templateId, final RedirectAttributes redirectAttributes) {
         PopulousTemplateDocument populousTemplateDocument= webulousTemplateService.findOne(templateId);
+        if (populousTemplateDocument == null) {
+            redirectAttributes.addFlashAttribute("message", "No template with id " + templateId);
+            return "redirect:/templates";
+        }
         model.addAttribute("populousTemplateDocument", populousTemplateDocument);
         return "template";
     }
@@ -100,7 +103,7 @@ public class TemplateController {
 
     @RequestMapping(value={"/new", "/{templateId}"}, params={"addPattern"})
     public String addPattern(final PopulousTemplateDocument populousTemplateDocument, final BindingResult bindingResult, Model model) {
-        populousTemplateDocument.getPatterns().add(new SimplePopulousPattern());
+        populousTemplateDocument.getPatterns().add(new PopulousPattern());
         model.addAttribute("populousTemplateDocument", populousTemplateDocument);
         return "template";
     }

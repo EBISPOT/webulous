@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.webulous;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 
@@ -10,6 +11,7 @@ import java.net.URI;
  * @date 16/03/2015
  * Samples, Phenotypes and Ontologies Team, EMBL-EBI
  */
+@Configuration
 public class WebulousRestMVCConfirguation extends RepositoryRestMvcConfiguration {
 
     @Override

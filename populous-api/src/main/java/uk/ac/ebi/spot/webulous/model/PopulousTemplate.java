@@ -12,7 +12,7 @@ import java.util.Set;
 public interface PopulousTemplate {
 
     String getId();
-    Collection<String> getAdminEmailAddresses();
+    String getAdminEmailAddresses();
     String getDescription();
     boolean isActive();
     int getDefaultNumberOfRows();

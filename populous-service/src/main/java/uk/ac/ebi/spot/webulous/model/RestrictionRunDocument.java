@@ -10,7 +10,7 @@ import java.util.Date;
  * @date 24/03/2015
  * Samples, Phenotypes and Ontologies Team, EMBL-EBI
  */
-@Document(collection = "opplrun")
+@Document(collection = "restrictionrun")
 public class RestrictionRunDocument {
 
     @Id

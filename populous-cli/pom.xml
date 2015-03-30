@@ -12,8 +12,8 @@
     <artifactId>populous-cli</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>../restriction-loader-app</module>
         <module>restriction-loader-app</module>
+        <module>oppl-runner-app</module>
     </modules>
 
 

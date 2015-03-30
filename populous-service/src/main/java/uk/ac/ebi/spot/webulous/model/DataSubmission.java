@@ -1,16 +1,23 @@
 package uk.ac.ebi.spot.webulous.model;
 
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Simon Jupp
  * @date 25/03/2015
  * Samples, Phenotypes and Ontologies Team, EMBL-EBI
  */
+@Component
 public class DataSubmission {
 
     private String templateId;
     private String reference;
     private String urigenApiKey;
     private String email;
+//    private List<List<String>> data;
     private String [][] data;
 
     public DataSubmission () {
@@ -20,6 +27,7 @@ public class DataSubmission {
     public DataSubmission (String templateId, String email) {
         this.templateId = templateId;
         this.email = email;
+//        this.data = new ArrayList<List<String>>();
         this.data = new String[0][0];
     }
 
@@ -55,11 +63,11 @@ public class DataSubmission {
         this.email = email;
     }
 
-    public String[][] getData() {
+    public String [][] getData() {
         return data;
     }
 
-    public void setData(String[][] data) {
+    public void setData( String [][] data) {
         this.data = data;
     }
 }

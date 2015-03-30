@@ -1,24 +1,22 @@
-package uk.ac.ebi.spot.webulous.model;
+package uk.ac.ebi.spot.webulous.impl;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import uk.ac.ebi.spot.webulous.model.PopulousDataRestriction;
+import uk.ac.ebi.spot.webulous.model.PopulousPattern;
+import uk.ac.ebi.spot.webulous.model.PopulousTemplate;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Simon Jupp
- * @date 12/03/2015
+ * @date 26/03/2015
  * Samples, Phenotypes and Ontologies Team, EMBL-EBI
  */
-@Document(collection = "templates")
-public class PopulousTemplateDocument implements PopulousTemplate {
+public class SimplePopulousTemplate implements PopulousTemplate {
 
-    @Id
     private String id;
 
-    @NotBlank(message = "Please enter a description")
     private String description;
 
     private boolean active;
@@ -28,36 +26,22 @@ public class PopulousTemplateDocument implements PopulousTemplate {
     private String activeOntology;
     private Set<String> ontologyImports;
 
-    @NotEmpty(message = "Please enter at least one data restriction")
     private List<PopulousDataRestriction> dataRestrictions;
 
     private List<PopulousPattern> patterns;
 
     private String adminEmailAddresses;
 
-
-    public PopulousTemplateDocument() {
-        this.active = true;
-        this.dataRestrictions = new ArrayList<PopulousDataRestriction>();
-        this.patterns = new ArrayList<PopulousPattern>();
-    }
-
-    public String getAdminEmailAddresses() {
-        return adminEmailAddresses;
-    }
-
-    public void setAdminEmailAddresses(String adminEmailAddresses) {
-        this.adminEmailAddresses = adminEmailAddresses;
+    @Override
+    public String getId() {
+        return id;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public String getId() {
-        return id;
-    }
-
+    @Override
     public String getDescription() {
         return description;
     }
@@ -66,14 +50,16 @@ public class PopulousTemplateDocument implements PopulousTemplate {
         this.description = description;
     }
 
+    @Override
     public boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean isActive) {
-        this.active = isActive;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
+    @Override
     public int getDefaultNumberOfRows() {
         return defaultNumberOfRows;
     }
@@ -82,6 +68,7 @@ public class PopulousTemplateDocument implements PopulousTemplate {
         this.defaultNumberOfRows = defaultNumberOfRows;
     }
 
+    @Override
     public String getUrigenserver() {
         return urigenserver;
     }
@@ -90,6 +77,7 @@ public class PopulousTemplateDocument implements PopulousTemplate {
         this.urigenserver = urigenserver;
     }
 
+    @Override
     public String getActiveOntology() {
         return activeOntology;
     }
@@ -98,6 +86,7 @@ public class PopulousTemplateDocument implements PopulousTemplate {
         this.activeOntology = activeOntology;
     }
 
+    @Override
     public Set<String> getOntologyImports() {
         return ontologyImports;
     }
@@ -106,22 +95,8 @@ public class PopulousTemplateDocument implements PopulousTemplate {
         this.ontologyImports = ontologyImports;
     }
 
+    @Override
     public List<PopulousDataRestriction> getDataRestrictions() {
-        Collections.sort(dataRestrictions, new Comparator<PopulousDataRestriction>() {
-            @Override
-            public int compare(PopulousDataRestriction o1, PopulousDataRestriction o2) {
-                if (o1.getColumnIndex() == 0) {
-                    return  1;
-                }
-                else if (o2.getColumnIndex() == 0) {
-                    return  -1;
-                }
-                else if (o1.getColumnIndex() <= o2.getColumnIndex()) {
-                    return -1;
-                }
-                return 1;
-            }
-        });
         return dataRestrictions;
     }
 
@@ -129,11 +104,21 @@ public class PopulousTemplateDocument implements PopulousTemplate {
         this.dataRestrictions = dataRestrictions;
     }
 
+    @Override
     public List<PopulousPattern> getPatterns() {
         return patterns;
     }
 
     public void setPatterns(List<PopulousPattern> patterns) {
         this.patterns = patterns;
+    }
+
+    @Override
+    public String getAdminEmailAddresses() {
+        return adminEmailAddresses;
+    }
+
+    public void setAdminEmailAddresses(String adminEmailAddresses) {
+        this.adminEmailAddresses = adminEmailAddresses;
     }
 }

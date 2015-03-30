@@ -3,16 +3,26 @@ package uk.ac.ebi.spot.webulous.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.webulous.model.DataSubmission;
 import uk.ac.ebi.spot.webulous.model.DataConversionRunDocument;
+import uk.ac.ebi.spot.webulous.model.RestrictionRunDocument;
 import uk.ac.ebi.spot.webulous.service.DataConversionService;
+
+import java.util.List;
 
 /**
  * @author Simon Jupp
  * @date 25/03/2015
  * Samples, Phenotypes and Ontologies Team, EMBL-EBI
  */
+@Controller
+@RequestMapping("/submissions")
 public class DataController {
 
 
@@ -25,8 +35,51 @@ public class DataController {
         return  logger;
     }
 
-    public @ResponseBody
-    SubmissionResponse submitData (DataSubmission submission) {
+    @ModelAttribute("all_submission_runs")
+    public List<DataConversionRunDocument> getDataRuns() {
+        return dataConversionService.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "lastUpdated")));
+    }
+
+    @RequestMapping(value = "", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String showDataRuns() {
+        return "submissions";
+    }
+
+    @RequestMapping(value = "/{templateId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getRunsByTemplateId(Model model, @PathVariable String templateId, final RedirectAttributes redirectAttributes) {
+        List<DataConversionRunDocument> runs = dataConversionService.findByTemplateId(templateId);
+        model.addAttribute("all_submission_runs", runs);
+        return "submissions";
+    }
+
+    @RequestMapping(value = "/{runid}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String deleteRun(Model model,@PathVariable String runid,final RedirectAttributes redirectAttributes) {
+        dataConversionService.deleteRun(runid);
+        redirectAttributes.addFlashAttribute("message", "Removed run with id: " + runid);
+        return "redirect:/submissions";
+    }
+
+
+
+    @RequestMapping(value = "/{runid}/run", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String refreshTemplate(
+            @PathVariable String runid,
+            final RedirectAttributes redirectAttributes) {
+
+        DataConversionRunDocument runDocument = dataConversionService.findOne (runid);
+
+        try {
+            dataConversionService.runDataConversion(runDocument);
+            redirectAttributes.addFlashAttribute("message", "Oppl run complete complete for : " + runDocument.getId());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", "Oppl run failed for : " + runDocument.getId() + ", message: " + e.getMessage());
+        }
+        return "redirect:/submissions";
+    }
+
+
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
+    public @ResponseBody SubmissionResponse submitData (@RequestBody DataSubmission submission) {
 
         boolean success = true;
         String message ="";

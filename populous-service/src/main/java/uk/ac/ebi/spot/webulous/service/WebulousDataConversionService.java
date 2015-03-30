@@ -170,7 +170,7 @@ public class WebulousDataConversionService {
         while(patName != null){
             if(patternNames.contains(patName)){
                 String fullPattern = ontologyConfig.getProperty("opplPattern.fullpattern."+patternCount);
-                opplPatterns.add(new SimplePopulousPattern(patName, fullPattern));
+                opplPatterns.add(new PopulousPattern(patName, fullPattern));
             }
 
             patternCount++;
