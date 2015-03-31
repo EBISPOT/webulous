@@ -55,7 +55,7 @@ public class SimpleEntityCreation implements EntityCreation {
     private String ID_LABEL_LANG;
 
     private String AUTO_ID_GENERATOR;
-    private String DEFAULT_AUTO_ID_GENERATOR_CLASS_NAME = "package PseudoRandomAutoIDGenerator";
+    private String DEFAULT_AUTO_ID_GENERATOR_CLASS_NAME = "uk.ac.ebi.spot.webulous.entity.PseudoRandomAutoIDGenerator";
 
     private String AUTO_ID_PREFIX = "[type]";
     private String AUTO_ID_SUFFIX = "";
@@ -63,7 +63,7 @@ public class SimpleEntityCreation implements EntityCreation {
     private int AUTO_ID_START = 1;
     private int AUTO_ID_END = -1;
 
-    private String DEFAULT_LABEL_DESCRIPTOR_CLASS = "package CustomLabelDescriptor";
+    private String DEFAULT_LABEL_DESCRIPTOR_CLASS = "uk.ac.ebi.spot.webulous.entity.CustomLabelDescriptor";
 
 
     public URI getDefaultBaseURI() {

@@ -116,7 +116,7 @@ public class TestOpplPatternExecutionService {
         entityCreation.setDefaultBaseURI("http://webulous.com/ontology");
         entityCreation.setAutoIDGeneratorClass(IterativeAutoIDGenerator.class);
         try {
-            OWLOntology ontology = service.executeOPPLPatterns(data, document, entityCreation, errorCollector);
+            OWLOntology ontology = service.executeOPPLPatterns("file:/Users/jupp/Dropbox/dev/webpopulous/populous-oppl/src/test/resources/new.owl", data, document, entityCreation, errorCollector);
             OWLOntologyManager manager = ontology.getOWLOntologyManager();
             try {
                 manager.saveOntology(ontology, IRI.create("file:/Users/jupp/Dropbox/dev/webpopulous/populous-oppl/src/test/resources/new.owl"));

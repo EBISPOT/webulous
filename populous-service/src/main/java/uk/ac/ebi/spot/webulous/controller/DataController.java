@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.webulous.model.DataSubmission;
 import uk.ac.ebi.spot.webulous.model.DataConversionRunDocument;
 import uk.ac.ebi.spot.webulous.model.RestrictionRunDocument;
+import uk.ac.ebi.spot.webulous.model.Status;
 import uk.ac.ebi.spot.webulous.service.DataConversionService;
 
 import java.util.List;
@@ -68,11 +69,12 @@ public class DataController {
 
         DataConversionRunDocument runDocument = dataConversionService.findOne (runid);
 
-        try {
-            dataConversionService.runDataConversion(runDocument);
+        DataConversionRunDocument dataConversionRunDocument = dataConversionService.runDataConversion(runDocument);
+        if (dataConversionRunDocument.getStatus().equals(Status.FAILED)) {
+            redirectAttributes.addFlashAttribute("error", "Oppl run failed for : " + runDocument.getId() + ", message: " + dataConversionRunDocument.getMessage());
+        }
+        else {
             redirectAttributes.addFlashAttribute("message", "Oppl run complete complete for : " + runDocument.getId());
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("message", "Oppl run failed for : " + runDocument.getId() + ", message: " + e.getMessage());
         }
         return "redirect:/submissions";
     }

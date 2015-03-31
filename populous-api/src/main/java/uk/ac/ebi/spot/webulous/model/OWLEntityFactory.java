@@ -22,6 +22,10 @@ public interface OWLEntityFactory {
      */
     OWLEntityCreationSet<OWLClass> createOWLClass(String shortName, URI baseURI) throws OWLEntityCreationException;
 
+
+    OWLEntityCreationSet<OWLClass> createOWLClass(String shortName, URI baseURI, OWLClass parent) throws OWLEntityCreationException;
+
+
     /**
      *
      * @param shortName user supplied name

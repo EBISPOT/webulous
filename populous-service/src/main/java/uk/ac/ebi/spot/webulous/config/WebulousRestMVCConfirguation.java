@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.webulous;
+package uk.ac.ebi.spot.webulous.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;

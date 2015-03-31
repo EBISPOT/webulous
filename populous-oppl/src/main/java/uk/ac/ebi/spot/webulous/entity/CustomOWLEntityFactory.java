@@ -31,8 +31,11 @@ public class CustomOWLEntityFactory implements OWLEntityFactory {
 
     private LabelDescriptor labelDescriptor;
 
-    EntityCreation entityPrefs;
+    private EntityCreation entityPrefs;
 
+    public CustomOWLEntityFactory() {
+
+    }
 
     public CustomOWLEntityFactory(OWLOntologyManager mngr, OWLOntology onto, EntityCreation entityCreation) {
         this.mngr = mngr;
@@ -40,7 +43,6 @@ public class CustomOWLEntityFactory implements OWLEntityFactory {
         this.entityPrefs = entityCreation;
 
     }
-
 
     public OWLEntityCreationSet<OWLClass> createOWLClass(String shortName, URI baseURI) throws OWLEntityCreationException {
         return createOWLEntity(OWLClass.class, shortName, baseURI);
@@ -219,7 +221,7 @@ public class CustomOWLEntityFactory implements OWLEntityFactory {
     }
 
 
-    private List<? extends OWLOntologyChange> createLabel(OWLEntity owlEntity, String value) {
+    public List<? extends OWLOntologyChange> createLabel(OWLEntity owlEntity, String value) {
         LabelDescriptor descr = getLabelDescriptor();
         URI uri = descr.getURI(entityPrefs);
         String lang = descr.getLanguage(entityPrefs);
@@ -227,10 +229,10 @@ public class CustomOWLEntityFactory implements OWLEntityFactory {
         OWLDataFactory df = mngr.getOWLDataFactory();
         OWLLiteral con;
         if (lang == null){
-            con = df.getOWLStringLiteral(value);
+            con = df.getOWLLiteral(value);
         }
         else{
-            con = df.getOWLStringLiteral(value, lang);
+            con = df.getOWLLiteral(value, lang);
         }
         OWLAnnotation anno = df.getOWLAnnotation(df.getOWLAnnotationProperty(IRI.create(uri)), con);
         OWLAxiom ax = df.getOWLAnnotationAssertionAxiom(owlEntity.getIRI(), anno);
@@ -300,7 +302,7 @@ public class CustomOWLEntityFactory implements OWLEntityFactory {
     }
 
 
-    private <T extends OWLEntity> T getOWLEntity(Class<T> type, URI uri) {
+    public <T extends OWLEntity> T getOWLEntity(Class<T> type, URI uri) {
         if (OWLClass.class.isAssignableFrom(type)){
             return (T)mngr.getOWLDataFactory().getOWLClass(IRI.create(uri));
         }

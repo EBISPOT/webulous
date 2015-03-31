@@ -50,8 +50,13 @@ public class MailService {
         mailMessage.setBcc(getTo());
         mailMessage.setFrom(getFrom());
         mailMessage.setSubject("Webulous run for " + document.getTemplateName() + ": " + document.getStatus());
+
+
+
         mailMessage.setText(
-                document.getMessage()
+                "You data submitted to webulous template " + document.getTemplateName() + " has completed with status: " + document.getStatus() + "\n\n" +
+                document.getMessage()  + "\n"
+
         );
         javaMailSender.send(mailMessage);
 

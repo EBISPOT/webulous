@@ -57,7 +57,7 @@ public class TemplateController {
     public String getTemplateById(Model model, @PathVariable String templateId, final RedirectAttributes redirectAttributes) {
         PopulousTemplateDocument populousTemplateDocument= webulousTemplateService.findOne(templateId);
         if (populousTemplateDocument == null) {
-            redirectAttributes.addFlashAttribute("message", "No template with id " + templateId);
+            redirectAttributes.addFlashAttribute("error", "No template with id " + templateId);
             return "redirect:/templates";
         }
         model.addAttribute("populousTemplateDocument", populousTemplateDocument);
