@@ -11,11 +11,24 @@
 
     <artifactId>webulous-tomcat</artifactId>
 
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <mainClass>uk.ac.ebi.spot.webulous.WebulousApp</mainClass>
+                            <finalName>webulous</finalName>
+                            <classifier>-boot</classifier>
+                        </configuration>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
