@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html   xmlns:th="http://www.thymeleaf.org"
+        xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Webulous server</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/spacelab.bootstrap.min.css" th:href="@{css/spacelab.bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{css/main.css}"/>
+</head>
+<body>
+
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Webulous</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+            <ul class="nav navbar-nav">
+                <li><a href="templates">Home</a></li>
+                <li><a href="templates/new">New template<span class="sr-only">(current)</span></a></li>
+                <li><a href="restrictions">Restriction updates</a></li>
+                <li><a href="submissions">Data submissions</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Help</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>Webulous server</h1>
+        <p>Welcome to the EMBL-EBI/NCBO Webulous server. </p>
+        <p><a class="btn btn-primary btn-lg">Learn more</a></p>
+
+    </div>
+</div>
+
+<div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Webulous Templates</h2>
+            <p>Use Webulous server to create templates for populating OWL ontologies. </p>
+            <p><a class="btn btn-default" href="templates" role="button">View existing templates &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Google spreadhseets</h2>
+            <p>Connect to a Webulous server to load templates into Google spreadsheets </p>
+            <p><a class="btn btn-default" href="#" role="button">Get the plugin &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Submit templates</h2>
+            <p>Submit data to a Webulous server and get your data transformed into lovely OWL axioms using the Ontology Pre-Processing Language (OPPL)</p>
+            <p><a class="btn btn-default" href="#" role="button">View how &raquo;</a></p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -46,8 +46,8 @@ public class DataController {
         return "submissions";
     }
 
-    @RequestMapping(value = "/{templateId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getRunsByTemplateId(Model model, @PathVariable String templateId, final RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "", params="templateId", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getRunsByTemplateId(Model model, @RequestParam("templateId") String templateId, final RedirectAttributes redirectAttributes) {
         List<DataConversionRunDocument> runs = dataConversionService.findByTemplateId(templateId);
         model.addAttribute("all_submission_runs", runs);
         return "submissions";

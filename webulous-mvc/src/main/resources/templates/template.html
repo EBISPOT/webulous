@@ -22,15 +22,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">iPopulous</a>
+            <a class="navbar-brand" href="/">Webulous</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
             <ul class="nav navbar-nav">
-                <li><a href="/templates">Home</a></li>
-                <li class="active"><a href="/templates/new">New template<span class="sr-only">(current)</span></a></li>
-                <li><a href="/restrictions">Restriction updates</a></li>
-                <li><a href="/submissions">Data submissions</a></li>
+                <li class="active"><a href="../templates">Home</a></li>
+                <li><a href="templates/new">New template<span class="sr-only">(current)</span></a></li>
+                <li><a href="../restrictions">Restriction updates</a></li>
+                <li><a href="../submissions">Data submissions</a></li>
             </ul>
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
@@ -68,8 +68,8 @@
 
                 <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-2">
-                        <a th:href="'/restrictions?templateId=' + ${populousTemplateDocument.id}" class="btn btn-primary">Restriction updates</a>
-                        <a th:href="'/submissions/' + ${populousTemplateDocument.id}" style="margin-left:1px;" class="btn btn-primary">Data submissions</a>
+                        <a th:href="'../restrictions?templateId=' + ${populousTemplateDocument.id}" class="btn btn-primary">Restriction updates</a>
+                        <a th:href="'../submissions?templateId=' + ${populousTemplateDocument.id}" style="margin-left:1px;" class="btn btn-primary">Data submissions</a>
 
                         <button type="reset" style="margin-left:1px;" class="btn btn-default pull-right">Reset</button>
                         <button type="submit" style="margin-left:1px;" class="btn btn-danger pull-right">Delete</button>
@@ -199,7 +199,7 @@
                         <div class="form-group">
                             <div class="col-lg-12">
                                 <button name="removeDataRestriction" th:value="${iterStat.index}" type="submit" style="margin-left:2px;" class="btn btn-danger btn-sm pull-right" data-placement="top" title="" data-original-title="Remove restriction">X</button>
-                                <a th:href="'/templates/' + ${populousTemplateDocument.id} + '/restrictions/' + ${iterStat.index} + ''" class="btn btn-primary btn-sm pull-right">View values</a>
+                                <a th:href="'../templates/' + ${populousTemplateDocument.id} + '/restrictions/' + ${iterStat.index} + ''" class="btn btn-primary btn-sm pull-right">View values</a>
                             </div>
                         </div>
                     </div>
