@@ -20,4 +20,5 @@ public interface PopulousTemplateRepository extends MongoRepository<PopulousTemp
 
     Page<PopulousTemplateDocument> findAll(Pageable pageable);
 
+    List<PopulousTemplateDocument> findByActive(boolean active);
 }

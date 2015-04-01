@@ -17,8 +17,9 @@
         <module>ontology-api</module>
         <module>populous-api</module>
         <module>populous-cli</module>
-        <module>populous-service</module>
-        <module>webulous</module>
+        <module>webulous-server</module>
+        <module>webulous-mvc</module>
+        <module>webulous-dependencies</module>
     </modules>
 
     <build>
@@ -160,67 +161,5 @@
   </dependencies>
 
 
-    <profiles>
-        <profile>
-            <id>localdev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <!--<build>-->
-                <!--<plugins>-->
-                    <!--&lt;!&ndash; Handy enforce plugin to check dependency convergence.  Currently only problems in third party libs &ndash;&gt;-->
-                    <!--<plugin>-->
-                        <!--<groupId>org.apache.maven.plugins</groupId>-->
-                        <!--<artifactId>maven-enforcer-plugin</artifactId>-->
-                        <!--<version>1.3</version>-->
-                        <!--<executions>-->
-                            <!--<execution>-->
-                                <!--<id>enforce</id>-->
-                                <!--<configuration>-->
-                                    <!--<rules>-->
-                                        <!--<DependencyConvergence/>-->
-                                    <!--</rules>-->
-                                <!--</configuration>-->
-                                <!--<goals>-->
-                                    <!--<goal>enforce</goal>-->
-                                <!--</goals>-->
-                                <!--<phase>validate</phase>-->
-                            <!--</execution>-->
-                        <!--</executions>-->
-                    <!--</plugin>-->
-                <!--</plugins>-->
-            <!--</build>-->
-
-            <properties>
-                <ontology.location>/home/dwelter/CodeCellar/webpopulous/webulous/src/main/resources</ontology.location>
-                <test.ontology.location>/home/dwelter/CodeCellar/webpopulous/webulous/src/main/resources</test.ontology.location>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <ontology.location>/ebi/microarray/home/fgpt/sw/webulous</ontology.location>
-                <test.ontology.location>/ebi/microarray/home/fgpt/sw/webulous</test.ontology.location>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>test</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <ontology.location>/nfs/public/rw/fg/fgpt/webulous</ontology.location>
-                <test.ontology.location>/ebi/microarray/home/fgpt/sw/webulous</test.ontology.location>
-            </properties>
-        </profile>
-
-
-    </profiles>
 
 </project>

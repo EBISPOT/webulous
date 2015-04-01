@@ -272,9 +272,6 @@ public class OpplPatternExecutionService {
                             }
                         }
                     }
-                    else {
-                        continue;
-                    }
                 }
                 else if (populousDataRestriction.isRequired()) {
                     throw new RuntimeException("Missing value at " + columnIndex+ ", which is a required restriction");
@@ -310,42 +307,6 @@ public class OpplPatternExecutionService {
         }
         return entities;
     }
-
-    //save the ontology to the designated location
-    private void saveOntology(IRI file) throws OWLOntologyStorageException {
-        ontologyManager.saveOntology(activeOntology, file);
-    }
-
-    //save the ontology based on the output location specified in the properties file
-    private void saveOntology() throws OWLOntologyStorageException {
-
-        // String location = populousTemplate.getSourceOntologyOutputLocation();
-
-
-        Date date = new Date() ;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss") ;
-
-//        String outputFileName = location.concat(dateFormat.format(date)).concat(".owl");
-
-//        ontologyManager.saveOntology(activeOntology, IRI.create(outputFileName));
-    }
-
-
-    //acquire all the OWLEntities associated with this data field
-//    private Set<OWLEntity> getOWLEntities(String value, Integer type) {
-//        Set<OWLEntity> entities = new HashSet<OWLEntity>();
-//
-//        if (!StringUtils.isBlank(value)) {
-//            String [] values = value.split("\\s*\\||\\s*");
-//            for (String s : values) {
-//                s = s.trim();
-//                logger.debug("Looking up:" + s);
-//                entities.addAll(getEntityShortForms(s, type, field.getIndex(), field.getRestrictionIndex()));
-//            }
-//        }
-//
-//        return entities;
-//    }
 
     //get the OWLEntities for data value shortForm, looking first in the list of valid ontology terms for this column, then in all ontologies, then if not found, create a new OWLEntity
     private OWLEntity getEntityForValue(String shortForm, Integer type, PopulousDataRestriction populousDataRestriction) {

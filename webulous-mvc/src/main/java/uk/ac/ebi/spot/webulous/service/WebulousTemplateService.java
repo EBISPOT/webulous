@@ -35,6 +35,10 @@ public class WebulousTemplateService implements TemplateService<PopulousTemplate
         return this.templateRepository.findAll();
     }
 
+    public List<PopulousTemplateDocument> findActive() {
+        return this.templateRepository.findByActive(true);
+    }
+
     public Page<PopulousTemplateDocument> findAll(Pageable pageable) {
         return this.templateRepository.findAll(pageable);
     }

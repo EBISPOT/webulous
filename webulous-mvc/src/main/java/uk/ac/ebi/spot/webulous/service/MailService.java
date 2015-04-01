@@ -24,7 +24,7 @@ import java.util.Date;
 public class MailService {
 
     @Autowired
-    private  JavaMailSender javaMailSender;
+    private JavaMailSender javaMailSender;
 
     // Reading these from application.properties
     @Value("${mail.from}")

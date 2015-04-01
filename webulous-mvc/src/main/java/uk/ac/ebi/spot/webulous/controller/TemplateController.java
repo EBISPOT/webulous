@@ -1,22 +1,24 @@
 package uk.ac.ebi.spot.webulous.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.webulous.model.PopulousDataRestriction;
 import uk.ac.ebi.spot.webulous.model.PopulousPattern;
 import uk.ac.ebi.spot.webulous.model.PopulousTemplateDocument;
+import uk.ac.ebi.spot.webulous.model.TemplateSummary;
 import uk.ac.ebi.spot.webulous.service.WebulousTemplateService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -34,6 +36,22 @@ public class TemplateController {
     @ModelAttribute("all_templates")
     public List<PopulousTemplateDocument> getTemplates() {
         return webulousTemplateService.findAll();
+    }
+
+    @ModelAttribute("all_templates")
+    public Page<PopulousTemplateDocument> getTemplates(Pageable pageable) {
+        return webulousTemplateService.findAll(pageable);
+    }
+
+
+    @RequestMapping(value = "", produces="application/json", method = RequestMethod.GET)
+    public @ResponseBody
+    Collection<TemplateSummary> getTemplateSummary() {
+        Collection<TemplateSummary> templateSummaries = new HashSet<TemplateSummary>();
+        for (PopulousTemplateDocument document : webulousTemplateService.findActive()) {
+            templateSummaries.add(new TemplateSummary(document.getId(), document.getDescription()));
+        }
+        return templateSummaries;
     }
 
     @RequestMapping("")

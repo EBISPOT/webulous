@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>webulous</artifactId>
+    <artifactId>webulous-server</artifactId>
 
     <build>
         <plugins>
@@ -42,7 +42,7 @@
 
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>populous-service</artifactId>
+            <artifactId>webulous-mvc</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
