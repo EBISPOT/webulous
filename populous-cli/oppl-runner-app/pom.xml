@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
-            <artifactId>populous-service</artifactId>
+            <artifactId>webulous-mvc</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
 
