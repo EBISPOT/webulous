@@ -26,3 +26,9 @@ Find the WAR file
 
     webulous-server/webulous-war/target/webulous-<version>.war
 
+Start Webulous on port 8080 with Docker
+------------------------
+
+    docker run -d -p 8080:8080 simonjupp/webpopulous 
+
+Assuming you are running on localhost the webulous server will be running at http://localhost:8080/webulous
