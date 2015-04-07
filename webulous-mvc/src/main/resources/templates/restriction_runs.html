@@ -82,14 +82,14 @@
                 <tr th:each="restrictionRun : ${all_restriction_runs}">
                     <td th:text="${restrictionRun.id}">run id</td>
                     <td>
-                        <a th:href="'/templates/' + ${restrictionRun.templateId}" th:text="${restrictionRun.templateName}">Template name</a>
+                        <a th:href="'templates/' + ${restrictionRun.templateId}" th:text="${restrictionRun.templateName}">Template name</a>
                     </td>
                     <td th:text="${restrictionRun.status}">status</td>
                     <td th:text="${restrictionRun.message}">message</td>
                     <td th:text="${restrictionRun.lastUpdate}">date</td>
                     <td>
-                        <a th:href="'/restrictions/' + ${restrictionRun.id} + '/delete'" style="margin-left:1px;" class="btn btn-sm btn-danger">Delete</a>
-                        <a th:href="'/restrictions/' + ${restrictionRun.id} + '/run'" style="margin-left:1px;" class="btn btn-sm btn-warning">Force</a>
+                        <a th:href="'restrictions/' + ${restrictionRun.id} + '/delete'" style="margin-left:1px;" class="btn btn-sm btn-danger">Delete</a>
+                        <a th:href="'restrictions/' + ${restrictionRun.id} + '/run'" style="margin-left:1px;" class="btn btn-sm btn-warning">Force</a>
                     </td>
                 </tr>
                 </tbody>

@@ -80,15 +80,15 @@
                 <tr th:each="dataRun : ${all_submission_runs}">
                     <td th:text="${dataRun.id}">run id</td>
                     <td>
-                        <a th:href="'/templates/' + ${dataRun.templateId}" th:text="${dataRun.templateName}">Template name</a>
+                        <a th:href="'templates/' + ${dataRun.templateId}" th:text="${dataRun.templateName}">Template name</a>
                     </td>
                     <td th:text="${dataRun.reference}">reference</td>
                     <td th:text="${dataRun.status}">status</td>
                     <td th:text="${dataRun.message}">message</td>
                     <td th:text="${dataRun.lastUpdated}">date</td>
                     <td>
-                        <a th:href="'/submissions/' + ${dataRun.id} + '/delete'" style="margin-left:1px;" class="btn btn-sm btn-danger">Delete</a>
-                        <a th:href="'/submissions/' + ${dataRun.id} + '/run'" style="margin-left:1px;" class="btn btn-sm btn-warning">Force</a>
+                        <a th:href="'submissions/' + ${dataRun.id} + '/delete'" style="margin-left:1px;" class="btn btn-sm btn-danger">Delete</a>
+                        <a th:href="'submissions/' + ${dataRun.id} + '/run'" style="margin-left:1px;" class="btn btn-sm btn-warning">Force</a>
                     </td>
                 </tr>
                 </tbody>
