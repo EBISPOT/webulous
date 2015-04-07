@@ -21,12 +21,13 @@ Run with embedded tomcat
 
     java -jar webulous-server/webulous-tomcat/target/webulous-boot.jar
 
-Find the WAR file
+
+Or deploy the following WAR file in your favourite servlet container 
 ------------------------
 
     webulous-server/webulous-war/target/webulous-<version>.war
 
-Start Webulous on port 8080 with Docker
+Or run the Webulous server directly with Docker
 ------------------------
 
     docker run -d -p 8080:8080 simonjupp/webpopulous 
