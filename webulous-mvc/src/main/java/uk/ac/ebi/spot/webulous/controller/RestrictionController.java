@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.webulous.model.PopulousDataRestriction;
 import uk.ac.ebi.spot.webulous.model.PopulousTemplateDocument;
 import uk.ac.ebi.spot.webulous.model.RestrictionRunDocument;
+import uk.ac.ebi.spot.webulous.model.Status;
 import uk.ac.ebi.spot.webulous.service.RestrictionService;
 import uk.ac.ebi.spot.webulous.service.WebulousTemplateService;
 
@@ -61,8 +62,13 @@ public class RestrictionController {
 
         RestrictionRunDocument runDocument = restrictionService.findOne (runid);
 
-        restrictionService.run(runDocument);
-        redirectAttributes.addFlashAttribute("message", "Refresh restriction values complete for : " + runDocument.getId());
+        runDocument = restrictionService.run(runDocument);
+        if (runDocument.getStatus().equals(Status.COMPLETE) ) {
+            redirectAttributes.addFlashAttribute("message", "Refresh restriction values complete for : " + runDocument.getId());
+        }
+        else if (runDocument.getStatus().equals(Status.FAILED)) {
+            redirectAttributes.addFlashAttribute("error", "Refresh restrictions failed for " + runDocument.getId() + ": " + runDocument.getMessage() );
+        }
         return "redirect:/restrictions";
     }
 

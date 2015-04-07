@@ -66,7 +66,7 @@ public class RestrictionService {
         }
     }
 
-    public void run(RestrictionRunDocument restrictionRunDocument) {
+    public RestrictionRunDocument run(RestrictionRunDocument restrictionRunDocument) {
         // set the status and update
         restrictionRunDocument.setStatus(Status.UPDATING);
         restrictionRunDocument.setLastUpdate(new Date());
@@ -126,14 +126,15 @@ public class RestrictionService {
                 restrictionRunRepository.save(restrictionRunDocument);
             }
         }
+        return restrictionRunDocument;
     }
 
     private String[][] createValuesArray(List<OWLClass> classes, OntologyDAO dao) {
         String [][] values;
         values = new String[classes.size()][2];
         for (int x = 0; x<classes.size(); x++) {
-            values[x][0] = classes.get(x).getIRI().toString();
-            values[x][1] = dao.getRendering(classes.get(x));
+            values[x][0] = dao.getRendering(classes.get(x));
+            values[x][1] = classes.get(x).getIRI().toString();
         }
         return values;
 

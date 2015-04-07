@@ -98,16 +98,16 @@
                     <table class="table table-striped table-hover ">
                         <thead>
                         <tr>
-                            <th>Value URI</th>
                             <th>Value label</th>
+                            <th>Value URI</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="value : ${populousRestriction.values}">
+                            <td th:text="${value[0]}">some label</td>
                             <td>
-                                <a th:href="${value[0]}" th:text="${value[0]}">http://www.example.com/example</a>
+                                <a th:href="${value[1]}" th:text="${value[1]}">http://www.example.com/example</a>
                             </td>
-                            <td th:text="${value[1]}">some label</td>
                         </tr>
                         </tbody>
                     </table>

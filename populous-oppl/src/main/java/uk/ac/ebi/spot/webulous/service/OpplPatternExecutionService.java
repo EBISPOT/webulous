@@ -212,8 +212,8 @@ public class OpplPatternExecutionService {
         for(PopulousDataRestriction restriction : dataRestrictions){
             Map<String, IRI> labelToUriMap = new HashMap<String, IRI>();
             for (int x = 0; x <restriction.getValues().length; x++) {
-                String uri = restriction.getValues()[x][0];
-                String label = restriction.getValues()[x][1];
+                String label = restriction.getValues()[x][0];
+                String uri = restriction.getValues()[x][1];
                 if (!StringUtils.isBlank(label)) {
                     label = label.trim();
                     label = label.toLowerCase();

@@ -52,10 +52,10 @@ public class TestOpplPatternExecutionService {
         dr2.setRestrictionType(RestrictionType.DESCENDANTS);
         dr2.setClassExpression("SeafoodTopping");
         String[][] fishValues = new String[2][2];
-        fishValues[0][0] = "http://www.pizza.com/ontologies/pizza.owl#AnchovyTopping";
-        fishValues[0][1] = "AnchovyTopping";
-        fishValues[1][0] = "http://www.pizza.com/ontologies/pizza.owl#PrawnTopping";
-        fishValues[1][1] = "PrawnTopping";
+        fishValues[0][0] = "AnchovyTopping";
+        fishValues[0][1] = "http://www.pizza.com/ontologies/pizza.owl#AnchovyTopping";
+        fishValues[1][0] = "PrawnTopping";
+        fishValues[1][1] = "http://www.pizza.com/ontologies/pizza.owl#PrawnTopping";
         dr2.setValues(fishValues);
 
         PopulousDataRestriction dr3 = new PopulousDataRestriction(3, "Meat toppings");
@@ -63,10 +63,10 @@ public class TestOpplPatternExecutionService {
         dr3.setClassExpression("MeatTopping");
         dr3.setRestrictionType(RestrictionType.DESCENDANTS);
         String[][] meatValues = new String[2][2];
-        meatValues[0][0] = "http://www.pizza.com/ontologies/pizza.owl#HamTopping";
-        meatValues[0][1] = "HamTopping";
-        meatValues[1][0] = "http://www.pizza.com/ontologies/pizza.owl#SalamiTopping";
-        meatValues[1][1] = "SalamiTopping";
+        meatValues[0][0] = "HamTopping";
+        meatValues[0][1] = "http://www.pizza.com/ontologies/pizza.owl#HamTopping";
+        meatValues[1][0] = "SalamiTopping";
+        meatValues[1][1] = "http://www.pizza.com/ontologies/pizza.owl#SalamiTopping";
         dr3.setValues(meatValues);
 
 
