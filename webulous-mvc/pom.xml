@@ -13,6 +13,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>webulous-mvc</artifactId>
     <version>0.1-SNAPSHOT</version>
 
