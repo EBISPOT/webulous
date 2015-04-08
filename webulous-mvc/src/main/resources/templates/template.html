@@ -72,8 +72,8 @@
                         <a th:href="'../submissions?templateId=' + ${populousTemplateDocument.id}" style="margin-left:1px;" class="btn btn-primary">Data submissions</a>
 
                         <button type="reset" style="margin-left:1px;" class="btn btn-default pull-right">Reset</button>
-                        <button type="submit" style="margin-left:1px;" class="btn btn-danger pull-right">Delete</button>
-                        <button type="submit" style="margin-left:1px;" class="btn btn-success pull-right">Save</button>
+                        <button name="save" style="margin-left:1px;" class="btn btn-danger pull-right">Delete</button>
+                        <button name="delete" type="submit" style="margin-left:1px;" class="btn btn-success pull-right">Save</button>
                     </div>
                 </div>
                 <div th:if="${populousTemplateDocument.id}">

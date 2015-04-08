@@ -97,4 +97,8 @@ public class WebulousTemplateService implements TemplateService<PopulousTemplate
         }
         return restrictionRunDocument;
     }
+
+    public void remove(PopulousTemplateDocument populousTemplateDocument) {
+        templateRepository.delete(populousTemplateDocument.getId());
+    }
 }

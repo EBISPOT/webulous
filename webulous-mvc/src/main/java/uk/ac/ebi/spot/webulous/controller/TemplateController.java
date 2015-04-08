@@ -95,9 +95,21 @@ public class TemplateController {
         populousTemplateDocument = webulousTemplateService.save(populousTemplateDocument);
         redirectAttributes.addFlashAttribute("message", "Successfully updated template: " + populousTemplateDocument.getId());
 
-//        PopulousTemplateDocument templateDocument= webulousTemplateService.findOne(templateId);
-//        model.addAttribute("document", templateDocument);
         return "redirect:/templates/" + populousTemplateDocument.getId();
+    }
+
+
+    @RequestMapping(value = "/{templateId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST, params={"delete"})
+    public String deleteTemplate(
+            @ModelAttribute PopulousTemplateDocument populousTemplateDocument,
+            Model model,
+            BindingResult bindingResult,
+            @PathVariable String templateId,
+            final RedirectAttributes redirectAttributes) {
+
+        webulousTemplateService.remove(populousTemplateDocument);
+        redirectAttributes.addFlashAttribute("message", "Successfully removed template: " + populousTemplateDocument.getId());
+        return "redirect:/templates";
     }
 
     @RequestMapping(value={"/new", "/{templateId}"}, params={"addDataRestriction"})
