@@ -16,16 +16,14 @@ Maven build
 
     mvn package
 
+This will build a WAR file in webulous-mvc/target/webulous-boot.war that can be deployed in your
+favourite container or executed directly with an embedded tomcat using
+
 Run with embedded tomcat
 ------------------------
 
-    java -jar webulous-server/webulous-tomcat/target/webulous-boot.jar
+    java -jar    webulous-mvc/target/webulous-boot.war
 
-
-Or deploy the following WAR file in your favourite servlet container 
-------------------------
-
-    webulous-server/webulous-war/target/webulous-<version>.war
 
 Or run the Webulous server directly with Docker
 ------------------------

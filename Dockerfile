@@ -8,4 +8,4 @@ RUN apt-get update && \
     git clone https://github.com/EBISPOT/webpopulous.git && \
     cd webpopulous && \
     mvn clean package && \
-    cp webulous-server/webulous-war/target/*.war $CATALINA_HOME/webapps/webulous.war
+    cp webulous-mvc/target/webulous-boot.war $CATALINA_HOME/webapps/webulous.war
