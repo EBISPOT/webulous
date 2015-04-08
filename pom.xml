@@ -19,6 +19,7 @@
         <module>populous-cli</module>
         <!--<module>webulous-server</module>-->
         <module>webulous-mvc</module>
+        <module>webulous-service</module>
     </modules>
 
     <build>
