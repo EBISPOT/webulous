@@ -17,7 +17,7 @@
         <module>ontology-api</module>
         <module>populous-api</module>
         <module>populous-cli</module>
-        <module>webulous-server</module>
+        <!--<module>webulous-server</module>-->
         <module>webulous-mvc</module>
     </modules>
 
