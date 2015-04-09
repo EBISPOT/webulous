@@ -36,7 +36,7 @@ public class LoaderApp  implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
 
-        System.out.println("creating a new teamplate");
+        System.out.println("creating a new template");
         PopulousTemplateDocument document = new PopulousTemplateDocument();
         document.setDescription("Pizza template");
         document.setActive(true);
@@ -108,8 +108,8 @@ public class LoaderApp  implements CommandLineRunner {
 
         restrictionRunRepository.deleteAll();
         dataRunRepository.deleteAll();
-//        templateRepository.deleteAll();
-//        templateRepository.save(document);
+        templateRepository.deleteAll();
+        templateRepository.save(document);
 
         System.out.println("saved!");
 

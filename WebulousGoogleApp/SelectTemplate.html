@@ -3,10 +3,10 @@
 
 
 <div>
-
+          
           <div align="left">
           </div>
-
+          
           <div align="left">
            <table>
             <tr>
@@ -14,20 +14,21 @@
               <input  size="45" class="serverSelect" type="text" placeholder="Enter Webulous server URL">
              </td>
              <td align="right">
-               <input id="getTemplateButton" type="button" value="Get" onclick="google.script.run.withSuccessHandler(showTemplates).getTemplates($('.serverSelect').val());"/></td>
+               <input id="getTemplateButton" type="button" value="Get" onclick="google.script.run.withFailureHandler(onFailure).withSuccessHandler(showTemplates).getTemplates($('.serverSelect').val());"/></td>
             </tr>
           </table>
-          <i>e.g."http://www.ebi.ac.uk/~jupp/downloads"</i>
+          <i>e.g."http://54.148.43.5:8080/webulous"</i>
           <hr/>
-
+          
            <div align="center">
              <select style="width:100%" class="templateSelect">
-              <option value="" disabled selected>Choose a template</option>
-             </select>
+              <option value="" disabled="disabled" selected="selected">Choose a template</option>
+             </select>  
           </div>
-
+          
           <br/><br/>
-
+          <p class="errorMessage" style="display:none; color:red;">Failed to connect to template server</p>
+            
           <div align="right">
            <table>
             <tr>
@@ -41,7 +42,7 @@
                 <td><input type="button" value="Cancel" onclick="google.script.host.close();" /></td>
             </tr>
           </table>
-
+          
 
  </div>
 </div>
@@ -54,15 +55,17 @@ function enableButton () {
 
 function showTemplates(data) {
  if (data == null) {
-  alert("Couldn't find any templates at this server");
+     $('.errorMessage').text("Couldn't find any templates at this server");
+     $('.errorMessage').show();
  }
  else if (data.length == 0) {
-  alert("No templates defined on this server");
+     $('.errorMessage').text("No templates defined on this server");
+     $('.errorMessage').show();
  }
  else {
    $('select.templateSelect').html('');
    for (var i = 0; i < data.length ; i++) {
-     $('select.templateSelect').append("<option value='" + data[i].id + "'>" + data[i].name + "</option>");
+     $('select.templateSelect').append("<option value='" + data[i].id + "'>" + data[i].description + "</option>");
    }
    enableButton();
  }
@@ -70,12 +73,17 @@ function showTemplates(data) {
 
 function templateSelected () {
  $('div.loading').show();
- google.script.run.withSuccessHandler(onSuccess).setSource($('.serverSelect').val(), $('select.templateSelect').val());
+ google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).setSource($('.serverSelect').val(), $('select.templateSelect').val());
+}
+
+
+function onFailure(error){
+    $('.errorMessage').text(error);
+    $('.errorMessage').show();
 }
 
 function onSuccess(){
     google.script.host.close();
-    //google.script.run.showSidebar();
 }
 
 

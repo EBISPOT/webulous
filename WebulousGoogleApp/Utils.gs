@@ -19,3 +19,11 @@ function letterToColumn(letter)
   }
   return column;
 }
+
+function showToast(msg, title, timeout) {
+ SpreadsheetApp.getActiveSpreadsheet().toast(msg,title, timeout);
+}
+
+
+
+                                         
