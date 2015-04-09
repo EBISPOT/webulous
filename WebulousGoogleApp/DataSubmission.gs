@@ -1,5 +1,13 @@
 
 
+/**
+ * Submits data in the actove sheet to the Webulous server
+ *
+ * @param {string} comment optional comment on the submission
+ * @param {string} apikey optional API key for URIGen users
+ *
+ */
+
 function submitData(comment, apikey) {
   var ui = SpreadsheetApp.getUi();    
 
@@ -11,13 +19,13 @@ function submitData(comment, apikey) {
   var data = getData();
   
   if (url == null || templateId == null) {
-   ui.alert ("No template server configured, you must load an existing template from an existing Webulous server") ;
+    throw new Error ("No template server configured, you must load an existing template from an existing Webulous server") ;
   }
   else if (email == null) {
-    ui.alert("You must be logged in with a valid google account and email to use this service");
+      throw new Error ("You must be logged in with a valid google account and email to use this service");
   }
   else if (data.length == 0) {
-   ui.alert("You must supply at least one row of data"); 
+      throw new Error ("You must supply at least one row of data");
   }
   else {
     
@@ -37,15 +45,18 @@ function submitData(comment, apikey) {
     var response = UrlFetchApp.fetch(submissionURL, options);
     var responseJson = JSON.parse(response)
     var message = responseJson.message;
-    
-    Logger.log(response);
-    
+
     SpreadsheetApp.getActiveSpreadsheet().toast(message, 'Status');      
     
   }
 }
 
-
+/**
+ * Get the data form the active sheet ignoring first row
+ *
+ * @return {data[][]} 2D array of values form the active spreadsheet
+ *
+ */
 
 function getData(){
  //process the spreadsheet row by row 

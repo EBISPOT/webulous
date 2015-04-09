@@ -226,7 +226,7 @@
 
                             <label th:for="'patternValue-' + ${iterStat.index}" for="patternValue" class="col-lg-2 control-label">Pattern Value</label>
                             <div class="col-lg-10" th:id="'patternValue-' + ${iterStat.index}" id="patternValue">
-                                <textarea th:field="*{patterns[__${iterStat.index}__].patternValue}" name="patternValue" class="form-control">
+                                <textarea rows="6" th:field="*{patterns[__${iterStat.index}__].patternValue}" name="patternValue" class="form-control">
 
                                 </textarea>
                             </div>

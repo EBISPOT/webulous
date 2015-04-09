@@ -116,6 +116,12 @@ public abstract class OntologyDAOImpl implements OntologyDAO {
         if (StringUtils.isBlank(render)) {
             render = owlClass.getIRI().toString();
         }
+
+            // remove single quotes
+        if (render.contains(" ") && render.startsWith("'") && render.endsWith("'")) {
+            render = render.substring(1, (render.length() -1));
+        }
+
         return  render;
     }
 

@@ -1,194 +1,192 @@
 <!doctype html>
 <html lang="en">
- <head>
+<head>
 
-<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css" />
-   
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//ssl.gstatic.com/docs/script/css/add-ons.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 </head>
 
 <body>
 
 <div style="margin-left: 10px; margin-right: 10px; height:90%; margin-top: 10px" id="dataRestriction">
- <!-- header -->
- <div id="importOntology" style="padding-bottom:2px; width:100%; top:0; ">
+    <!-- header -->
+    <div id="importOntology" style="padding-bottom:2px; width:100%; top:0; ">
 
-         
-         <div class="ontologyDropdown" style="padding-bottom:2px;">
-         <? var source = getBioPortalOntologies();?>
-         <select style="width:280px;" class="ontologySelect">
-         <option value="" selected>Search all ontologies</option>
-         <?  
+
+        <div class="ontologyDropdown" style="padding-bottom:2px;">
+            <? var source = getBioPortalOntologies();?>
+            <select style="width:280px;" class="ontologySelect">
+                <option value="" selected>Search all ontologies</option>
+                <?
                  
               //var iri = "@id";
               for(var i=0; i < source.length; i++){
                if(source[i] != null){ ?>
                 <option value="<?=source[i].acronym;?>"><?=source[i].name; ?> (<?=source[i].acronym; ?>)</option>
 
-         <?}
+                <?}
          }?>
-         </select>      
-         </div>
+            </select>
+        </div>
 
- <div>
-      <table>
-       <tr>
-        <td style="width:100%">
-         <input id="search-box" name="query" class="queryString" style="height:20px;width:95%;"/>
-        </td>
-        <td>
-         <button id="search-button" onclick="doBioPortalSearch($('.queryString').val(), $('.ontologySelect').val());">Go</button>
-        </td>
-       </tr>
-      </table>
-     
- </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:100%">
+                        <input id="search-box" name="query" class="queryString" style="height:20px;width:95%;"/>
+                    </td>
+                    <td>
+                        <button id="search-button" onclick="doBioPortalSearch($('.queryString').val(), $('.ontologySelect').val());">Go</button>
+                    </td>
+                </tr>
+            </table>
 
- <div style="height:30px">
+        </div>
 
-   <div class="loading" style="margin-right:-10px;float:left;visibility:hidden;">
-    <img style="height:20px;width:20px;" src="https://5079980847011989849-a-1802744773732722657-s-sites.googlegroups.com/site/scriptsexamples/ProgressSpinner.gif"/>
-    Fetching data from bioportal, please wait...
-   </div>
- </div>
+        <div style="height:30px">
+
+            <div class="loading" style="margin-right:-10px;float:left;visibility:hidden;">
+                <img style="height:20px;width:20px;" src="https://5079980847011989849-a-1802744773732722657-s-sites.googlegroups.com/site/scriptsexamples/ProgressSpinner.gif"/>
+                Fetching data from bioportal, please wait...
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+    <!-- search results -->
+    <div class="searchdiv" style="height:490px;margin-bottom:20px;overflow-y:scroll;">
+        <div class="searchresults">
+        </div>
+    </div>
+
+
+    <div id="restrictions" style="background: white;height:50px;width:100%; bottom:0;position:fixed;">
+
+        <div align="center">
+            <span style="font-size:smaller;color:gray;">Webulous - developed by EMBL-EBI</span><br/>
+            <span style="font-size:smaller;color:gray;">Powered by NCBO BioPortal</span>
+        </div>
+
+    </div>
+
 </div>
 
-<hr/>
-<!-- search results -->
-<div class="searchdiv" style="height:490px;margin-bottom:20px;overflow-y:scroll;">
-      <div class="searchresults">
-      </div>
-</div>
-
-
-<div id="restrictions" style="background: white;height:50px;width:100%; bottom:0;position:fixed;"> 
-
-   <div align="center">
-       <span style="font-size:smaller;color:gray;">Webulous - developed by EMBL-EBI</span><br/>
-       <span style="font-size:smaller;color:gray;">Powered by NCBO BioPortal</span>
-   </div>
-  
-</div>
-
-</div>
- 
 <script>
 
-$( document ).ready(function() {
-    //google.script.run.withSuccessHandler(renderOntologyDropdown).getBioPortalOntologies();
-    $("#search-box").keyup(function(event){
-    if(event.keyCode == 13){
-        $("#search-button").click();
-    }
-});
-});
-
-$(window).on('load resize', function(){
-     $('.searchdiv').height($(this).height());
-});
-    
-function renderSearchResults(json) {
-  $(".searchresults").html('');
-
-  if (json.collection.length > 0) {
-  
-   for(var i=0; i<json.collection.length; i++){ 
-    var record = json.collection[i]; 
-    var label = record.prefLabel;
-    var ontologyUri = record.links.ontology;
-    var n = ontologyUri.lastIndexOf('/');
-    var ontology = ontologyUri.substring(n + 1);
-
-    var definition = "";
-    if (record.definition != null) {
-     definition = record.definition[0];
-     if (definition.length > 150) {
-     definition = definition.substr(0, 150) + '…';
-     }
-    }
-
-    var iri = record["@id"];
-    var bp_iri = record.links.ui;
-    var wbaction = "wb-action-" + i;
-
-    var buttondiv = 
-            $("<div align=\"center\" class=\"" + wbaction + "\" style=\"z-index:10;position:relative;height:100%;width:100%;display:none;bottom:0;\">" +
-               "<input style=\"padding:2px 5px;\" type=\"button\" value=\"Insert\" onclick=\"setRestriction(" + i + ")\"> " +
-               "<input style=\"padding:2px 5px;\" type=\"button\" value=\"Subclasses\" onclick=\"setRestrictionsFromBP(" + i + ", 'children')\"> " +
-               "<input style=\"padding:2px 5px;\" type=\"button\" value=\"Descendants\" onclick=\"setRestrictionsFromBP(" + i + ", 'descendants')\"></div>");  
-    var div = $("<div style=\"border: 1px solid transparent;position:relative;margin:2px;padding:3px;\" class=\"action-" + i + "\">");
- 
-    div.on ('mouseover', function() {   
-      $(this).css("border", "solid 1px gray");
-      var id = "wb-" + $(this).attr('class'); 
-      $("." + id).show();
+    $( document ).ready(function() {
+        $("#search-box").keyup(function(event){
+            if(event.keyCode == 13){
+                $("#search-button").click();
+            }
+        });
     });
-    div.on ('mouseout', function() {  
-      $(this).css("border", "solid 1px transparent");
-      var id = "wb-" + $(this).attr('class'); 
-      $("." + id).hide();
+
+    $(window).on('load resize', function(){
+        $('.searchdiv').height($(this).height());
     });
-     
-    div.append("<div><a style=\"font-size: 90%;text-decoration: underline;\" href=\"" + bp_iri + "\">"  + label + " (" + ontology + ")</a></div>");  
-    div.append("<div style=\"font-size: 70%;color:green;\">" + iri + "</div>");  
-    div.append("<div style=\"font-size: 85%;\">" + definition + "</div>");  
-    div.append("<input type=\"hidden\" class=\"term-iri-" + i + "\" value=\"" + iri + "\"/>");  
-    div.append("<input type=\"hidden\" class=\"term-ontology-" + i + "\" value=\"" + ontology + "\"/>");  
-    div.append("<input type=\"hidden\" class=\"term-label-" + i + "\" value=\"" + label + "\"/>");  
-    div.append(buttondiv);
-    
-    $(".searchresults").append(div);
-   }
-  }
-  else {
-    $("div.searchresults").html("<p>No results</p>");
+
+    function renderSearchResults(json) {
+        $(".searchresults").html('');
+
+        if (json.collection.length > 0) {
+
+            for(var i=0; i<json.collection.length; i++){
+                var record = json.collection[i];
+                var label = record.prefLabel;
+                var ontologyUri = record.links.ontology;
+                var n = ontologyUri.lastIndexOf('/');
+                var ontology = ontologyUri.substring(n + 1);
+
+                var definition = "";
+                if (record.definition != null) {
+                    definition = record.definition[0];
+                    if (definition.length > 150) {
+                        definition = definition.substr(0, 150) + '…';
+                    }
+                }
+
+                var iri = record["@id"];
+                var bp_iri = record.links.ui;
+                var wbaction = "wb-action-" + i;
+
+                var buttondiv =
+                        $("<div align=\"center\" class=\"" + wbaction + "\" style=\"z-index:10;position:relative;height:100%;width:100%;display:none;bottom:0;\">" +
+                        "<input style=\"padding:2px 5px;\" type=\"button\" value=\"Insert\" onclick=\"setRestriction(" + i + ")\"> " +
+                        "<input style=\"padding:2px 5px;\" type=\"button\" value=\"Subclasses\" onclick=\"setRestrictionsFromBP(" + i + ", 'children')\"> " +
+                        "<input style=\"padding:2px 5px;\" type=\"button\" value=\"Descendants\" onclick=\"setRestrictionsFromBP(" + i + ", 'descendants')\"></div>");
+                var div = $("<div style=\"border: 1px solid transparent;position:relative;margin:2px;padding:3px;\" class=\"action-" + i + "\">");
+
+                div.on ('mouseover', function() {
+                    $(this).css("border", "solid 1px gray");
+                    var id = "wb-" + $(this).attr('class');
+                    $("." + id).show();
+                });
+                div.on ('mouseout', function() {
+                    $(this).css("border", "solid 1px transparent");
+                    var id = "wb-" + $(this).attr('class');
+                    $("." + id).hide();
+                });
+
+                div.append("<div><a style=\"font-size: 90%;text-decoration: underline;\" href=\"" + bp_iri + "\">"  + label + " (" + ontology + ")</a></div>");
+                div.append("<div style=\"font-size: 70%;color:green;\">" + iri + "</div>");
+                div.append("<div style=\"font-size: 85%;\">" + definition + "</div>");
+                div.append("<input type=\"hidden\" class=\"term-iri-" + i + "\" value=\"" + iri + "\"/>");
+                div.append("<input type=\"hidden\" class=\"term-ontology-" + i + "\" value=\"" + ontology + "\"/>");
+                div.append("<input type=\"hidden\" class=\"term-label-" + i + "\" value=\"" + label + "\"/>");
+                div.append(buttondiv);
+
+                $(".searchresults").append(div);
+            }
+        }
+        else {
+            $("div.searchresults").html("<p>No results</p>");
+        }
+        hideSpinner();
+
     }
-    hideSpinner();
 
-}
-
-function doBioPortalSearch(query, ontology) {
-   showSpinner();
-   google.script.run.withFailureHandler(onFailure).withSuccessHandler(renderSearchResults).searchBioportal(query, ontology);
-}
+    function doBioPortalSearch(query, ontology) {
+        showSpinner();
+        google.script.run.withFailureHandler(onFailure).withSuccessHandler(renderSearchResults).searchBioportal(query, ontology);
+    }
 
 
-function setRestrictionsFromBP(id, type) {
-   showSpinner();
-   var ontology = $(".term-ontology-" + id).val();
-   var term = $(".term-label-" + id).val();
-   var iri = $(".term-iri-" + id ).val();
-   google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).getRestrictionValuesFromBP(ontology, iri, term, type);
-}
+    function setRestrictionsFromBP(id, type) {
+        showSpinner();
+        var ontology = $(".term-ontology-" + id).val();
+        var term = $(".term-label-" + id).val();
+        var iri = $(".term-iri-" + id ).val();
+        google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).getRestrictionValuesFromBP(ontology, iri, term, type);
+    }
 
-function setRestriction(id){
-   showSpinner();
-   var ontology = $('.ontologySelect').val(); 
-   var term = $(".term-label-" + id).val();
-   var iri = $(".term-iri-" + id ).val();
-   google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).getRestrictionValues(ontology, iri, term, 'individual');
-}
+    function setRestriction(id){
+        showSpinner();
+        var ontology = $('.ontologySelect').val();
+        var term = $(".term-label-" + id).val();
+        var iri = $(".term-iri-" + id ).val();
+        google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).getRestrictionValues(ontology, iri, term);
+    }
 
-function onFailure() {
-  hideSpinner();
-}
+    function onFailure() {
+        hideSpinner();
+    }
 
-function onSuccess(msg){
-  google.script.run.showToast(msg.message, "", 4);
-   hideSpinner();
-}
+    function onSuccess(msg){
+        google.script.run.showToast(msg.message, "", 4);
+        hideSpinner();
+    }
 
-function showSpinner() {
-  $(".loading").css("visibility", "visible");
-}
+    function showSpinner() {
+        $(".loading").css("visibility", "visible");
+    }
 
-function hideSpinner() {
-  $(".loading").css("visibility", "hidden");
-}
+    function hideSpinner() {
+        $(".loading").css("visibility", "hidden");
+    }
 
- </script>
- 
- </body>
- </html>
+</script>
+
+</body>
+</html>
  

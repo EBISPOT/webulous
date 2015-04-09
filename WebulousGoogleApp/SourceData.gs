@@ -9,37 +9,36 @@ function getTemplates(url) {
   if (url == "") {
     throw new Error ("URL can't be empty");
   }
-  return getSourceData(url + "/templates.json");
+  return getObjectFromUrl(url + "/templates.json");
 }
 
 /**
  *
  * Creates a new sheet based on data form a webulous server 
  *
- * @param {string} uri The base URI of the webulous template server
+ * @param {string} url The base URI of the webulous template server
  * @param {string} id The id of the template on the webulous template server
  */
 function setSource(url, id){
   
   if (url == null || id == null) {
-    throw new Error "You must supply a valid template server url";
+    throw new Error ("You must supply a valid template server url");
   }
   
   var template = url + "/api/templates/" + id;
 
-    var sourceData = getSourceData(template);
+  var sourceData = getObjectFromUrl(template);
   var sourceSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SourceData");
   
   if(sourceSheet == null){
     sourceSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("SourceData");
+    sourceSheet.hideSheet();
+    // set the webulous server and template id
+    var baseURI = sourceSheet.getRange("A1");
+    baseURI.setValue(url);
+    var templateId = sourceSheet.getRange("B1");
+    templateId.setValue(id);
   }  
-  
-  sourceSheet.hideSheet();
-  // set the webulous server and template id
-  var baseURI = sourceSheet.getRange("A1");
-  baseURI.setValue(url);
-  var templateId = sourceSheet.getRange("B1");
-  templateId.setValue(id);
   
   /** currently not supporting this feature
   //this sets the source ontology, which be default goes into cells A2 (acronym) and B2 (full name)
@@ -58,20 +57,7 @@ function setSource(url, id){
 
 }
 
-/**
- *
- * Get json from a URL and return as a genric object
- 
- * @param {string} uri The URI of the document server
- * @return {object} new object parsed from JSON
- */
-function getSourceData(uri){
 
-  Logger.log(uri);
-  var result = UrlFetchApp.fetch(uri).getContentText();
-  var data = JSON.parse(result);   
-  return data;
-}
 
 /**
  *
@@ -97,12 +83,11 @@ function _initilaiseFromTemplate (sourceData) {
     
     for (var i=0; i<sourceData.dataRestrictions.length; i++) {
       // add the header in the active sheet
-      Logger.log("testL" + sourceData.dataRestrictions[i].columnIndex + " = " + sourceData.dataRestrictions[i].restrictionName);
       activeSheet.getRange(1, sourceData.dataRestrictions[i].columnIndex).setValue(sourceData.dataRestrictions[i].restrictionName)
       // create a data validation
       var datarange = activeSheet.getRange(2, sourceData.dataRestrictions[i].columnIndex, numberOfRows)
       if (sourceData.dataRestrictions[i].values.length>1) {
-          createRestriction2(datarange, sourceData.description, sourceData.dataRestrictions[i].restrictionName, sourceData.dataRestrictions[i].defaultValue, "SUPPLIED", sourceData.dataRestrictions[i].values);
+          _createRestriction(datarange, sourceData.description, sourceData.dataRestrictions[i].restrictionName, sourceData.dataRestrictions[i].defaultValue, "SUPPLIED", sourceData.dataRestrictions[i].values);
       }
     }
   }
@@ -142,8 +127,7 @@ function getRestrictedOntologySet() {
     var fullname = data.getCell(i+1, 2).getValue();
     var iri = data.getCell(i+1, 3).getValue();
     if (shortname != '' && fullname != '' && iri != '') {
-      Logger.log("reading restricted ontologies " + shortname + " - " + fullname);
-      ontologies[i] = {"acronym":shortname, "name":fullname, "@id":iri}; 
+      ontologies[i] = {"acronym":shortname, "name":fullname, "@id":iri};
     }
   }
   return ontologies;
@@ -175,8 +159,6 @@ function saveToRestrictedOntologySet(shortname, fullname, iri) {
       return;
     }
   }
-
-  Logger.log("going to write to " + max);
 
   // if we get here add it as a new ontology to the sheet
   var range = source.getRange(max+1,1,1,3);

@@ -106,10 +106,10 @@ public class LoaderApp  implements CommandLineRunner {
 
         System.out.println("template created about to save");
 
-        restrictionRunRepository.deleteAll();
-        dataRunRepository.deleteAll();
-        templateRepository.deleteAll();
-        templateRepository.save(document);
+//        restrictionRunRepository.deleteAll();
+//        dataRunRepository.deleteAll();
+//        templateRepository.deleteAll();
+//        templateRepository.save(document);
 
         System.out.println("saved!");
 

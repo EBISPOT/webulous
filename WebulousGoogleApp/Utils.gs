@@ -1,29 +1,24 @@
-function columnToLetter(column)
-{
-  var temp, letter = '';
-  while (column > 0)
-  {
-    temp = (column - 1) % 26;
-    letter = String.fromCharCode(temp + 65) + letter;
-    column = (column - temp - 1) / 26;
-  }
-  return letter;
-}
 
-function letterToColumn(letter)
-{
-  var column = 0, length = letter.length;
-  for (var i = 0; i < length; i++)
-  {
-    column += (letter.charCodeAt(i) - 64) * Math.pow(26, length - i - 1);
+/**
+ *
+ * Get json from a URL and return as a generic object
+
+ * @param {string} uri The URI of the document server
+ * @return {object} new object parsed from JSON
+ */
+function getObjectFromUrl(uri){
+  try {
+    var result = UrlFetchApp.fetch(uri).getContentText();
+    if (result != null) {
+      return JSON.parse(result);
+    } else {
+      throw new Error("No results from " + uri);
+    }
+  } catch (e) {
+    throw new Error("Can't query " + uri + ":" + e);
   }
-  return column;
 }
 
 function showToast(msg, title, timeout) {
  SpreadsheetApp.getActiveSpreadsheet().toast(msg,title, timeout);
 }
-
-
-
-                                         
