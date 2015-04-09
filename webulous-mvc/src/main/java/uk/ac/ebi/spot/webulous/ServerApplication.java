@@ -16,10 +16,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class ServerApplication extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        System.setProperty("entityExpansionLimit", "1000000000");
         return application.sources(ServerApplication.class);
     }
 
     public static void main(String[] args) {
+        System.setProperty("entityExpansionLimit", "1000000000");
         SpringApplication.run(ServerApplication.class, args);
     }
 }

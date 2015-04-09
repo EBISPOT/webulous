@@ -108,6 +108,7 @@ public class LoaderApp  implements CommandLineRunner {
         List<PopulousDataRestriction> restrictionSet = new ArrayList<PopulousDataRestriction>();
         restrictionSet.add(dr1);
         restrictionSet.add(dr2);
+        restrictionSet.add(dr3);
         restrictionSet.add(dr4);
         restrictionSet.add(dr5);
         restrictionSet.add(dr6);
@@ -123,7 +124,7 @@ public class LoaderApp  implements CommandLineRunner {
                 "?species:CLASS, \n" +
                 "?tissue:CLASS \n" +
                 "BEGIN \n" +
-                "ADD ?cellLine subClassOf derives_from some (?cellType and part_of some (?tissue and part_of some ?species))\n" +
+                "ADD ?cellLine subClassOf derives_from some (?cellType and BFO_0000050 some (?tissue and BFO_0000050 some ?species))\n" +
                 "END;");
 
         PopulousPattern populousPattern2 = new PopulousPattern();
@@ -168,7 +169,7 @@ public class LoaderApp  implements CommandLineRunner {
 
         PopulousPattern populousPattern7 = new PopulousPattern();
         populousPattern7.setPatternName("Cell line");
-        populousPattern7.setPatternValue("?cellLine:CLASS,\n" +
+        populousPattern7.setPatternValue("?cellLine:CLASS\n" +
                 "BEGIN\n" +
                 "ADD ?cellLine subClassOf EFO_0000322\n" +
                 "END;");

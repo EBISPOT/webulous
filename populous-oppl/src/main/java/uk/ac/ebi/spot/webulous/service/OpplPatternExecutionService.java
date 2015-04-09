@@ -253,7 +253,7 @@ public class OpplPatternExecutionService {
                         //determine the type of the input variable: OWLClass, OWLIndividual or constant, then instantiate as appropriate
                         if (type.accept(variableVisitor).equals(5)) {
                             logger.debug("instantiating variable as constant:" + opplVariableMap.get(variable).getName() + " to " + cellValue);
-                            String [] values = cellValue.split("\\s*\\||\\s*");
+                            String [] values = cellValue.split("\\s*\\|\\|\\s*");
                             for (String s : values) {
                                 s = s.trim();
                                 ipm.instantiate(v, ontologyManager.getOWLDataFactory().getOWLLiteral(s));
@@ -353,7 +353,15 @@ public class OpplPatternExecutionService {
             OWLClass parent = null;
             if (!StringUtils.isBlank(populousDataRestriction.getClassExpression())) {
                 // see if there is a parent term
-                parent = shortFormProvider.getEntity(populousDataRestriction.getClassExpression()).asOWLClass();
+                String render = populousDataRestriction.getClassExpression();
+                // remove single quotes
+                if (render.contains(" ") && render.startsWith("'") && render.endsWith("'")) {
+                    render = render.substring(1, (render.length() -1));
+                }
+                OWLEntity parentEntity = shortFormProvider.getEntity(render);
+                if (parentEntity instanceof OWLClass) {
+                    parent = parentEntity.asOWLClass();
+                }
             }
 
             OWLEntityCreationSet<OWLClass> ecs = null;
