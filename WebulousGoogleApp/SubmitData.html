@@ -10,7 +10,7 @@
     <div align="left">
         <p>
             You are about to submit this data to <?= getTemplateServerURL(); ?>. <br/>
-            Please provide any additional notes on this submission along with your URIGen api if required
+            Please provide any additional notes on this submission along with your URIGen API key if required
         </p>
         <table>
             <tr>
@@ -19,6 +19,7 @@
                 </td>
                 <td align="right">
                     <input  size="45" class="message" type="text" placeholder="Enter submission message here"/>
+                </td>
             </tr>
             <tr>
                 <td style="padding-right:3px;">
@@ -26,21 +27,34 @@
                 </td>
                 <td align="right">
                     <input  size="45" class="apikey" type="text" placeholder="optional"/>
+                </td>
             </tr>
             <tr>
                 <td align="left" style="padding-right:5px;">
                 </td>
-                <table>
-                    <tr>
-                        <td style="width:100px; padding-right:3px;">
-                            <input class="submitTemplateButton" type="button" value="Submit" onclick="submit()"/></td>
-                        <td><input type="button" value="Cancel" onclick="google.script.host.close();" /></td>
-                    </tr>
-                </table>
+                <td>
+                    <table>
+
+                        <tr>
+                            <td style="width:100px; padding-right:3px;">
+                                <input class="submitTemplateButton" type="button" value="Submit" onclick="submit()"/>
+                            </td>
+                            <td><input type="button" value="Cancel" onclick="google.script.host.close();" /></td>
+                        </tr>
+
+
+
+                    </table>
+                    <br/>
+                    <div class="loading" style="visibility:hidden">
+                        <img style="height:30px;width:30px;" src="https://5079980847011989849-a-1802744773732722657-s-sites.googlegroups.com/site/scriptsexamples/ProgressSpinner.gif"/>
+                        Submitting data, please wait...
+                    </div>
+                </td>
             </tr>
         </table>
 
-        <p class="errorMessage" style="display:none; color:red;">Failed to submit datar</p>
+        <p class="errorMessage" style="display:none; color:red;">Failed to submit data</p>
 
 
 
@@ -52,14 +66,17 @@
 
 
     function submit () {
+        $("div.loading").css("visibility", "visible");
         google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).submitData($('.message').val(), $('.apikey').val());
     }
 
     function onFailure(error){
+        $("div.loading").css("visibility", "hidden");
         $('.errorMessage').text(error).show();
     }
 
     function onSuccess(){
+        $("div.loading").css("visibility", "hidden");
         google.script.host.close();
     }
 
