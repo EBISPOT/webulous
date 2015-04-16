@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.webulous.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -29,6 +30,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/templates")
 public class TemplateController {
+
+    @Value("${webulous.ui.readonly}")
+    boolean readOnly = false;
 
     @Autowired
     private WebulousTemplateService webulousTemplateService;
@@ -74,6 +78,11 @@ public class TemplateController {
     @RequestMapping(value = "/{templateId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getTemplateById(Model model, @PathVariable String templateId, final RedirectAttributes redirectAttributes) {
         PopulousTemplateDocument populousTemplateDocument= webulousTemplateService.findOne(templateId);
+
+        if (readOnly) {
+            model.addAttribute("readonly", true);
+        }
+
         if (populousTemplateDocument == null) {
             redirectAttributes.addFlashAttribute("error", "No template with id " + templateId);
             return "redirect:/templates";
@@ -92,8 +101,13 @@ public class TemplateController {
             @PathVariable String templateId,
             final RedirectAttributes redirectAttributes) {
 
-        populousTemplateDocument = webulousTemplateService.save(populousTemplateDocument);
-        redirectAttributes.addFlashAttribute("message", "Successfully updated template: " + populousTemplateDocument.getId());
+        if (readOnly) {
+            redirectAttributes.addFlashAttribute("error", "Can't save this is a read only instance");
+        }
+        else {
+            populousTemplateDocument = webulousTemplateService.save(populousTemplateDocument);
+            redirectAttributes.addFlashAttribute("message", "Successfully updated template: " + populousTemplateDocument.getId());
+        }
 
         return "redirect:/templates/" + populousTemplateDocument.getId();
     }
@@ -107,13 +121,24 @@ public class TemplateController {
             @PathVariable String templateId,
             final RedirectAttributes redirectAttributes) {
 
+        if (readOnly) {
+            redirectAttributes.addFlashAttribute("error", "Can't save this is a read only instance");
+        }
+
         webulousTemplateService.remove(populousTemplateDocument);
         redirectAttributes.addFlashAttribute("message", "Successfully removed template: " + populousTemplateDocument.getId());
         return "redirect:/templates";
     }
 
     @RequestMapping(value={"/new", "/{templateId}"}, params={"addDataRestriction"})
-    public String addDataRestriction(final PopulousTemplateDocument populousTemplateDocument, Model model, final BindingResult bindingResult) {
+    public String addDataRestriction(final PopulousTemplateDocument populousTemplateDocument, Model model, final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
+
+
+        if (readOnly) {
+            redirectAttributes.addFlashAttribute("error", "Can't create restrictions this is a read only version");
+            return "redirect:/templates";
+        }
+
         PopulousDataRestriction dataRestriction = new PopulousDataRestriction();
         dataRestriction.setColumnIndex(populousTemplateDocument.getDataRestrictions().size() + 1);
         populousTemplateDocument.getDataRestrictions().add(dataRestriction);
@@ -149,7 +174,12 @@ public class TemplateController {
     // create new template methods
 
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String showNewTemplate(Model model) {
+    public String showNewTemplate(Model model, final RedirectAttributes redirectAttributes) {
+
+        if (readOnly) {
+            redirectAttributes.addFlashAttribute("error", "Can't create new template this is a read only version");
+            return "redirect:/templates";
+        }
         PopulousTemplateDocument   populousTemplateDocument = new PopulousTemplateDocument();
         model.addAttribute("populousTemplateDocument", populousTemplateDocument);
         return "template";
@@ -157,6 +187,11 @@ public class TemplateController {
 
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String saveTemplate(@Valid @ModelAttribute PopulousTemplateDocument populousTemplateDocument, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+
+        if (readOnly) {
+            redirectAttributes.addFlashAttribute("error", "Can't create new template this is a read only version");
+            return "all_templates";
+        }
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("populousTemplateDocument", populousTemplateDocument);

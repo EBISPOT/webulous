@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.webulous.config;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +17,11 @@ import java.util.Properties;
 @Configuration
 public class MailConfig {
 
-    @Value("${mail.protocol}")
+    @Value("${mail.protocol:smtp}")
     private String protocol;
-    @Value("${mail.host}")
+    @Value("${mail.host:}")
     private String host;
-    @Value("${mail.port}")
+    @Value("${mail.port:587}")
     private int port;
 
 
@@ -29,7 +30,9 @@ public class MailConfig {
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setJavaMailProperties(getMailProperties());
-        mailSender.setHost(host);
+        if (StringUtils.isNoneEmpty(host)) {
+            mailSender.setHost(host);
+        }
         mailSender.setPort(port);
         mailSender.setProtocol(protocol);
         return mailSender;

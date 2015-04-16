@@ -49,8 +49,8 @@ public class DataConversionService {
     private String displayOutputPath;
 
 
-    @Value("${webulous.sendemail:}")
-    private boolean sendEmail = false;
+    @Value("${webulous.sendemail:false}")
+    private boolean sendEmail;
 
     public DataConversionRunDocument queueDataConversion(DataSubmission submission) {
 
@@ -154,5 +154,9 @@ public class DataConversionService {
 
     public DataConversionRunDocument findOne(String runid) {
         return dataConversionRunRepository.findOne(runid);
+    }
+
+    public List<DataConversionRunDocument> findByStatus(Status status) {
+        return dataConversionRunRepository.findByStatus(status);
     }
 }

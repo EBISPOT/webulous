@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.webulous.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,8 @@ import java.util.List;
 @RequestMapping("/submissions")
 public class DataController {
 
+    @Value("${webulous.ui.readonly}")
+    boolean readOnly = false;
 
     @Autowired
     private DataConversionService dataConversionService;
@@ -42,12 +45,14 @@ public class DataController {
     }
 
     @RequestMapping(value = "", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String showDataRuns() {
+    public String showDataRuns(Model model) {
+        model.addAttribute("readonly", readOnly);
         return "submissions";
     }
 
     @RequestMapping(value = "", params="templateId", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getRunsByTemplateId(Model model, @RequestParam("templateId") String templateId, final RedirectAttributes redirectAttributes) {
+        model.addAttribute("readonly", readOnly);
         List<DataConversionRunDocument> runs = dataConversionService.findByTemplateId(templateId);
         model.addAttribute("all_submission_runs", runs);
         return "submissions";
@@ -55,6 +60,10 @@ public class DataController {
 
     @RequestMapping(value = "/{runid}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String deleteRun(Model model,@PathVariable String runid,final RedirectAttributes redirectAttributes) {
+        if (readOnly) {
+            redirectAttributes.addFlashAttribute("error", "Can't delete run, this a read only version");
+            return "redirect:/submissions";
+        }
         dataConversionService.deleteRun(runid);
         redirectAttributes.addFlashAttribute("message", "Removed run with id: " + runid);
         return "redirect:/submissions";
@@ -67,6 +76,10 @@ public class DataController {
             @PathVariable String runid,
             final RedirectAttributes redirectAttributes) {
 
+        if (readOnly) {
+            redirectAttributes.addFlashAttribute("error", "Can't force run, this a read only version");
+            return "redirect:/submissions";
+        }
         DataConversionRunDocument runDocument = dataConversionService.findOne (runid);
 
         DataConversionRunDocument dataConversionRunDocument = dataConversionService.runDataConversion(runDocument);

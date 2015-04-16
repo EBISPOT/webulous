@@ -27,9 +27,9 @@ public class MailService {
     private JavaMailSender javaMailSender;
 
     // Reading these from application.properties
-    @Value("${mail.from}")
+    @Value("${mail.from:}")
     private String from;
-    @Value("${mail.to}")
+    @Value("${mail.to:}")
     private String to;
 
     private final Logger log = LoggerFactory.getLogger(getClass());

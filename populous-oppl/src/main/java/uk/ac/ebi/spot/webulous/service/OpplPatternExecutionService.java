@@ -139,7 +139,6 @@ public class OpplPatternExecutionService {
                             changes.addAll(patternExecutor.visit(patternModel));
                             done++;
                         } catch (RuntimeException e) {
-                            // todo collect this error
                             errorCollector.add(e.getMessage());
                             logger.error("Error processing row " + done + ": " + e.getMessage(), e);
                         }

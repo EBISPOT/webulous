@@ -50,6 +50,10 @@ public class RestrictionService {
        return restrictionRunRepository.findByTemplateId(templateId, sort);
     }
 
+    public List<RestrictionRunDocument> findByStatus(Status status) {
+       return restrictionRunRepository.findByStatus(status);
+    }
+
     public List<RestrictionRunDocument> findAll(Sort sort) {
         return restrictionRunRepository.findAll(sort);
     }
@@ -59,10 +63,9 @@ public class RestrictionService {
 
         getLog().trace("Checking for restrictions that are queued");
         for (RestrictionRunDocument restrictionRunDocument : restrictionRunRepository.findByStatus(Status.QUEUED)) {
-
+            getLog().info("Starting to run " + restrictionRunDocument.getTemplateName() + " (" + restrictionRunDocument.getId() + ")");
             run(restrictionRunDocument);
-
-
+            getLog().info("Run "+ restrictionRunDocument.getId() + " complete!");
         }
     }
 
@@ -139,7 +142,6 @@ public class RestrictionService {
         return values;
 
     }
-
 
     public void deleteRun(String runid) {
         restrictionRunRepository.delete(runid);

@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.domain.Sort;
+import uk.ac.ebi.spot.webulous.model.DataConversionRunDocument;
 import uk.ac.ebi.spot.webulous.model.RestrictionRunDocument;
 import uk.ac.ebi.spot.webulous.model.Status;
+import uk.ac.ebi.spot.webulous.service.DataConversionService;
 import uk.ac.ebi.spot.webulous.service.RestrictionService;
 
 import java.util.ArrayList;
@@ -16,15 +17,14 @@ import java.util.List;
 
 /**
  * @author Simon Jupp
- * @date 24/03/2015
+ * @date 30/03/2015
  * Samples, Phenotypes and Ontologies Team, EMBL-EBI
  */
 @SpringBootApplication
-@EnableConfigurationProperties
-public class RestrictionUpdateApp  implements CommandLineRunner {
+public class PatternExecutionApp implements CommandLineRunner {
 
     @Autowired
-    private RestrictionService restrictionService;
+    private DataConversionService dataConversionService;
 
     private static boolean list = false;
     private static boolean queued = false;
@@ -33,39 +33,40 @@ public class RestrictionUpdateApp  implements CommandLineRunner {
     private static String [] run_ids = {};
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(RestrictionUpdateApp.class, args);
+        SpringApplication.run(PatternExecutionApp.class, args);
    	}
 
     @Override
     public void run(String... strings) throws Exception {
-
         int parseArgs = parseArguments(strings);
         if (parseArgs> 0) {
             if (queued || list) {
 
-                List<RestrictionRunDocument> runDocuments = new ArrayList<RestrictionRunDocument>();
+                List<DataConversionRunDocument> runDocuments = new ArrayList<DataConversionRunDocument>();
 
                 if (queued) {
-                    runDocuments = restrictionService.findByStatus(Status.QUEUED);
+                    runDocuments = dataConversionService.findByStatus(Status.QUEUED);
                     if (runDocuments.isEmpty()) {
                         System.out.println("No queued jobs");
                     }
                 }
                 else {
-                    runDocuments= restrictionService.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "lastUpdated")));
+                    runDocuments= dataConversionService.findAll(new Sort(new Sort.Order(Sort.Direction.DESC, "lastUpdated")));
                 }
-                for (RestrictionRunDocument runDocument : runDocuments) {
+                for (DataConversionRunDocument runDocument : runDocuments) {
 
                     if (idsOnly)  {
                         System.out.println(runDocument.getId());
                     }
                     else {
-                        System.out.printf("%s\t%s\t%s\t%s\t%s\t%s\n",
+                        System.out.printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
                                 runDocument.getId(),
                                 runDocument.getTemplateId(),
                                 runDocument.getTemplateName(),
                                 runDocument.getStatus(),
-                                runDocument.getLastUpdate(),
+                                runDocument.getLastUpdated(),
+                                runDocument.getUserEmail(),
+                                runDocument.getReference(),
                                 runDocument.getMessage());
                     }
 
@@ -73,10 +74,14 @@ public class RestrictionUpdateApp  implements CommandLineRunner {
             }
             else if (run_ids.length>0) {
                 for (String id : run_ids) {
-                    RestrictionRunDocument docToRun = restrictionService.findOne(id);
+                    DataConversionRunDocument docToRun = dataConversionService.findOne(id);
                     if (docToRun != null) {
                         System.out.println("Running job with id: " + docToRun.getId());
-                        restrictionService.run(docToRun);
+                        DataConversionRunDocument runDocument = dataConversionService.runDataConversion(docToRun);
+                        if (runDocument.getStatus().equals(Status.FAILED)) {
+                            System.out.println("Job failed!" + runDocument.getMessage());
+                            System.exit(1);
+                        }
                         System.out.println("Job complete! " + docToRun.getId());
                     }
                     else {
@@ -86,12 +91,11 @@ public class RestrictionUpdateApp  implements CommandLineRunner {
             }
             else if (runAll) {
                 System.out.println("Running all queued jobs...");
-                restrictionService.runAllQueued();
+                dataConversionService.getAllQueued();
                 System.out.println("Running all queued jobs complete");
             }
         }
     }
-
 
     private static int parseArguments(String[] args) {
 
@@ -106,7 +110,7 @@ public class RestrictionUpdateApp  implements CommandLineRunner {
             // check for mode help option
             if (cl.hasOption("") || cl.hasOption("h")) {
                 // print out mode help
-                help.printHelp("restriction-updater.jar", options, true);
+                help.printHelp("pattern-executor.jar", options, true);
                 parseArgs += 1;
             }
             else {
@@ -151,21 +155,21 @@ public class RestrictionUpdateApp  implements CommandLineRunner {
         Option helpOption = new Option("h", "help", false, "Print the help");
         options.addOption(helpOption);
 
-        Option list = new Option("l", "list", false, "List all restriction run jobs");
+        Option list = new Option("l", "list", false, "List all data submissions");
         list.setRequired(false);
 
-        Option queued = new Option("q", "queued", false, "List all queued restriction run jobs");
+        Option queued = new Option("q", "queued", false, "List all queued data submissions");
         queued.setRequired(false);
 
-        Option idsOnly = new Option("i", "id", false, "Only return job ids");
+        Option idsOnly = new Option("i", "id", false, "Only return job id");
         idsOnly.setRequired(false);
 
-        Option runId = new Option("r", "run", true, "Start a specific run by run id");
+        Option runId = new Option("r", "run", true, "Start a specific pattern execution job for a data submission id");
         runId.setRequired(false);
         runId.setArgs(Option.UNLIMITED_VALUES);
 
 
-        Option runAll = new Option("a", "runAll", false, "run all queued jobs");
+        Option runAll = new Option("a", "runAll", false, "run all queued data submissions");
         runAll.setRequired(false);
 
         options.addOption(list);

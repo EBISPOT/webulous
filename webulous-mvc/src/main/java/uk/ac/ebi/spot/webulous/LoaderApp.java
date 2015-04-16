@@ -35,12 +35,15 @@ public class LoaderApp  implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        restrictionRunRepository.deleteAll();
-        dataRunRepository.deleteAll();
-        templateRepository.deleteAll();
 
-        createPizza();
-        createEFOCellLine();
+        if (templateRepository.findAll().size() == 0) {
+//            restrictionRunRepository.deleteAll();
+//            dataRunRepository.deleteAll();
+//            templateRepository.deleteAll();
+            createPizza();
+            createEFOCellLine();
+
+        }
 
 
 
@@ -255,6 +258,7 @@ public class LoaderApp  implements CommandLineRunner {
 
         System.out.println("saved pizza!");
     }
+
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(LoaderApp.class, args);
