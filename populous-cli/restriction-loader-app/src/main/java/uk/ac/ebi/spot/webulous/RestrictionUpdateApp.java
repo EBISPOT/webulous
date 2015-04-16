@@ -154,7 +154,7 @@ public class RestrictionUpdateApp  implements CommandLineRunner {
         Option list = new Option("l", "list", false, "List all restriction run jobs");
         list.setRequired(false);
 
-        Option queued = new Option("q", "queued", false, "List all queued restriction run jobs");
+        Option queued = new Option("q", "queued", false, "List all queued restriction update jobs");
         queued.setRequired(false);
 
         Option idsOnly = new Option("i", "id", false, "Only return job ids");
@@ -165,7 +165,7 @@ public class RestrictionUpdateApp  implements CommandLineRunner {
         runId.setArgs(Option.UNLIMITED_VALUES);
 
 
-        Option runAll = new Option("a", "runAll", false, "run all queued jobs");
+        Option runAll = new Option("a", "runAll", false, "Run all queued jobs");
         runAll.setRequired(false);
 
         options.addOption(list);

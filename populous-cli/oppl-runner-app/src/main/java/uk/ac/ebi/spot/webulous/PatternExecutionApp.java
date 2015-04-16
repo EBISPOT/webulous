@@ -169,7 +169,7 @@ public class PatternExecutionApp implements CommandLineRunner {
         runId.setArgs(Option.UNLIMITED_VALUES);
 
 
-        Option runAll = new Option("a", "runAll", false, "run all queued data submissions");
+        Option runAll = new Option("a", "runAll", false, "Run all queued data submissions");
         runAll.setRequired(false);
 
         options.addOption(list);
