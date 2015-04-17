@@ -21,6 +21,8 @@ public class PopulousTemplateDocument implements PopulousTemplate {
     @NotBlank(message = "Please enter a description")
     private String description;
 
+    private String templateGroupName;
+
     private boolean active;
 
     private int defaultNumberOfRows = 100;
@@ -35,6 +37,14 @@ public class PopulousTemplateDocument implements PopulousTemplate {
 
     private String adminEmailAddresses;
 
+    @Override
+    public String getTemplateGroupName() {
+        return templateGroupName;
+    }
+
+    public void setTemplateGroupName(String templateGroupName) {
+        this.templateGroupName = templateGroupName;
+    }
 
     public PopulousTemplateDocument() {
         this.active = true;

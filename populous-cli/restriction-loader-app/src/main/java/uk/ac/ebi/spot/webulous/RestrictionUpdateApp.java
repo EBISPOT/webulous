@@ -104,7 +104,7 @@ public class RestrictionUpdateApp  implements CommandLineRunner {
             CommandLine cl = parser.parse(options, args, true);
 
             // check for mode help option
-            if (cl.hasOption("") || cl.hasOption("h")) {
+            if (cl.getArgs().length == 0 || cl.hasOption("h")) {
                 // print out mode help
                 help.printHelp("restriction-updater.jar", options, true);
                 parseArgs += 1;

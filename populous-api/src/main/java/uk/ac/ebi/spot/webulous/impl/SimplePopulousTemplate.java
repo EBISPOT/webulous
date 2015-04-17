@@ -4,7 +4,6 @@ import uk.ac.ebi.spot.webulous.model.PopulousDataRestriction;
 import uk.ac.ebi.spot.webulous.model.PopulousPattern;
 import uk.ac.ebi.spot.webulous.model.PopulousTemplate;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +17,7 @@ public class SimplePopulousTemplate implements PopulousTemplate {
     private String id;
 
     private String description;
+    private String templateGroupName;
 
     private boolean active;
 
@@ -31,6 +31,15 @@ public class SimplePopulousTemplate implements PopulousTemplate {
     private List<PopulousPattern> patterns;
 
     private String adminEmailAddresses;
+
+    @Override
+    public String getTemplateGroupName() {
+        return templateGroupName;
+    }
+
+    public void setTemplateGroupName(String templateGroupName) {
+        this.templateGroupName = templateGroupName;
+    }
 
     @Override
     public String getId() {

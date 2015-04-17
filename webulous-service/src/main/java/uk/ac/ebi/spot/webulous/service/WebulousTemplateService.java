@@ -24,7 +24,7 @@ public class WebulousTemplateService implements TemplateService<PopulousTemplate
     private PopulousTemplateRepository templateRepository;
 
     @Autowired
-    RestrictionRunRepository restrictionRunRepository;
+    RestrictionService restrictionService;
 
     @Autowired
     RestrictionService service;
@@ -57,7 +57,7 @@ public class WebulousTemplateService implements TemplateService<PopulousTemplate
             if (template == null) {
                 throw new ResourceNotFoundException("Template doesn't exists for id" + templateId);
             }
-            RestrictionRunDocument runDocument = queueTemplate(template);
+            RestrictionRunDocument runDocument = restrictionService.queueTemplate(template);
             if (force) {
                 service.run(runDocument);
             }
@@ -66,39 +66,30 @@ public class WebulousTemplateService implements TemplateService<PopulousTemplate
         return null;
     }
 
+    @Override
+    public List<RestrictionRunDocument> refreshGroup(String groupName, boolean force) {
 
-
-
-
+        List<RestrictionRunDocument> runs = new ArrayList<RestrictionRunDocument>();
+        for (PopulousTemplateDocument doc : findByTemplateGroupName(groupName)) {
+            runs.add(refresh(doc.getId(), force));
+        }
+        return runs;
+    }
 
     public PopulousTemplateDocument save(PopulousTemplateDocument template) {
         PopulousTemplateDocument templateDocument =  templateRepository.save(template);
         // queue it up for running if it has restrictions
-        queueTemplate(templateDocument);
+        restrictionService.queueTemplate(templateDocument);
         return templateDocument;
     }
 
-    private RestrictionRunDocument queueTemplate(PopulousTemplateDocument templateDocument) {
-        RestrictionRunDocument restrictionRunDocument = null;
-        if (!templateDocument.getDataRestrictions().isEmpty()) {
 
-            restrictionRunDocument = restrictionRunRepository.findByTemplateIdAndStatus(templateDocument.getId(), Status.QUEUED);
-            if (restrictionRunDocument == null) {
-
-                restrictionRunDocument = new RestrictionRunDocument();
-                restrictionRunDocument.setTemplateId(templateDocument.getId());
-                restrictionRunDocument.setTemplateName(templateDocument.getDescription());
-                restrictionRunDocument.setStatus(Status.QUEUED);
-                restrictionRunDocument.setLastUpdate(new Date());
-                restrictionRunDocument.setMessage("Restrictions for this template are queued and waiting...");
-
-                restrictionRunDocument = restrictionRunRepository.save(restrictionRunDocument);
-            }
-        }
-        return restrictionRunDocument;
-    }
 
     public void remove(PopulousTemplateDocument populousTemplateDocument) {
         templateRepository.delete(populousTemplateDocument.getId());
+    }
+
+    public List<PopulousTemplateDocument> findByTemplateGroupName(String groupName) {
+        return templateRepository.findByTemplateGroupName(groupName);
     }
 }

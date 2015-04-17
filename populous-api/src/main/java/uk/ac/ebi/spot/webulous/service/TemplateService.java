@@ -11,9 +11,12 @@ import java.util.List;
  */
 public interface TemplateService<T extends PopulousTemplate,Q> {
 
-    public List<T> findAll();
+    List<T> findAll();
 
     T findOne(String templateId);
 
-    public Q refresh(String id, boolean force);
+    Q refresh(String id, boolean force);
+    List<Q> refreshGroup(String groupName, boolean force);
+
+    List<T> findByTemplateGroupName(String groupName);
 }

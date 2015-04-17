@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.webulous.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -10,10 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uk.ac.ebi.spot.webulous.model.PopulousDataRestriction;
-import uk.ac.ebi.spot.webulous.model.PopulousPattern;
-import uk.ac.ebi.spot.webulous.model.PopulousTemplateDocument;
-import uk.ac.ebi.spot.webulous.model.TemplateSummary;
+import uk.ac.ebi.spot.webulous.model.*;
 import uk.ac.ebi.spot.webulous.service.WebulousTemplateService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,10 +48,19 @@ public class TemplateController {
 
     @RequestMapping(value = "", produces="application/json", method = RequestMethod.GET)
     public @ResponseBody
-    Collection<TemplateSummary> getTemplateSummary() {
+    Collection<TemplateSummary> getTemplateSummary(@RequestParam(value = "groupName", required=false) String groupName) {
         Collection<TemplateSummary> templateSummaries = new HashSet<TemplateSummary>();
         for (PopulousTemplateDocument document : webulousTemplateService.findActive()) {
-            templateSummaries.add(new TemplateSummary(document.getId(), document.getDescription()));
+            if (StringUtils.isNoneEmpty(groupName)) {
+                if (document.getTemplateGroupName() != null) {
+                    if (document.getTemplateGroupName().toLowerCase().equals(groupName.toLowerCase())) {
+                        templateSummaries.add(new TemplateSummary(document.getId(), document.getDescription()));
+                    }
+                }
+            }
+            else {
+                templateSummaries.add(new TemplateSummary(document.getId(), document.getDescription()));
+            }
         }
         return templateSummaries;
     }
@@ -116,18 +123,61 @@ public class TemplateController {
     @RequestMapping(value = "/{templateId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST, params={"delete"})
     public String deleteTemplate(
             @ModelAttribute PopulousTemplateDocument populousTemplateDocument,
-            Model model,
-            BindingResult bindingResult,
-            @PathVariable String templateId,
             final RedirectAttributes redirectAttributes) {
 
         if (readOnly) {
             redirectAttributes.addFlashAttribute("error", "Can't save this is a read only instance");
+            return "redirect:/templates";
         }
 
         webulousTemplateService.remove(populousTemplateDocument);
         redirectAttributes.addFlashAttribute("message", "Successfully removed template: " + populousTemplateDocument.getId());
         return "redirect:/templates";
+    }
+
+    @RequestMapping(value = "", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET, params={"refresh"})
+    public String refreshAllTemplates(
+            @RequestParam(value = "groupName", required=false) String groupName,
+            final RedirectAttributes redirectAttributes) {
+
+        if (readOnly) {
+            redirectAttributes.addFlashAttribute("error", "Can't refresh, this is a read only instance");
+            return "redirect:/templates";
+        }
+
+        if (StringUtils.isNoneEmpty(groupName)) {
+            List<RestrictionRunDocument> runDocuments = webulousTemplateService.refreshGroup(groupName, false);
+            if (runDocuments.size() == 0) {
+                redirectAttributes.addFlashAttribute("error", "No group " + groupName);
+            }
+            else {
+                redirectAttributes.addFlashAttribute("message", "Successfully sent restriction refresh request for group: " + groupName);
+            }
+            return "redirect:/restrictions";
+        }
+        else {
+            for (PopulousTemplateDocument doc : webulousTemplateService.findAll()) {
+                webulousTemplateService.refresh(doc.getId(), false);
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("message", "Successfully sent restriction refresh request");
+        return "redirect:/restrictions";
+    }
+
+    @RequestMapping(value = "/{templateId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET, params={"refresh"})
+    public String refreshTemplate(
+            @PathVariable String templateId,
+            @RequestParam(value = "groupName", required=false) String groupName,
+            final RedirectAttributes redirectAttributes) {
+
+        if (readOnly) {
+            redirectAttributes.addFlashAttribute("error", "Can't refresh, this is a read only instance");
+            return "redirect:/templates";
+        }
+        webulousTemplateService.refresh(templateId, false);
+        redirectAttributes.addFlashAttribute("message", "Successfully sent restriction refresh request");
+        return "redirect:/restrictions";
     }
 
     @RequestMapping(value={"/new", "/{templateId}"}, params={"addDataRestriction"})

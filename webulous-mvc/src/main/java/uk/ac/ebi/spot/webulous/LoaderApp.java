@@ -55,6 +55,7 @@ public class LoaderApp  implements CommandLineRunner {
         System.out.println("creating a new template for EFO");
         PopulousTemplateDocument document = new PopulousTemplateDocument();
         document.setDescription("EFO Cell Line");
+        document.setTemplateGroupName("EFO");
         document.setActive(true);
         document.setAdminEmailAddresses("jupp@ebi.ac.uk");
         document.setActiveOntology("http://www.ebi.ac.uk/efo");

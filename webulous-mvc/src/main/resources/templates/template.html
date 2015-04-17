@@ -87,6 +87,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="templateGroupName" class="col-lg-2 control-label">Template group</label>
+                    <div class="col-lg-10" th:class="${#fields.hasErrors('templateGroupName')} ? 'col-lg-10 has-error' : 'col-lg-10'">
+                        <input type="text" class="form-control" id="templateGroupName" name="templateGroupName" th:field="*{templateGroupName}"/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="adminEmailAddresses" class="col-lg-2 control-label">Admin e-mail</label>
                     <div class="col-lg-10">
                         <input type="text" class="form-control" id="adminEmailAddresses" th:field="*{adminEmailAddresses}"/>

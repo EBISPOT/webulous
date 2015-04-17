@@ -14,6 +14,7 @@ public interface PopulousTemplate {
     String getId();
     String getAdminEmailAddresses();
     String getDescription();
+    String getTemplateGroupName();
     boolean isActive();
     int getDefaultNumberOfRows();
     String getUrigenserver();

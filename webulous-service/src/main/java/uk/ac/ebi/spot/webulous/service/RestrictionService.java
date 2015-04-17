@@ -150,4 +150,36 @@ public class RestrictionService {
     public RestrictionRunDocument findOne(String runid) {
         return restrictionRunRepository.findOne(runid);
     }
+
+    public RestrictionRunDocument queueTemplate(PopulousTemplateDocument templateDocument) {
+        RestrictionRunDocument restrictionRunDocument = null;
+        if (hasRestrictionsToUpdate(templateDocument)) {
+
+            restrictionRunDocument = restrictionRunRepository.findByTemplateIdAndStatus(templateDocument.getId(), Status.QUEUED);
+            if (restrictionRunDocument == null) {
+
+                restrictionRunDocument = new RestrictionRunDocument();
+                restrictionRunDocument.setTemplateId(templateDocument.getId());
+                restrictionRunDocument.setTemplateName(templateDocument.getDescription());
+                restrictionRunDocument.setStatus(Status.QUEUED);
+                restrictionRunDocument.setLastUpdate(new Date());
+                restrictionRunDocument.setMessage("Restrictions for this template are queued and waiting...");
+
+                restrictionRunDocument = restrictionRunRepository.save(restrictionRunDocument);
+            }
+        }
+        return restrictionRunDocument;
+    }
+
+    private boolean hasRestrictionsToUpdate(PopulousTemplateDocument templateDocument) {
+
+        for (PopulousDataRestriction dataRestriction : templateDocument.getDataRestrictions()) {
+            // if this template has restrictions that are not UNRESTRICTED, then it can be queued
+            if (!dataRestriction.getRestrictionType().equals(RestrictionType.UNRESTRICTED)) {
+                return true;
+            }
+        }
+        return false;
+
+    }
 }
