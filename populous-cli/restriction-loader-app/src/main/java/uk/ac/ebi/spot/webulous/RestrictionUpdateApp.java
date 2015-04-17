@@ -47,7 +47,7 @@ public class RestrictionUpdateApp  implements CommandLineRunner {
 
                 if (queued) {
                     runDocuments = restrictionService.findByStatus(Status.QUEUED);
-                    if (runDocuments.isEmpty()) {
+                    if (runDocuments.isEmpty() && !idsOnly) {
                         System.out.println("No queued jobs");
                     }
                 }

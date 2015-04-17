@@ -46,7 +46,7 @@ public class PatternExecutionApp implements CommandLineRunner {
 
                 if (queued) {
                     runDocuments = dataConversionService.findByStatus(Status.QUEUED);
-                    if (runDocuments.isEmpty()) {
+                    if (runDocuments.isEmpty() && !idsOnly) {
                         System.out.println("No queued jobs");
                     }
                 }
