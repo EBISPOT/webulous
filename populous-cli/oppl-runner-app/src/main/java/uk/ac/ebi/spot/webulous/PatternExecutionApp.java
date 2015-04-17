@@ -108,7 +108,7 @@ public class PatternExecutionApp implements CommandLineRunner {
             CommandLine cl = parser.parse(options, args, true);
 
             // check for mode help option
-            if (cl.getArgs().length == 0  || cl.hasOption("h")) {
+            if ((args == null || args.length == 0) || cl.hasOption("h")) {
                 // print out mode help
                 help.printHelp("pattern-executor.jar", options, true);
                 parseArgs += 1;
