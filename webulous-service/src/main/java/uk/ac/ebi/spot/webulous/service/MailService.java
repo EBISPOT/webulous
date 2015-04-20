@@ -38,7 +38,7 @@ public class MailService {
         return log;
     }
 
-    public void sendEmailNotification(String to, String cc, DataConversionRunDocument document) {
+    public void sendEmailNotification(String[] to, String cc, String subject, String message) {
 
 
         // Set up some of the values used in mail body
@@ -46,18 +46,13 @@ public class MailService {
         // Format mail message
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(to);
-        mailMessage.setCc(cc);
+        if (cc != null) {
+            mailMessage.setCc(cc);
+        }
         mailMessage.setBcc(getTo());
         mailMessage.setFrom(getFrom());
-        mailMessage.setSubject("Webulous run for " + document.getTemplateName() + ": " + document.getStatus());
-
-
-
-        mailMessage.setText(
-                "You data submitted to webulous template " + document.getTemplateName() + " has completed with status: " + document.getStatus() + "\n\n" +
-                document.getMessage()  + "\n"
-
-        );
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
         javaMailSender.send(mailMessage);
 
     }

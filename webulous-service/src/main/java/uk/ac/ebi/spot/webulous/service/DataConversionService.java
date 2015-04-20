@@ -135,7 +135,15 @@ public class DataConversionService {
 
         if (sendEmail) {
             // e-mail everyone
-            mailService.sendEmailNotification(runDocument.getUserEmail(), templateDocument.getAdminEmailAddresses(), runDocument);
+            String subject = "Webulous run for " + runDocument.getTemplateName() + ": " + runDocument.getStatus();
+            String message =  "Your data submitted to webulous template " + runDocument.getTemplateName() + " has completed with status: " + runDocument.getStatus() + "\n\n" +
+                    runDocument.getMessage()  + "\n";
+
+            mailService.sendEmailNotification(
+                    runDocument.getUserEmail().split(","),
+                    templateDocument.getAdminEmailAddresses(),
+                    subject,
+                    message);
         }
         return dataConversionRunRepository.save(runDocument);
     }

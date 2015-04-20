@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.fgpt.OntologyDAO;
@@ -30,9 +31,15 @@ public class RestrictionService {
     private PopulousTemplateRepository templateRepository;
 
     @Autowired
-    RestrictionRunRepository restrictionRunRepository;
+    private RestrictionRunRepository restrictionRunRepository;
+
+    @Autowired
+    private MailService mailService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Value("${webulous.sendemail:false}")
+    private boolean sendEmail;
 
     public Logger getLog() {
         return  logger;
@@ -126,7 +133,19 @@ public class RestrictionService {
                 restrictionRunDocument.setStatus(Status.FAILED);
                 restrictionRunDocument.setMessage(e.getMessage());
             } finally {
-                restrictionRunRepository.save(restrictionRunDocument);
+                RestrictionRunDocument runDocument = restrictionRunRepository.save(restrictionRunDocument);
+                if (sendEmail) {
+
+                    String subject = "Webulous template update for " + runDocument.getTemplateName() + ":" + runDocument.getStatus();
+                    String message = "The restriction upates on template " + runDocument.getTemplateName() + " has completed with status : " + runDocument.getStatus() + "\n\n";
+                    mailService.sendEmailNotification(
+                            populousTemplateDocument.getAdminEmailAddresses().split(","),
+                            null,
+                            subject,
+                            message);
+
+                }
+
             }
         }
         return restrictionRunDocument;
