@@ -140,8 +140,8 @@ public class DataConversionService {
                     runDocument.getMessage()  + "\n";
 
             mailService.sendEmailNotification(
-                    runDocument.getUserEmail().split(","),
-                    templateDocument.getAdminEmailAddresses(),
+                    runDocument.getUserEmail(),
+                    templateDocument.getAdminEmailAddresses().split(","),
                     subject,
                     message);
         }

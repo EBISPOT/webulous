@@ -38,7 +38,23 @@ public class MailService {
         return log;
     }
 
-    public void sendEmailNotification(String[] to, String cc, String subject, String message) {
+    public void sendEmailNotification(String to, String subject, String message) {
+        sendEmailNotification( new String[] {to}, null, subject, message );
+    }
+
+    public void sendEmailNotification(String to, String cc, String subject, String message) {
+        sendEmailNotification( new String[] {to}, new String[] {cc}, subject, message );
+    }
+
+    public void sendEmailNotification(String[] to, String subject, String message) {
+        sendEmailNotification( to, null, subject, message );
+    }
+
+    public void sendEmailNotification(String to, String []cc, String subject, String message) {
+        sendEmailNotification( new String[] {to}, cc, subject, message );
+    }
+
+    public void sendEmailNotification(String[] to, String[] cc, String subject, String message) {
 
 
         // Set up some of the values used in mail body

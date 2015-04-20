@@ -140,7 +140,6 @@ public class RestrictionService {
                     String message = "The restriction upates on template " + runDocument.getTemplateName() + " has completed with status : " + runDocument.getStatus() + "\n\n";
                     mailService.sendEmailNotification(
                             populousTemplateDocument.getAdminEmailAddresses().split(","),
-                            null,
                             subject,
                             message);
 
