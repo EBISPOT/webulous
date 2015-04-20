@@ -35,6 +35,7 @@ public class PopulousTemplateDocument implements PopulousTemplate {
 
     private List<PopulousPattern> patterns;
 
+    @NotEmpty(message = "Please enter at least one admin e-mail address")
     private String adminEmailAddresses;
 
     @Override
