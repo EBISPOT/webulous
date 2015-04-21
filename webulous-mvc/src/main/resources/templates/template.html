@@ -104,7 +104,7 @@
             <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
 
             <div class="grid_12 alpha" id="local-title">
-                <h1><a href="index.html">Webulous</a></h1>
+                <h1><a href="../index">Webulous</a></h1>
             </div>
 
             <!-- /local-title -->
@@ -139,7 +139,8 @@
                         <!--@thymesVar id="populousTemplateDocument" type="uk.ac.ebi.spot.webulous.model.PopulousTemplateDocument"-->
                         <form method="post" class="form-horizontal" th:object="${populousTemplateDocument}">
                             <fieldset>
-                                <legend>Webulous template <span th:text="${populousTemplateDocument.id}"></span> </legend>
+                                <legend><h2>Webulous template  <span style="font-size: smaller; color: #207a7a;" th:text="${populousTemplateDocument.id}"></span> </h2></legend>
+
 
                                 <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
                                     <a href="#" class="close" data-dismiss="alert">&times;</a>
@@ -158,8 +159,10 @@
                                         <a th:href="'../restrictions?templateId=' + ${populousTemplateDocument.id}" style="color: white;" class="btn btn-primary">Restriction updates</a>
                                         <a th:href="'../submissions?templateId=' + ${populousTemplateDocument.id}" style="margin-left:1px;color: white;" class="btn btn-primary">Data submissions</a>
 
-                                        <button type="reset" style="margin-left:1px;" class="btn btn-default pull-right">Reset</button>
-                                        <button name="delete" style="margin-left:1px;" class="btn btn-danger pull-right"  th:unless="${readonly}">Delete</button>
+                                        <!--<button type="reset" style="margin-left:1px;" class="btn btn-default pull-right">Reset</button>-->
+                                        <button name="delete" style="margin-left:1px;" onclick="return confirm('Are you sure you want to delete this template?')" class="btn btn-danger pull-right"  th:unless="${readonly}">Delete</button>
+                                        <!--<a th:unless="${readonly}" th:href="${populousTemplateDocument.id} + '?refresh'" style="color:white;margin-left:1px;" class="btn btn-warning">Queue</a>-->
+                                        <button name="refresh" style="margin-left:1px;" class="btn btn-warning pull-right" th:unless="${readonly}">Queue</button>
                                         <button name="save" type="submit" style="margin-left:1px;" class="btn btn-success pull-right" th:unless="${readonly}">Save</button>
                                     </div>
                                 </div>

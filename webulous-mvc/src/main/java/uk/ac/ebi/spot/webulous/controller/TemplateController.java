@@ -165,7 +165,7 @@ public class TemplateController {
         return "redirect:/restrictions";
     }
 
-    @RequestMapping(value = "/{templateId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET, params={"refresh"})
+    @RequestMapping(value = "/{templateId}", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET, RequestMethod.POST}, params={"refresh"})
     public String refreshTemplate(
             @PathVariable String templateId,
             @RequestParam(value = "groupName", required=false) String groupName,

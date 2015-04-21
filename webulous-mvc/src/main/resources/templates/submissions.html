@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
-    <link rel="stylesheet" type="text/css" href="../static/css/spacelab.bootstrap.min.css" th:href="@{../css/spacelab.bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/spacelab.bootstrap.min.css" th:href="@{css/spacelab.bootstrap.min.css}"/>
 
     <!-- CSS: implied media=all -->
     <!-- CSS concatenated and minified via ant build script-->
@@ -103,7 +103,7 @@
             <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
 
             <div class="grid_12 alpha" id="local-title">
-                <h1><a href="index.html">Webulous</a></h1>
+                <h1><a href="../index">Webulous</a></h1>
             </div>
 
             <!-- /local-title -->
@@ -174,8 +174,8 @@
                                         <td th:text="${dataRun.message}">message</td>
                                         <td th:text="${dataRun.lastUpdated}">date</td>
                                         <td>
-                                            <a th:unless="${readonly}" th:href="'submissions/' + ${dataRun.id} + '/delete'" style="margin-left:1px;" class="btn btn-sm btn-danger">Delete</a>
-                                            <a th:unless="${readonly}" th:href="'submissions/' + ${dataRun.id} + '/run'" style="margin-left:1px;" class="btn btn-sm btn-warning">Force</a>
+                                            <a th:unless="${readonly}" th:href="'submissions/' + ${dataRun.id} + '/delete'" style="color:white;margin-left:1px;" class="btn btn-sm btn-danger">Delete</a>
+                                            <!--<a th:unless="${readonly}" th:href="'submissions/' + ${dataRun.id} + '/run'" style="color:white;margin-left:1px;" class="btn btn-sm btn-warning">Force</a>-->
                                         </td>
                                     </tr>
                                     </tbody>
