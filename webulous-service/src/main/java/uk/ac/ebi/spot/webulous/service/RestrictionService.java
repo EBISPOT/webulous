@@ -135,16 +135,18 @@ public class RestrictionService {
             } finally {
                 RestrictionRunDocument runDocument = restrictionRunRepository.save(restrictionRunDocument);
                 if (sendEmail) {
-
-                    String subject = "Webulous template update for " + runDocument.getTemplateName() + ":" + runDocument.getStatus();
-                    String message = "The restriction upates on template " + runDocument.getTemplateName() + " has completed with status : " + runDocument.getStatus() + "\n\n";
-                    mailService.sendEmailNotification(
-                            populousTemplateDocument.getAdminEmailAddresses().split(","),
-                            subject,
-                            message);
-
+                    try {
+                        String subject = "Webulous template update for " + runDocument.getTemplateName() + ":" + runDocument.getStatus();
+                        String message = "The restriction upates on template " + runDocument.getTemplateName() + " has completed with status : " + runDocument.getStatus() + "\n\n";
+                        mailService.sendEmailNotification(
+                                populousTemplateDocument.getAdminEmailAddresses().split(","),
+                                subject,
+                                message);
+                    } catch (Exception e) {
+                        getLog().error("Failed to send e-mail", e);
+                        runDocument.setMessage("Finished but failed to e-mail notification");
+                    }
                 }
-
             }
         }
         return restrictionRunDocument;

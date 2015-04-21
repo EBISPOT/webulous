@@ -2,6 +2,8 @@ package uk.ac.ebi.spot.webulous.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.semanticweb.owlapi.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -51,6 +53,11 @@ public class DataConversionService {
 
     @Value("${webulous.sendemail:false}")
     private boolean sendEmail;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    public Logger getLog() {
+        return  logger;
+    }
 
     public DataConversionRunDocument queueDataConversion(DataSubmission submission) {
 
@@ -135,15 +142,20 @@ public class DataConversionService {
 
         if (sendEmail) {
             // e-mail everyone
-            String subject = "Webulous run for " + runDocument.getTemplateName() + ": " + runDocument.getStatus();
-            String message =  "Your data submitted to webulous template " + runDocument.getTemplateName() + " has completed with status: " + runDocument.getStatus() + "\n\n" +
-                    runDocument.getMessage()  + "\n";
+            try {
+                String subject = "Webulous run for " + runDocument.getTemplateName() + ": " + runDocument.getStatus();
+                String message =  "Your data submitted to webulous template " + runDocument.getTemplateName() + " has completed with status: " + runDocument.getStatus() + "\n\n" +
+                        runDocument.getMessage()  + "\n";
 
-            mailService.sendEmailNotification(
-                    runDocument.getUserEmail(),
-                    templateDocument.getAdminEmailAddresses().split(","),
-                    subject,
-                    message);
+                mailService.sendEmailNotification(
+                        runDocument.getUserEmail(),
+                        templateDocument.getAdminEmailAddresses().split(","),
+                        subject,
+                        message);
+            } catch (Exception e) {
+                getLog().error("Failed to send e-mail", e);
+                runDocument.setMessage("Finished but failed to e-mail notification");
+            }
         }
         return dataConversionRunRepository.save(runDocument);
     }
