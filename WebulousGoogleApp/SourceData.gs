@@ -19,7 +19,7 @@ function getTemplates(url) {
  * @param {string} url The base URI of the webulous template server
  * @param {string} id The id of the template on the webulous template server
  */
-function setSource(url, id){
+function setSource(url, id, rows){
   
   if (url == null || id == null) {
     throw new Error ("You must supply a valid template server url");
@@ -53,7 +53,7 @@ function setSource(url, id){
   }
   **/
 
-  _initilaiseFromTemplate(sourceData);
+  _initilaiseFromTemplate(sourceData, rows);
 
 }
 
@@ -66,7 +66,7 @@ function setSource(url, id){
  *
  * @param {string} sourceData data form the webulous server
  */
-function _initilaiseFromTemplate (sourceData) {
+function _initilaiseFromTemplate (sourceData, numberOfRows) {
 
   var activeSheet;
   if (SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sourceData.description) == null) {
@@ -76,8 +76,10 @@ function _initilaiseFromTemplate (sourceData) {
    activeSheet  = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sourceData.description)
   }
   
+  if (numberOfRows == null) {
+    numberOfRows = sourceData.defaultNumberOfRows;
+  }
   
-  var numberOfRows = sourceData.defaultNumberOfRows;
   
   if (sourceData.dataRestrictions != null) {
     

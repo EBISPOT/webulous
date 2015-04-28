@@ -273,7 +273,7 @@ public class OpplPatternExecutionService {
                     }
                 }
                 else if (populousDataRestriction.isRequired()) {
-                    throw new RuntimeException("Missing value at " + columnIndex+ ", which is a required restriction");
+                    throw new RuntimeException("Missing value for " + populousDataRestriction.getRestrictionName()+ ", which is a required field");
                 }
             }
             else {

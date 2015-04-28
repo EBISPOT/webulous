@@ -14,10 +14,10 @@
                     <input  size="45" class="serverSelect" type="text" placeholder="Enter Webulous server URL">
                 </td>
                 <td align="right">
-                    <input id="getTemplateButton" type="button" value="Get" onclick="google.script.run.withFailureHandler(onFailure).withSuccessHandler(showTemplates).getTemplates($('.serverSelect').val());"/></td>
+                    <input id="getTemplateButton" class="action" type="button" value="Get templates" onclick="google.script.run.withFailureHandler(onFailure).withSuccessHandler(showTemplates).getTemplates($('.serverSelect').val());"/></td>
             </tr>
         </table>
-        <i>e.g."http://54.148.43.5:8080/webulous"</i>
+        <i>e.g."http://www.ebi.ac.uk/efo/webulous"</i>
         <hr/>
 
         <div align="center">
@@ -25,21 +25,27 @@
                 <option value="" disabled="disabled" selected="selected">Choose a template</option>
             </select>
         </div>
-
-        <br/><br/>
+        <div align="left">
+          <table>
+           <tr>
+            <td>Number of rows</td>
+            <td style="padding-left:10px;"><input  class="numberOfRows" size="5" value="100"/>
+           </tr>
+          </table>
+        </div>
         <p class="errorMessage" style="display:none; color:red;">Failed to connect to template server</p>
 
-        <div align="right">
+        <div align="left">
             <table>
                 <tr>
+                    <td style="width:100px; padding-right:3px;">
+                        <input class="selectTemplateButton action" disabled="disabled" type="button" value="Load template" onclick="templateSelected()"/></td>
+                    <td><input type="button" value="Cancel" onclick="google.script.host.close();" /></td>
                     <td align="left" style="padding-right:5px;">
                         <div class="loading" style="display:none">
                             <img style="height:30px;width:30px;" src="https://5079980847011989849-a-1802744773732722657-s-sites.googlegroups.com/site/scriptsexamples/ProgressSpinner.gif"/>
                         </div>
                     <td>
-                    <td style="width:100px; padding-right:3px;">
-                        <input class="selectTemplateButton" disabled="disabled" type="button" value="Open template" onclick="templateSelected()"/></td>
-                    <td><input type="button" value="Cancel" onclick="google.script.host.close();" /></td>
                 </tr>
             </table>
 
@@ -64,6 +70,7 @@
             $('.errorMessage').show();
         }
         else {
+            $('.errorMessage').hide();
             $('select.templateSelect').html('');
             for (var i = 0; i < data.length ; i++) {
                 $('select.templateSelect').append("<option value='" + data[i].id + "'>" + data[i].description + "</option>");
@@ -74,7 +81,7 @@
 
     function templateSelected () {
         $('div.loading').show();
-        google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).setSource($('.serverSelect').val(), $('select.templateSelect').val());
+        google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).setSource($('.serverSelect').val(), $('select.templateSelect').val(), $('.numberOfRows').val());
     }
 
 

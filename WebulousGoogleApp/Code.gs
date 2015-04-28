@@ -2,15 +2,14 @@ function onOpen() {
   var ui = SpreadsheetApp.getUi();
     ui.createMenu('Webulous')
         .addItem('Ontology search', 'showSidebar')
-        .addItem('Remove selected restriction', 'removeRestriction')        
-        .addItem('Reset this spreadsheet', 'resetSpreadsheet')        
+        .addItem('Remove selected validation', 'removeRestriction')        
+        .addItem('Remove all validations', 'resetSpreadsheet')        
         .addSeparator()
         .addSubMenu(ui.createMenu('Webulous server')
-              .addItem('Load template...', 'showSelectTemplate')
-              .addItem('Submit...', 'showSubmitData'))      
+              .addItem('Load a template...', 'showSelectTemplate')
+              .addItem('Submit populated template...', 'showSubmitData'))      
         .addSeparator()
         .addItem('About', 'showAbout')        
-        .addItem('Help', 'showHelp')        
         .addToUi();
 
 }
@@ -26,8 +25,8 @@ function showSidebar() {
 function showSelectTemplate () {
     var html = (HtmlService.createTemplateFromFile('SelectTemplate').evaluate())
      .setSandboxMode(HtmlService.SandboxMode.IFRAME)
-    .setWidth(400)
-    .setHeight(300);
+    .setWidth(420)
+    .setHeight(230);
   SpreadsheetApp.getUi() 
       .showModalDialog(html, 'Select template from server');
 }
@@ -54,7 +53,7 @@ function showSubmitData(){
     var html = (HtmlService.createTemplateFromFile('SubmitData').evaluate())
     .setSandboxMode(HtmlService.SandboxMode.IFRAME)
     .setWidth(400)
-    .setHeight(400);
+    .setHeight(300);
     SpreadsheetApp.getUi() 
     .showModalDialog(html, 'Submit data to Webulous server');   
   }        
@@ -62,7 +61,7 @@ function showSubmitData(){
 
 function resetSpreadsheet() {
   var ui = SpreadsheetApp.getUi();    
-  var alert = ui.alert("Are you sure you want to reset spreadsheet, removing all patterns and restrictions?", ui.ButtonSet.OK_CANCEL);
+  var alert = ui.alert("Are you sure you want to remove all data validations from this sheet?", ui.ButtonSet.OK_CANCEL);
   if(alert == ui.Button.OK){  
     
     var ss = SpreadsheetApp.getActive();
@@ -96,17 +95,8 @@ function resetSpreadsheet() {
 
 function showAbout(){  
   var html = HtmlService.createHtmlOutputFromFile('About')
-  .setWidth(400)
-      .setHeight(300);
+  .setWidth(280)
+      .setHeight(180);
   SpreadsheetApp.getUi() 
       .showModalDialog(html, 'About Webulous');
-}
-
-
-function showHelp(){  
-  var html = HtmlService.createHtmlOutputFromFile('Help')
-      .setWidth(400)
-      .setHeight(300);
-  SpreadsheetApp.getUi() 
-      .showModalDialog(html, 'Help');
 }

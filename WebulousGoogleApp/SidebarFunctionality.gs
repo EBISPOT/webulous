@@ -264,6 +264,19 @@ function getLastNonEmptyCellInRow(sheet, rowToCheck) {
   return rowLength+1;
 }
 
+/**
+ * Set the values of the active cells with the value supplied
+ * @param value the value to enter into the cells
+ */
+
+function setCellValue(value) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getActiveSheet();
+  var range = sheet.getActiveRange();
+  
+  range.setValue(value);
+  
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // tests

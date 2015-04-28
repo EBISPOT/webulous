@@ -15,13 +15,13 @@ function submitData(comment, apikey) {
   
   var url = getTemplateServerURL()
   var templateId = getTemplateId();
-  var email = Session.getActiveUser().getEmail();
+  var email = Session.getEffectiveUser().getEmail();
   var data = getData();
   
   if (url == null || templateId == null) {
     throw new Error ("No template server configured, you must load an existing template from an existing Webulous server") ;
   }
-  else if (email == null) {
+  else if (email == "") {
       throw new Error ("You must be logged in with a valid google account and email to use this service");
   }
   else if (data.length == 0) {
@@ -64,7 +64,11 @@ function getData(){
   var dataSheet = SpreadsheetApp.getActiveSheet();  
   var colNum = dataSheet.getLastColumn();
   var rowNum = dataSheet.getLastRow();
-    
+  
+  if (rowNum == 1) {
+   throw new Error("You must supply at least one row of data"); 
+  }
+  
   return dataSheet.getRange(2, 1, rowNum-1, colNum).getValues();
   
 }

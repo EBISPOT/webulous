@@ -12,7 +12,7 @@
          More info: h5bp.com/b/378 -->
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> --> <!-- Not yet implemented -->
 
-    <title>Home &lt; Webulous &lt; EMBL-EBI</title>
+    <title>About &lt; Webulous &lt; EMBL-EBI</title>
     <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
     <meta name="keywords" content="bioinformatics, europe, institute"/><!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
     <meta name="author" content="EMBL-EBI"/><!-- Your [project-name] here -->
@@ -21,7 +21,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
-    <link rel="stylesheet" type="text/css" href="../static/css/spacelab.bootstrap.min.css" th:href="@{css/spacelab.bootstrap.min.css}"/>
 
     <!-- CSS: implied media=all -->
     <!-- CSS concatenated and minified via ant build script-->
@@ -42,6 +41,54 @@
     <style type="text/css">
         /* You have the option of setting a maximum width for your page, and making sure everything is centered */
         /* body { max-width: 1600px; margin: 0 auto; } */
+
+        #toc {
+            border-bottom: 1px solid #efefed;
+            padding-top: .5em;
+            padding-bottom: .5em;
+        }
+
+        .sect1+.sect1 {
+          border-top: 1px solid #efefed;
+          padding-bottom: .5em;
+
+        }
+
+        #toctitle {
+            padding: 0 9px;
+            color: #207a7a;
+            font-size: 277%;
+            line-height: 1.11;
+            font-family: 'HelveticaNeueLT Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+            -webkit-margin-before: 0.83em;
+            -webkit-margin-start: 0px;
+            -webkit-margin-end: 0px;
+        }
+
+        #toc a {
+            text-decoration: none;
+            border-bottom-style: none;
+            font-size: medium;
+        }
+
+        #toc ul {
+            font-family: "Open Sans","DejaVu Sans",sans-serif;
+            list-style-type: none;
+        }
+
+        #toc>ul {
+            margin-left: .125em;
+        }
+
+        #footer {
+            padding: 0 9px;
+            color: lightgray;
+        }
+
+        .imageblock {
+            padding: 9px;
+        }
+
     </style>
 
 
@@ -102,11 +149,11 @@
             <!-- local-title -->
             <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
 
+
             <div id="local-title" class="grid_12 alpha logo-title">
-                <a href="../index" title="Back to Webulous homepage"><img style="width: 80px" th:src="@{../img/webulous_logo.png}" src="../static/img/webulous_logo.png" alt="Webulous logo"/></a>
+                <a href="index" title="Back to Webulous homepage"><img style="width: 80px" th:src="@{../img/webulous_logo.png}" src="../static/img/webulous_logo.png" alt="Webulous logo"/></a>
                 <span><h1>Webulous</h1></span>
             </div>
-
 
             <!-- /local-title -->
 
@@ -114,11 +161,11 @@
 
             <nav>
                 <ul class="grid_24" id="local-nav">
-                    <li><a href="templates">Home</a></li>
+                    <li class="first"><a href="templates">Templates</a></li>
                     <li><a href="templates/new">New template</a></li>
                     <li><a href="restrictions">Restriction updates</a></li>
-                    <li class="active"><a href="submissions">Data submissions</a></li>
-                    <li class="last"><a href="docs">Documentation</a></li>
+                    <li><a href="submissions">Data submissions</a></li>
+                    <li class="last active"><a href="docs">Documentation</a></li>
                 </ul>
             </nav>
         </div>
@@ -127,69 +174,24 @@
     </header>
 
     <div id="content" role="main" class="grid_24 clearfix">
-        <div class="container">
+        <div class="container" style="margin-left:50px;margin-right:50px; ">
 
+            <div id="docs-header">
 
-            <div class="grid_24 alpha">
-
-                <section>
-                    <div class="col-lg-12">
-                        <div class="">
-
-
-                            <div>
-                                <h2>Data submissions</h2>
-                                <!--@thymesVar id="readonly" type="boolean"-->
-
-                                <!--@thymesVar id="message" type="String"-->
-                                <div class="alert alert-dismissible alert-success" th:if="${message}">
-                                    <button type="button" class="close" data-dismiss="alert">×</button>
-                                    <strong th:text="${message}">Success message goes here</strong>.
-                                </div>
-
-                                <!--@thymesVar id="error" type="String"-->
-                                <div class="alert alert-dismissible alert-danger" th:if="${error}">
-                                    <button type="button" class="close" data-dismiss="alert">×</button>
-                                    <strong th:text="${error}">Error message goes here</strong>.
-                                </div>
-
-                                <table class="table table-striped table-hover ">
-                                    <thead>
-                                    <tr>
-                                        <th>Submission id</th>
-                                        <th>Template</th>
-                                        <th>Reference</th>
-                                        <th>Status</th>
-                                        <th>Message</th>
-                                        <th>Updated</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="dataRun : ${all_submission_runs}">
-                                        <td th:text="${dataRun.id}">run id</td>
-                                        <td>
-                                            <a th:href="'templates/' + ${dataRun.templateId}" th:text="${dataRun.templateName}">Template name</a>
-                                        </td>
-                                        <td th:text="${dataRun.reference}">reference</td>
-                                        <td th:text="${dataRun.status}">status</td>
-                                        <td th:text="${dataRun.message}">message</td>
-                                        <td th:text="${dataRun.lastUpdated}">date</td>
-                                        <td>
-                                            <a th:unless="${readonly}" th:href="'submissions/' + ${dataRun.id} + '/delete'" style="color:white;margin-left:1px;" class="btn btn-sm btn-danger">Delete</a>
-                                            <!--<a th:unless="${readonly}" th:href="'submissions/' + ${dataRun.id} + '/run'" style="color:white;margin-left:1px;" class="btn btn-sm btn-warning">Force</a>-->
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-
-
-                    </div>
-                </section>
             </div>
+
+            <div id="docs-content">
+
+            </div>
+
+            <div id="docs-footer">
+
+            </div>
+
+            <!--<div class="grid_24 alpha">-->
+
+            <!--</div>-->
+
         </div>
     </div>
 
@@ -242,10 +244,10 @@
     </footer>
 
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script type="text/javascript" src="../js/main.js" th:href="@{../js/main.js}"></script>
+
 <script defer="defer" src="//www.ebi.ac.uk/web_guidelines/js/cookiebanner.js"></script>
 <script defer="defer" src="//www.ebi.ac.uk/web_guidelines/js/foot.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="../static/js/webulous-docs.js" th:src="@{../js/webulous-docs.js}"></script>
 </body>
 </html>
-
