@@ -112,11 +112,12 @@
             <!-- /local-title -->
 
             <!-- -->
+            <!--@thymesVar id="readonly" type="boolean"-->
+            <!--@thymesVar id="new" type="boolean"-->
 
             <nav>
                 <ul class="grid_24" id="local-nav">
                     <li class="active"><a href="../templates">Templates</a></li>
-                    <li><a href="new">New template</a></li>
                     <li><a href="../restrictions">Restriction updates</a></li>
                     <li><a href="../submissions">Data submissions</a></li>
                     <li class="last"><a href="../docs">Documentation</a></li>
@@ -136,7 +137,6 @@
                 <section>
                     <div class="">
 
-                        <!--@thymesVar id="readonly" type="boolean"-->
 
                         <!--@thymesVar id="populousTemplateDocument" type="uk.ac.ebi.spot.webulous.model.PopulousTemplateDocument"-->
                         <form method="post" class="form-horizontal" th:object="${populousTemplateDocument}">

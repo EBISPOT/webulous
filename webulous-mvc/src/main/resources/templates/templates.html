@@ -115,7 +115,6 @@
             <nav>
                 <ul class="grid_24" id="local-nav">
                     <li class="first active"><a href="templates">Templates</a></li>
-                    <li><a href="templates/new">New template</a></li>
                     <li><a href="restrictions">Restriction updates</a></li>
                     <li><a href="submissions">Data submissions</a></li>
                     <li class="last"><a href="docs">Documentation</a></li>
@@ -148,6 +147,10 @@
                                <button type="button" class="close" data-dismiss="alert">×</button>
                                <strong th:text="${error}">Error message goes here</strong>.
                            </div>
+
+                        <div th:unless="${readonly}">
+                            <a href="templates/new" style="color: white;" class="btn btn-primary">Create new template</a>
+                        </div>
 
                         <table class="table table-striped table-hover ">
                             <thead>
