@@ -60,6 +60,10 @@
         $('input.selectTemplateButton').removeAttr('disabled');;
     }
 
+    function disableButton () {
+        $('input.selectTemplateButton').attr('disabled', 'disabled');;
+    }
+    
     function showTemplates(data) {
         if (data == null) {
             $('.errorMessage').text("Couldn't find any templates at this server");
@@ -80,12 +84,14 @@
     }
 
     function templateSelected () {
+        disableButton();
         $('div.loading').show();
         google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).setSource($('.serverSelect').val(), $('select.templateSelect').val(), $('.numberOfRows').val());
     }
 
 
     function onFailure(error){
+        enableButton();
         $('.errorMessage').text(error);
         $('.errorMessage').show();
     }

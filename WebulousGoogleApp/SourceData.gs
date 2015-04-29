@@ -30,7 +30,7 @@ function setSource(url, id, rows){
   var sourceData = getObjectFromUrl(template);
   var sourceSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SourceData");
   
-  if(sourceSheet == null){
+  if(sourceSheet == null && sourceData.description != null){
     sourceSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("SourceData");
     sourceSheet.hideSheet();
     // set the webulous server and template id
@@ -38,7 +38,18 @@ function setSource(url, id, rows){
     baseURI.setValue(url);
     var templateId = sourceSheet.getRange("B1");
     templateId.setValue(id);
-  }  
+    var templateName = sourceSheet.getRange("C1");
+    templateName.setValue(sourceData.description);
+  } else {
+   
+    var templateName = sourceSheet.getRange("C1").getValue();
+    if (templateName != sourceData.description) {
+      var ui = SpreadsheetApp.getUi();    
+      var alert = ui.alert("You have already loaded the template \"" + templateName + "\", you must remove the template using \"Remove template\" from the Webulous menu", ui.ButtonSet.OK_CANCEL); 
+      return;
+    }
+    
+  }
   
   /** currently not supporting this feature
   //this sets the source ontology, which be default goes into cells A2 (acronym) and B2 (full name)

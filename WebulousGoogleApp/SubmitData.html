@@ -10,53 +10,43 @@
     <div align="left">
         <p>
             You are about to submit this data to a webulous server.
-        </p>    
+        </p>
         <p style="text-align: center;font-style: italic;"><?= getTemplateServerURL(); ?>. </p>
-        <p>    
+        <p>
             Please provide any additional notes on this submission along with your URIGen API key if required
         </p>
-        <table>
-            <tr>
-                <td style="padding-right:3px;">
-                    Message:
-                </td>
-                <td align="right">
-                    <input  size="35" class="message" type="text" placeholder="Enter submission message here"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding-right:3px;">
-                    URIGen API Key:
-                </td>
-                <td align="right">
-                    <input  size="35" class="apikey" type="text" placeholder="optional"/>
-                </td>
-            </tr>
-            <tr>
-                <td align="left" style="padding-right:5px;">
-                    <table>
-                        <tr>
-                            <td style="padding-right:3px;">
-                                <input class="submitTemplateButton action" type="button" value="Submit" onclick="submit()"/>
-                            </td>
-                            <td><input type="button" value="Cancel" onclick="google.script.host.close();" /></td>
-                        </tr>
-                    </table>
-                </td>
-                <td>
-                    <div class="loading" style="display:none;">
-                        <img style="height:30px;width:30px;" src="https://5079980847011989849-a-1802744773732722657-s-sites.googlegroups.com/site/scriptsexamples/ProgressSpinner.gif"/>
-                        Submitting data, please wait...
-                    </div>
-                    <div class="errorMessage" style="display:none; color:red;">Failed to submit data</div>
-               </td>
-            </tr>
-        </table>
 
+        <div>
+            <div class="form-group" style="padding-bottom:5px;">
+                <label for="message">Message</label>
+                <input id="message" style="width:100%;" class="message" type="text" placeholder="Enter submission message"/>
+            </div>
 
+            <div class="form-group" style="padding-bottom:5px;">
+                <label for="urigen">URIGen API Key:</label>
+                <input  id="urigen" style="width:100%;" class="apikey" type="text" placeholder="API key (optional)"/>
+            </div>
+        </div>
 
+        <div class="block">
+            <div class="inline form-group">
+                <input class="submitTemplateButton action" type="button" value="Submit" onclick="submit()"/>
+            </div>
 
+            <div class="inline form-group">
+                <input type="button" value="Cancel" onclick="google.script.host.close();" />
+            </div>
 
+            <div class="inline form-group loading" style="visibility:hidden;">
+                <img style="height:30px;width:30px;" src="https://5079980847011989849-a-1802744773732722657-s-sites.googlegroups.com/site/scriptsexamples/ProgressSpinner.gif"/>
+                Submitting data, please wait...
+            </div>
+
+            <div class="form-group errorMessage" style="padding-top:5px;display:none; color:red;">
+                Failed to submit data
+            </div>
+
+        </div>
     </div>
 </div>
 
@@ -64,20 +54,19 @@
 
 
     function submit () {
-        $("div.loading").show();
-        //$("div.loading").css("visibility", "visible");
+        $('input.submitTemplateButton').attr('disabled', 'disabled');;
+        $("div.loading").css("visibility", "visible");
         google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).submitData($('.message').val(), $('.apikey').val());
     }
 
     function onFailure(error){
-        $("div.loading").hide();
-        //$("div.loading").css("visibility", "hidden");
+        $('input.submitTemplateButton').removeAttr('disabled');;
+        $("div.loading").css("visibility", "hidden");
         $('.errorMessage').text(error).show();
     }
 
     function onSuccess(){
-        $("div.loading").hide();;
-        //$("div.loading").css("visibility", "hidden");
+        $("div.loading").css("visibility", "hidden");
         google.script.host.close();
     }
 

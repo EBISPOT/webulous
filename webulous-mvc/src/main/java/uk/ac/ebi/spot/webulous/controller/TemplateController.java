@@ -66,7 +66,10 @@ public class TemplateController {
     }
 
     @RequestMapping("")
-    public String showAllTemplates() {
+    public String showAllTemplates(Model model) {
+        if (readOnly) {
+            model.addAttribute("readonly", true);
+        }
         return "templates";
     }
 
