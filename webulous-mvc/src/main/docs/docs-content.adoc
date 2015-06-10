@@ -9,7 +9,7 @@ Webulous is an application-suite for collaborative ontology development. Webulou
 Webulous has been designed to support a scenario where knowledge about a domain is collected in spreadsheets and transformed into statements within an ontology according to pre-defined ontology design patterns.
 
 Webulous is comprised of two components: the Webulous server, and the Google Spreadsheet add-on. The Webulous server is used for administrating ontology building templates and handles the transformation of spreadsheets into an ontology.
-The Webulous Google Sheet Add-on servers as a client to the Webulous server and allows teamples to be loaded form the Webulous server, and allows users to submit populated templates back to the server for processing.
+The Webulous Google Sheet Add-on servers as a client to the Webulous server and allows templates to be loaded form the Webulous server, and allows users to submit populated templates back to the server for processing.
 
 The Webulous Google Sheet Add-on can also be used as a generic application for searching ontologies in the NCBO bioportal and provides a convenient way to create data validations according to ontology terms.
 
@@ -166,9 +166,7 @@ Assuming you are running on localhost the webulous server will be running at htt
 
 ==== Webulous admin interface
 
-The Webulous admin interface can be used to
-
-== Developer access
+The Webulous admin interface is the primary interface for managing Webulous templates and data submissions.
 
 == Support
 
