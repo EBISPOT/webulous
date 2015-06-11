@@ -127,7 +127,7 @@ You must use the Webulous server if you want to create templates with data valid
 
 ==== Why is the Webulous Add-on slow?
 
-Google sheets has limits on how many terms can go into a data validation. If you are trying to create a data validation of more than 10,000 terms you can expect the performance to drop off. It is best to try and minimise the number of allowed values
+Google sheets has limits on how many terms can go into a data validation. If you are trying to create a data validation of more than 5000 terms you can expect the performance to drop off. It is best to try and minimise the number of allowed values
 in a validation, and split these over multiple columns if you have a lot of terms.
 
 == Webulous server
