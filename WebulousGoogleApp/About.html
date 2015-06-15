@@ -1,9 +1,74 @@
 <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css" />
 
 <div>
+
+    <img style="float:right;" src="http://www.ebi.ac.uk/efo/webulous/img/webulous_logo.png"/>
+    <p>
+        The Webulous Add-on provides access to the Ontologies in the <a target="_blank" href="http://www.bioontology.org">NCBO BioPortal</a> repository so that you can easily create ontology based data validations in
+        Google Sheets. From the Webulous menu select the "Ontology Search..." option to open a sidebar where you can access BioPortal. You can choose to search across all ontologies in BioPortal
+        or restrict this to a specific ontology by choosing one from the dropdown.
+    </p>
+
+    <h2>Creating a data validation</h2>
+    <p>
+        You can create data validations in your spreadsheet directly from search results. To create a data validation first select a range of cells in your spreadsheet where you would like the
+        validation to apply. This can be a custom range of cells or an entire column or row.
+    </p>
+
+    <div style="background-color:lightgoldenrodyellow; padding:5px;">
+        <p>
+            Note: Creating long lists of data validations can effect performance of the Google Sheet so it is recommended
+            to only create validations for a few hundred cells at a time.
+        </p>
+    </div>
+
+    <p>
+        With a range selected, hover over the term in your search result that will act as the source for the data validation. Two buttons will appear that will allow you to create a data validation
+        based on either direct subclasses of the term, or all subclasses (descendants) of the term. The data validation will also include the selected term.
+        You can merge multiple ontology terms into an existing data validation. Simply select an existing range and choose either subclasses or descendnats of the new term from the search results.
+    </p>
+
+    <div style="background-color:lightgoldenrodyellow; padding:5px;">
+        <p>
+            Note: Data validations are currently restricted to a maximum of 5000 terms.
+        </p>
+    </div>
+
+    <h2>Removing data validation</h2>
+
+    <p>
+        You can remove existing data validations using the normal Data > Validations... menu item in Google Sheets. However, validations created with Webulous create hidden sheets that store the term label to URI mappings.
+        In order to remove these validations entirely it is recommended  to use the Webulous > "Ontology Validations..." menu item. This will show all the existing validations. From here you can view or remove individual validations
+        or you can simply remove all validations to reset the spreadsheet.
+    </p>
+
+    <h2>Webulous templates</h2>
+
+    <p>
+        Webulous can also be used to edit ontology building templates from a Webulous server. For instance, you can use Webulous to submit new terms to ontologies like EFO. You can get more information about
+        creating your own Webulous server <a target="_blank" href="http://www.ebi.ac.uk/efo/webulous">here</a> and the code is also available  from <a target="_blank" href="https://github.com/EBISPOT/webulous">GitHub</a>.
+    </p>
+
+    <p>
+        You can only load one Webulous template at a time. Select the "Webulous templates..." option in the menu. Choose a Webulous template server and a list of available templates will appear. Choose the template and a
+        new sheet will be created in your spreadsheet. Populate the columns with the required information and submit the data back, again using the "Webulous template..." menu item.
+    </p>
+
+    <h2>About Webulous</h2>
+
     <p>Version: 1.0-beta</p>
-    <p>Developed in the <a href="http://www.ebi.ac.uk/about/spot-team">SPOT Team</a> at the EMBL-EBI <a href="http://www.ebi.ac.uk">European Bioinformatics Institute</a> in collaboration with the
-        NCBO <a href="http://www.bioontology.org">National Centre for Biomedical Ontology</a>.</p>
-    <br>
+    <p>Developed in the <a target="_blank" href="http://www.ebi.ac.uk/about/spot-team">SPOT Team</a> at the EMBL-EBI <a target="_blank" href="http://www.ebi.ac.uk">European Bioinformatics Institute</a> in collaboration with the
+        NCBO <a target="_blank" href="http://www.bioontology.org">National Centre for Biomedical Ontology</a>.</p>
+    <h2>Contact</h2>
+    <p>Please contact the <a href="mailto:efo-users@lists.sourceforge.net">SPOT team</a> if you require any further assistance with Webulous.
 </div>
-<input type="button" value="Close" onclick="google.script.host.close()" />
+
+<div class="block">
+    <div class="inline form-group">
+        <a href="http://www.ebi.ac.uk/efo/webulous" class="button action" type="button">Learn more</a>
+    </div>
+
+    <div class="inline form-group">
+        <input type="button" value="Close" onclick="google.script.host.close();" />
+    </div>
+</div>

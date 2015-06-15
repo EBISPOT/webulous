@@ -61,12 +61,14 @@ function submitData(comment, apikey) {
 function getData(){
  //process the spreadsheet row by row 
   
-  var dataSheet = SpreadsheetApp.getActiveSheet();  
+  var templateName = getTemplateName();
+  
+  var dataSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(templateName);  
   var colNum = dataSheet.getLastColumn();
   var rowNum = dataSheet.getLastRow();
   
   if (rowNum == 1) {
-   throw new Error("You must supply at least one row of data"); 
+   throw new Error("You must supply at least one row of data in " + templateName); 
   }
   
   return dataSheet.getRange(2, 1, rowNum-1, colNum).getValues();

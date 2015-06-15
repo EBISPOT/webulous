@@ -51,7 +51,7 @@ function _getBPQuery(ontology, cls, type) {
  * @param ontology ontology where the terms came from
  * @param cls  uri of the term
  * @param label label for the term
- * @param type type of terms {subclass or descendants}
+ * @param type type of terms {children or descendants}
  *
  * @return {string [][]} 2D array of terms {label, uri}
  */
@@ -61,10 +61,24 @@ function getOntologyTermsFromBP(ontology, cls, label, type){
   var terms = [];
   try {
     var doc = getObjectFromUrl(query);
-
+    
+    if (doc.pageCount != null && doc.collection != null) {
+      var pageLength = doc.collection.length
+      var pageCount = doc.pageCount;
+      var total = (pageLength * pageCount);
+      
+      if (total > 5000) {
+        var ui = SpreadsheetApp.getUi();    
+        var alert = ui.alert("You are trying to create a data restriction with " + total + " terms. This is above the recommended limit of 5000 terms so it may take a while to create the validation and the sheet performance may suffer. Do you want to continue?", ui.ButtonSet.YES_NO);
+        if(alert == ui.Button.NO){
+          return terms;
+        }  
+      }
+    }
+    
     terms = _processResult(doc);
     terms.push([label, cls]);
-
+    
     if(parseInt(doc.pageCount) > 1){
       var url = doc.links.nextPage;
       var done = false;
@@ -83,7 +97,7 @@ function getOntologyTermsFromBP(ontology, cls, label, type){
     }
 
   } catch (e) {
-    throw new Error("Couldn't query BioPortal: " + e)
+    throw new Error("Can't query BioPortal")
   }
 
   return terms;
@@ -125,14 +139,17 @@ function getBioPortalOntologies () {
 function _processResult(result){
   var values = [];
 
-  for(var i=0; i<result.collection.length; i++){
-    var current = result.collection[i];
-    var value = new Array(2);
-
-    value[0] = current.prefLabel;
-    value[1] = current["@id"];
-
-    values.push(value);
+  if (result.collection != null) {
+    for(var i=0; i<result.collection.length; i++){
+      var current = result.collection[i];
+      var value = new Array(2);
+      
+      value[0] = current.prefLabel;
+      value[1] = current["@id"];
+      
+      values.push(value);
+    }
   }
+  
   return values;
 }

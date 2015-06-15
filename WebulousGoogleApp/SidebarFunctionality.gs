@@ -19,7 +19,7 @@
 
 function _createRestriction(range, ontology, cls, label, type, terms) {
 
-  Logger.log("Creating restriction with: %s, %s, %s", ontology , cls , type  );
+  Logger.log("Creating validation with: %s, %s, %s", ontology , cls , type  );
 
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var selectedRangeAsString = range.getA1Notation();
@@ -28,7 +28,7 @@ function _createRestriction(range, ontology, cls, label, type, terms) {
   var lastCol = 1;
 
   if (existingRange.length > 1) {
-    SpreadsheetApp.getUi().alert("Can't create a restriction in this range as it covers two existing ranges");
+    SpreadsheetApp.getUi().alert("Can't create a validation in this range as it covers two existing ranges");
   }
   else if (existingRange.length == 1) {
 
@@ -45,10 +45,15 @@ function _createRestriction(range, ontology, cls, label, type, terms) {
     restrictionSheet.hideSheet();
   }
 
-  terms.sort(function(a,b) {
-    return (a[0] > b[0]) ? 1 : (a[0] < b[0]) ? -1 : 0;
-  });
-
+  try {
+    terms.sort(function(a,b) {
+      return (a[0] > b[0]) ? 1 : (a[0] < b[0]) ? -1 : 0;
+    });
+  }
+  catch (e) {
+    // sort may not work with some funky labels, catch any sort error and continue with an unsorted list
+  }
+  
   // store the details of the restriction in the hidden sheet
   restrictionSheet.getRange(1, lastCol).setValue(ontology);
   restrictionSheet.getRange(2, lastCol).setValue(cls);
@@ -60,7 +65,7 @@ function _createRestriction(range, ontology, cls, label, type, terms) {
   var rule = SpreadsheetApp.newDataValidation().requireValueInList(termRange.getValues()).build();
   range.setDataValidation(rule);
 
-  return {"status": "1", "message": "Restriction created for " + type + " of " +  label};
+  return {"status": "1", "message": "Validation created for " + type + " of " +  label};
 
 }
 
@@ -70,6 +75,26 @@ function _createRestriction(range, ontology, cls, label, type, terms) {
  */
 
 function getExistingRange(range) {
+  
+  var existingRanges = new Array(0);
+  var ranges = getAllOntologyValidationsRanges();
+  for (var x = 0; x < ranges.length; x++) {
+    
+    var range2 = SpreadsheetApp.getActive().getActiveSheet().getRange(ranges[x]);
+       if (intersects(range, range2)) {
+         existingRanges.push(range2.getA1Notation());
+       }
+  }
+  return existingRanges;
+}
+
+/**
+ * Get all the ranges defined in the active sheet that have ontology validations
+ * These are ranges that are attached to a hidden sheet with the same name as the range
+ * @returns {string} the existing ranges in A1 notation
+ */
+
+function getAllOntologyValidationsRanges(range) {
 
   var sheets = SpreadsheetApp.getActive().getSheets();
   var existingRanges = new Array(0);
@@ -82,10 +107,7 @@ function getExistingRange(range) {
     try {
       var existingRange = sheets[x].getRange(sheetName);
       Logger.log("Found sheet with name %s", sheetName);
-
-      if (intersects(range, existingRange)) {
-        existingRanges.push(existingRange.getA1Notation());
-      }
+      existingRanges.push(existingRange.getA1Notation());
     } catch (e) {
        // we allow this to fail and continue looking for sheets with this name
     }
@@ -198,7 +220,11 @@ function getRestrictionValuesFromBP(ontology, cls, label, type){
 
   try {
     var terms = getOntologyTermsFromBP(ontology, cls, label, type);
-
+    
+    if (terms == null) {
+      return {"status":1, "message": "No validation created"};
+    }
+    
     if (terms.length == 0) {
       return {"status":1, "message": "No " + type + " found for " + cls};
     }
@@ -214,11 +240,11 @@ function getRestrictionValuesFromBP(ontology, cls, label, type){
 /**
  * Removes any data restrictions form the active range
  */
-function removeRestriction(){
+function removeRestriction(rangeA1){
 
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getActiveSheet();
-  var range = sheet.getActiveRange();
+  var range = sheet.getRange(rangeA1);
 
   var existingRanges  = getExistingRange(range);
 

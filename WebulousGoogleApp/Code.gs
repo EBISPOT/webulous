@@ -1,15 +1,9 @@
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
     ui.createAddonMenu()
-        .addItem('Ontology search', 'showSidebar')
-        .addItem('Remove selected validation', 'removeRestriction')        
-        .addItem('Remove all validations', 'removeAllValidations')        
-        .addItem('Remove template', 'removeTemplate')        
-        .addSeparator()
-        .addSubMenu(ui.createMenu('Webulous server')
-              .addItem('Load a template...', 'showSelectTemplate')
-              .addItem('Submit populated template...', 'showSubmitData'))      
-        .addSeparator()
+        .addItem('Ontology search...', 'showSidebar')
+        .addItem('Manage validations...', 'viewValidations')
+        .addItem('Webulous template...', 'webulousServer')        
         .addItem('About', 'showAbout')
         .addToUi();
 
@@ -26,18 +20,26 @@ function showSidebar() {
 function showSelectTemplate () {
     var html = (HtmlService.createTemplateFromFile('SelectTemplate').evaluate())
      .setSandboxMode(HtmlService.SandboxMode.IFRAME)
-    .setWidth(430)
-    .setHeight(240);
+    .setWidth(350)
+    .setHeight(290);
   SpreadsheetApp.getUi() 
       .showModalDialog(html, 'Load template from server');
 }
 
-
+function webulousServer () {
+ if(SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SourceData") == null){
+     showSelectTemplate();
+ }
+ else {
+    showSubmitData();
+ }
+  
+}
 
 function noSource(){
   var ui = SpreadsheetApp.getUi();    
-  var alert = ui.alert("You need to choose a Webulous server to submit data", ui.ButtonSet.OK_CANCEL);
-  if(alert == ui.Button.OK){  
+  var alert = ui.alert("You can only upload data for a template loaded from a Webulous server.\n Would you like to load a Webulous template now?", ui.ButtonSet.YES_NO);
+  if(alert == ui.Button.YES){  
      showSelectTemplate();
   }    
 }
@@ -46,18 +48,56 @@ function showSubmitData(){
   if(SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SourceData") == null){
     noSource();   
   }
-  else if(SpreadsheetApp.getActiveSheet().getLastColumn() == 0){
-    var ui = SpreadsheetApp.getUi();    
-    var alert = ui.alert("This spreadsheet contains no data.");    
-  }
   else{
+    
+    var templateName = getTemplateName();
+    var templateSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(templateName);
+    SpreadsheetApp.getActiveSpreadsheet().setActiveSheet(templateSheet);
+    
+    
     var html = (HtmlService.createTemplateFromFile('SubmitData').evaluate())
     .setSandboxMode(HtmlService.SandboxMode.IFRAME)
-    .setWidth(410)
-    .setHeight(310);
+    .setWidth(440)
+    .setHeight(340);
     SpreadsheetApp.getUi() 
-    .showModalDialog(html, 'Submit populated template to server');   
+    .showModalDialog(html, 'Submit data for template to the Webulous server');   
   }        
+}
+
+function viewValidations() {
+  
+  // get hidden sheets that are a range
+  var sheets = SpreadsheetApp.getActive().getSheets();
+  var validationsExist = false;
+  
+  for (var x = 0 ; x < sheets.length ; x++) {
+    var sheetName = sheets[x].getName();
+    // get a range from sheet name
+    Logger.log("looking for sheet with name %s", sheetName);
+
+    try {
+      var existingRange = sheets[x].getRange(sheetName);
+      var a1 = existingRange.getA1Notation();
+      if (a1 != null) {
+       validationsExist = true; 
+      }
+    } catch (e) {
+       // we allow this to fail and continue looking for sheets with this name
+    }
+  }
+
+  if (validationsExist) {
+   var html = (HtmlService.createTemplateFromFile('Validations').evaluate())
+    .setSandboxMode(HtmlService.SandboxMode.IFRAME)
+    .setWidth(300)
+    .setHeight(260);
+    SpreadsheetApp.getUi() 
+    .showModalDialog(html, 'Manage Validations');   
+  }
+  else {
+    SpreadsheetApp.getUi().alert("No ontology validations defined, use the \"Ontology Search\" option to create new validations")
+  }
+  
 }
 
 function removeAllValidations () {
@@ -84,10 +124,9 @@ function removeTemplate() {
       var alert = ui.alert("Are you sure you want to remove \"" + templateName + "\"?", ui.ButtonSet.YES_NO);
       if(alert == ui.Button.YES){  
         var templateSheet = ss.getSheetByName(templateName);
-        ss.setActiveSheet(templateSheet);
-        _removeAllValidationsFromSheet();
-
         if (templateSheet != null) {
+          ss.setActiveSheet(templateSheet);
+          _removeAllValidationsFromSheet();
           ss.deleteSheet(templateSheet);
         }
         ss.deleteSheet(sourceSheet);
@@ -111,24 +150,21 @@ function _removeAllValidationsFromSheet () {
     
     try {
       var existingRange = sheets[x].getRange(sheetName);
-      Logger.log("Found sheet with name %s", sheetName);
+      Logger.log("Founds sheet with name %s", sheetName);
       ss.deleteSheet(ss.getSheetByName(sheetName));
+      var range = activeSheet.getRange(sheetName);
+      range.clearDataValidations();
     } catch (e) {
       
     }
   }
-  
-  // remove any restrictions from the active sheet
-  var sheet = ss.getActiveSheet();
-  var range = sheet.getRange(1, 1, sheet.getMaxRows(), sheet.getMaxColumns());
-  range.clearDataValidations();
 }
 
 
 function showAbout(){  
   var html = HtmlService.createHtmlOutputFromFile('About')
-  .setWidth(280)
-      .setHeight(180);
+  .setWidth(560)
+      .setHeight(460);
   SpreadsheetApp.getUi() 
       .showModalDialog(html, 'About Webulous');
 }

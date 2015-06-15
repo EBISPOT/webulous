@@ -9,9 +9,10 @@
 
     <div align="left">
         <p>
-            You are about to submit this data to a webulous server.
+
+            You are about to submit data for template <span style="font-style: italic;font-weight: bold;"><?= getTemplateName(); ?></span> to the following Webulous server.
         </p>
-        <p style="text-align: center;font-style: italic;"><?= getTemplateServerURL(); ?>. </p>
+        <p style="text-align: center;font-style: italic;font-weight: bold;"><?= getTemplateServerURL(); ?>. </p>
         <p>
             Please provide any additional notes on this submission along with your URIGen API key if required
         </p>
@@ -31,6 +32,10 @@
         <div class="block">
             <div class="inline form-group">
                 <input class="submitTemplateButton action" type="button" value="Submit" onclick="submit()"/>
+            </div>
+
+            <div class="inline form-group">
+                <input type="button" value="Remove template" onclick="google.script.run.removeTemplate();" />
             </div>
 
             <div class="inline form-group">

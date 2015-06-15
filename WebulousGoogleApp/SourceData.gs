@@ -120,6 +120,14 @@ function getTemplateId () {
   }
 }
 
+function getTemplateName () {
+  var sourceSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("SourceData");
+  if (sourceSheet != null) {
+    return sourceSheet.getRange("C1").getValue();
+  }
+}
+
+
 /**
  * Get the name and URI for all ontologies that are restricted by this template
  *

@@ -1,91 +1,150 @@
-<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css" />
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css" />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 
-<div>
+<div class="block">
 
-    <div align="left">
-    </div>
+    <div class="form-group" >
 
-    <div align="left">
-        <table>
-            <tr>
-                <td style="padding-right:3px;">
-                    <input  size="45" class="serverSelect" type="text" placeholder="Enter Webulous server URL">
-                </td>
-                <td align="right">
-                    <input id="getTemplateButton" class="action" type="button" value="Get templates" onclick="google.script.run.withFailureHandler(onFailure).withSuccessHandler(showTemplates).getTemplates($('.serverSelect').val());"/></td>
-            </tr>
-        </table>
-        <i>e.g."http://www.ebi.ac.uk/efo/webulous"</i>
+        <div style="padding-top:5px;" class="form-group"  align="center">
+            <!--<input style="float:right;" id="addServerButton" class="action" type="button" value="Add server" onclick="google.script.run.withFailureHandler(onFailure).withSuccessHandler(showTemplates).getTemplates($('.serverSelect').val());"/>-->
+            <div style="overflow: hidden;">
+                <select id="serverSelect" style="width:100%;" class="serverSelect">
+                    <option value="" disabled="disabled" selected="selected">Choose a server</option>
+                    <?
+                 var servers = getWebulousServers();
+                 for (var x = 0; x < servers.length; x++) {
+                 
+                ?>
+                    <option value="<?=servers[x];?>"><?=servers[x];?></option>
+                    <? } ?>
+                    <option id="addServerDropdownOption" value="add">Add new server...</option>
+
+                </select>
+            </div>
+
+            <div  id="addNewServerDiv" style="padding-top:5px;visibility:hidden;">
+                <input id="addServerButton" disabled="disabled" style="float:right;" id="getTemplateButton" class="action" type="button" value="Add" onclick="google.script.run.withFailureHandler(onFailure).withSuccessHandler(addNewServer).getTemplates($('.addServer').val());"/>
+                <div style="overflow: hidden; padding-right: .5em;">
+                    <input class="addServer" style="width:100%;" type="text" placeholder="Enter Webulous template server URL">
+                </div>
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <p>
+                <a style="font-size:smaller;" target="_blank" href="http://www.ebi.ac.uk/efo/webulous">Learn more...</a>
+            </p>
+        </div>
         <hr/>
 
-        <div align="center">
+        <div style="padding-top:5px;" class="form-group"  align="center">
             <select style="width:100%;" class="templateSelect">
                 <option value="" disabled="disabled" selected="selected">Choose a template</option>
             </select>
         </div>
-        <div align="left">
-          <table>
-           <tr>
-            <td>Number of rows</td>
-            <td style="padding-left:10px;"><input  class="numberOfRows" size="5" value="100"/>
-           </tr>
-          </table>
+
+        <div style="padding-top:5px;" class="form-group" >
+            <label for="noRows">Rows</label>
+            <input style="width:60px" id="noRows" type="number" class="numberOfRows" value="20" max="500"/>
         </div>
-        <p class="errorMessage" style="display:none; color:red;">Failed to connect to template server</p>
 
-        <div align="left">
-            <table>
-                <tr>
-                    <td style="width:100px; padding-right:3px;">
-                        <input class="selectTemplateButton action" disabled="disabled" type="button" value="Load template" onclick="templateSelected()"/></td>
-                    <td><input type="button" value="Cancel" onclick="google.script.host.close();" /></td>
-                    <td align="left" style="padding-right:5px;">
-                        <div class="loading" style="display:none">
-                            <img style="height:30px;width:30px;" src="https://5079980847011989849-a-1802744773732722657-s-sites.googlegroups.com/site/scriptsexamples/ProgressSpinner.gif"/>
-                        </div>
-                    <td>
-                </tr>
-            </table>
+        <p class="errorMessage" style="visibility:hidden; color:red;">Failed to connect to template server</p>
 
-
+        <div  style="padding-top:5px;width:100%;" class="inline form-group">
+            <input class="selectTemplateButton action" disabled="disabled" type="button" value="Load template" onclick="templateSelected()"/>
+            <input type="button" value="Cancel" onclick="google.script.host.close();" />
+            <div class="loading" style="display:inline;visibility:hidden;padding-top:5px;">
+                <img style="height:30px;width:30px;" src="https://5079980847011989849-a-1802744773732722657-s-sites.googlegroups.com/site/scriptsexamples/ProgressSpinner.gif"/>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
 
+
+    $( document ).ready(function() {
+
+        $('#serverSelect').change(function() {
+            if ($(this).val() === 'add') {
+                $('#addNewServerDiv').css('visibility', 'visible');
+                $("#serverSelect option[value='add']").remove();
+            }
+            else {
+                google.script.run.withFailureHandler(onFailure).withSuccessHandler(showTemplates).getTemplates($('.serverSelect').val());
+            }
+        });
+
+        $('input.addServer').on('keyup blur', function(){
+            if (this.value.trim().length > 0) {
+                $('#addServerButton').prop('disabled', '');
+            }
+        });
+
+
+
+    });
+
+
+    function addNewServer(data) {
+
+        // show the templates
+        if ( showTemplates(data) ) {
+            // save the server to the users list
+            var newserver = $('input.addServer').val();
+            google.script.run.addUsersWebulousServer(newserver);
+
+            // cleanup
+            $('#serverSelect').append($('<option>', {
+                value: newserver,
+                text: newserver,
+                selected: 'selected'
+            }));
+
+            $('#addNewServerDiv').css('visibility', 'hidden');
+
+        }
+    }
+
     function enableButton () {
-        $('input.selectTemplateButton').removeAttr('disabled');;
+        $('input.selectTemplateButton').removeAttr('disabled');
     }
 
     function disableButton () {
-        $('input.selectTemplateButton').attr('disabled', 'disabled');;
+        $('input.selectTemplateButton').attr('disabled', 'disabled');
     }
-    
+
     function showTemplates(data) {
         if (data == null) {
             $('.errorMessage').text("Couldn't find any templates at this server");
-            $('.errorMessage').show();
+            $('.errorMessage').css('visibility', 'visible');
         }
         else if (data.length == 0) {
             $('.errorMessage').text("No templates defined on this server");
-            $('.errorMessage').show();
+            $('.errorMessage').css('visibility', 'hidden');
         }
         else {
-            $('.errorMessage').hide();
+            $('.errorMessage').css('visibility', 'hidden');
             $('select.templateSelect').html('');
             for (var i = 0; i < data.length ; i++) {
                 $('select.templateSelect').append("<option value='" + data[i].id + "'>" + data[i].description + "</option>");
             }
             enableButton();
+            return true;
         }
+        return false;
     }
 
     function templateSelected () {
+        var numberOfRows =  $('.numberOfRows').val();
+        if (numberOfRows > 500) {
+            $('.errorMessage').text("Max rows is 500, if you need more use copydown.");
+            $('.errorMessage').css('visibility', 'visible');
+            return;
+        }
+
         disableButton();
-        $('div.loading').show();
+        $('div.loading').css("visibility", "visible");
         google.script.run.withFailureHandler(onFailure).withSuccessHandler(onSuccess).setSource($('.serverSelect').val(), $('select.templateSelect').val(), $('.numberOfRows').val());
     }
 
@@ -93,7 +152,8 @@
     function onFailure(error){
         enableButton();
         $('.errorMessage').text(error);
-        $('.errorMessage').show();
+        $('div.loading').css("visibility", "hidden");
+        $('.errorMessage').css('visibility', 'visible');
     }
 
     function onSuccess(){

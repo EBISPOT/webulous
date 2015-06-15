@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<style>
+    .branding-below {
+        bottom: 0;
+        top: 0;
+    }
+</style>
+
+<div class="branding-below">
+    <div style="padding-right:15px;" class="block">
+        <span>View or remove ontology based data validations.</span>
+        <hr/>
+    </div>
+
+    <div class="block" style="height:160px;overflow:auto;padding-right:15px;">
+        <? var ranges = getAllOntologyValidationsRanges();?>
+        <?
+              //var iri = "@id";
+              for(var i=0; i < ranges.length; i++){
+               if(ranges[i] != null){ ?>
+        <div style="display:table-row;">
+            <div style="width:100%;margin-top:5px;margin-bottom:5px;">
+                <div style="display: table-cell;width:100px;">
+                    <?=ranges[i];?>
+                </div>
+                <div style="display: table-cell;width:100%;text-align:right;">
+                    <input style="margin-right: 10px" class="action" type="button" value="View values" onclick="showSheet(<?=ranges[i];?>)"/>
+                    <input style="width:80px;" type="button" value="Remove" onclick="removeValidation(<?=ranges[i];?>)"/>
+                </div>
+            </div>
+        </div>
+
+        <? } } ?>
+    </div>
+
+    <div class="block" style="padding-right:15px;">
+        <div style="float:right;">
+            <input style="width:80px;" type="button" value="Remove All" onclick="removeAllValidations()"/>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function showSheet (name) {
+        google.script.run.showSheet(name);
+        google.script.host.close();
+    }
+
+    function removeValidation (name) {
+        google.script.run.removeRestriction(name);
+        google.script.host.close();
+    }
+
+    function removeAllValidations() {
+        google.script.run.removeAllValidations();
+        google.script.host.close();
+    }
+</script>

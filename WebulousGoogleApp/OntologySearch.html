@@ -116,7 +116,7 @@
                             //"<input class=\"action\" style=\"height: 20px;line-height: 20px;min-width: 22px;font-size: 10px;\" type=\"button\" value=\"Add\" onclick=\"setRestriction(" + i + ")\"> " +
                         "<input title=\"Data validation for direct children\" type=\"button\" value=\"Subclasses\" onclick=\"setRestrictionsFromBP(" + i + ", 'children')\"> " +
                         "<input title=\"Data validation for all children\" type=\"button\" value=\"Descendants\" onclick=\"setRestrictionsFromBP(" + i + ", 'descendants')\"></div>");
-                var div = $("<div style=\"border: 1px solid transparent;padding:5px;overflow: scroll;\" class=\"action-" + i + "\">");
+                var div = $("<div style=\"border: 1px solid transparent;padding:5px; word-wrap: break-word;\" class=\"action-" + i + "\">");
 
                 div.on ('mouseover', function() {
                     $(this).css("border", "solid 1px #d9d9d9");
@@ -161,7 +161,7 @@
 
     function setRestrictionsFromBP(id, type) {
         //showSpinner();
-        google.script.run.showToast("Loading validations form bioportal in the background", "", 5);
+        google.script.run.showToast("Loading validations from bioportal in the background", "", 5);
         var ontology = $(".term-ontology-" + id).val();
         var term = $(".term-label-" + id).val();
         var iri = $(".term-iri-" + id ).val();
@@ -198,4 +198,3 @@
     }
 
 </script>
-
