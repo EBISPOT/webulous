@@ -172,4 +172,18 @@ The Webulous admin interface is the primary interface for managing Webulous temp
 
 Please contact Simon Jupp (jupp [at] ebi.ac.uk) if you have any queries or technical problems.
 
+== Acknowledgements
+
+Webulous was designed and developed by the http://www.ebi.ac.uk/about/spot-team[Samples Phenotypes and Ontologies Team] at EMBL-EBI. We are also grateful for the free software provided by the following:
+
+* http://oppl2.sourceforge.net[Ontology Pre-processing language]: Developed by the University of Manchester.
+* http://owlapi.sourceforge.net[The OWL API]: Developed by the University of Manchester.
+* https://www.mongodb.org[MongoDB]
+* http://projects.spring.io/spring-boot/[Spring Boot] and http://projects.spring.io/spring-data-mongodb/[Spring Data MondgoDB]
+* http://www.thymeleaf.org[Thymeleaf]
+* https://www.atlassian.com/software/bamboo[Bamboo]: Continuous integration, continuous deployment and release management.
+* https://www.atlassian.com/software/fisheye/overview[Fisheye]: Browse, search and track your source code repositories.
+* https://github.com[GitHub]
+* https://www.jetbrains.com/idea/[IntelliJ IDEA] is the full-featured commercial IDE — with a complete set of tools and integrations with the most important modern technologies and frameworks, such as Spring and Hibernate — a must-have for effective Web and Java EE development.
+
 

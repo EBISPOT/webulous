@@ -48,6 +48,7 @@
     <!--<link rel="stylesheet" type="text/css" href="css/spacelab.bootstrap.min.css" th:href="@{../css/spacelab.bootstrap.min.css}"/>-->
     <!--<link rel="stylesheet" type="text/css" href="css/main.css" th:href="@{../css/main.css}"/>-->
     <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{../css/main.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-tour-standalone.min.css" th:href="@{../css/bootstrap-tour-standalone.min.css}"/>
 
     <!-- end CSS-->
 
@@ -121,6 +122,7 @@
                     <li><a href="../restrictions">Restriction updates</a></li>
                     <li><a href="../submissions">Data submissions</a></li>
                     <li class="last"><a href="../docs">Documentation</a></li>
+                    <li class="functional last"><a href="../contact" class="icon icon-generic" data-icon="C">Contact Us</a></li>
                 </ul>
             </nav>
         </div>
@@ -138,11 +140,15 @@
                     <div class="">
 
 
+
                         <!--@thymesVar id="populousTemplateDocument" type="uk.ac.ebi.spot.webulous.model.PopulousTemplateDocument"-->
                         <form method="post" class="form-horizontal" th:object="${populousTemplateDocument}">
                             <fieldset>
                                 <legend><h2>Webulous template  <span style="font-size: smaller; color: #207a7a;" th:text="${populousTemplateDocument.id}"></span> </h2></legend>
 
+                                <div>
+                                    <a href="javascript:templateTour()">Need help? Take the tour</a>
+                                </div>
 
                                 <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
                                     <a href="#" class="close" data-dismiss="alert">&times;</a>
@@ -242,7 +248,7 @@
                                 </div>
 
 
-                                <h2>Data Restrictions</h2>
+                                <h2 id="datarestrictions">Data Restrictions</h2>
 
                                 <div id="restrictions">
 
@@ -329,7 +335,7 @@
                                     </div>
                                 </div>
 
-                                <h2>OPPL Patterns</h2>
+                                <h2 id="opplpatterns">OPPL Patterns</h2>
 
                                 <div id="patterns">
                                     <div class="pattern-div" th:each="pattern,iterStat : ${populousTemplateDocument.patterns}">
@@ -430,6 +436,7 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript" src="../js/main.js" th:href="@{../js/main.js}"></script>
+<script type="text/javascript" src="../js/bootstrap-tour-standalone.min.js" th:href="@{../js/bootstrap-tour-standalone.min.js}"></script>
 <script defer="defer" src="//www.ebi.ac.uk/web_guidelines/js/cookiebanner.js"></script>
 <script defer="defer" src="//www.ebi.ac.uk/web_guidelines/js/foot.js"></script>
 </body>

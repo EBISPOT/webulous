@@ -3,7 +3,9 @@ Webulous
 
 Webulous is a server for creating OWL ontologies from spreadsheets. Webulous provides a repository of ontology templates (or design patterns) that can be populated with data
 from spreadsheets. Webulous includes an OPPL (Ontology Pre-Processing Language) server for transforming data collected from templates into an OWL ontology. Webulous also has an accompanying
-Google Spreadsheet App (available from Google app store soon), that connects Google Spreadsheets to a Webulous template server.
+Google Spreadsheet App (https://chrome.google.com/webstore/detail/webulous/noieiladpjihajkdgipcmnjcjcgplood), that connects Google Spreadsheets to a Webulous template server.
+
+There's more information about using Webulous available here http://www.ebi.ac.uk/spot/webulous.
 
 Installation
 =============

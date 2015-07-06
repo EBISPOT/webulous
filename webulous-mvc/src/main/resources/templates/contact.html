@@ -12,7 +12,7 @@
          More info: h5bp.com/b/378 -->
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> --> <!-- Not yet implemented -->
 
-    <title>Home &lt; Webulous &lt; EMBL-EBI</title>
+    <title>Contact &lt; Webulous &lt; EMBL-EBI</title>
     <meta name="description" content="EMBL-EBI"/><!-- Describe what this page is about -->
     <meta name="keywords" content="bioinformatics, europe, institute"/><!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
     <meta name="author" content="EMBL-EBI"/><!-- Your [project-name] here -->
@@ -21,7 +21,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
-    <link rel="stylesheet" type="text/css" href="../static/css/spacelab.bootstrap.min.css" th:href="@{css/spacelab.bootstrap.min.css}"/>
 
     <!-- CSS: implied media=all -->
     <!-- CSS concatenated and minified via ant build script-->
@@ -103,10 +102,9 @@
             <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
 
             <div id="local-title" class="grid_12 alpha logo-title">
-                <a href="../index" title="Back to Webulous homepage"><img style="width: 80px" th:src="@{img/webulous_logo.png}" src="../static/img/webulous_logo.png" alt="Webulous logo"/></a>
+                <a href="index" title="Back to Webulous homepage"><img style="width: 80px" th:src="@{img/webulous_logo.png}" src="../static/img/webulous_logo.png" alt="Webulous logo"/></a>
                 <span><h1>Webulous</h1></span>
             </div>
-
 
             <!-- /local-title -->
 
@@ -114,11 +112,12 @@
 
             <nav>
                 <ul class="grid_24" id="local-nav">
-                    <li><a href="templates">Home</a></li>
+                    <li class="first"><a href="templates">Templates</a></li>
                     <li><a href="restrictions">Restriction updates</a></li>
-                    <li class="active"><a href="submissions">Data submissions</a></li>
+                    <li><a href="submissions">Data submissions</a></li>
                     <li class="last"><a href="docs">Documentation</a></li>
-                    <li class="functional last"><a href="../../../contact" class="icon icon-generic" data-icon="C">Contact Us</a></li>
+                    <li class="last"><a href="docs">Documentation</a></li>
+                    <li class="active functional last"><a href="contact" class="icon icon-functional" data-icon="\">Contact Us</a></li>
                 </ul>
             </nav>
         </div>
@@ -133,63 +132,15 @@
             <div class="grid_24 alpha">
 
                 <section>
-                    <div class="col-lg-12">
-                        <div class="">
-
-
-                            <div>
-                                <h2>Data submissions</h2>
-                                <!--@thymesVar id="readonly" type="boolean"-->
-
-                                <!--@thymesVar id="message" type="String"-->
-                                <div class="alert alert-dismissible alert-success" th:if="${message}">
-                                    <button type="button" class="close" data-dismiss="alert">×</button>
-                                    <strong th:text="${message}">Success message goes here</strong>.
-                                </div>
-
-                                <!--@thymesVar id="error" type="String"-->
-                                <div class="alert alert-dismissible alert-danger" th:if="${error}">
-                                    <button type="button" class="close" data-dismiss="alert">×</button>
-                                    <strong th:text="${error}">Error message goes here</strong>.
-                                </div>
-
-                                <table class="table table-striped table-hover ">
-                                    <thead>
-                                    <tr>
-                                        <th>Submission id</th>
-                                        <th>Template</th>
-                                        <th>Reference</th>
-                                        <th>Status</th>
-                                        <th>Message</th>
-                                        <th>Updated</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="dataRun : ${all_submission_runs}">
-                                        <td th:text="${dataRun.id}">run id</td>
-                                        <td>
-                                            <a th:href="'templates/' + ${dataRun.templateId}" th:text="${dataRun.templateName}">Template name</a>
-                                        </td>
-                                        <td th:text="${dataRun.reference}">reference</td>
-                                        <td th:text="${dataRun.status}">status</td>
-                                        <td th:text="${dataRun.message}">message</td>
-                                        <td th:text="${dataRun.lastUpdated}">date</td>
-                                        <td>
-                                            <a th:unless="${readonly}" th:href="'submissions/' + ${dataRun.id} + '/delete'" style="color:white;margin-left:1px;" class="btn btn-sm btn-danger">Delete</a>
-                                            <!--<a th:unless="${readonly}" th:href="'submissions/' + ${dataRun.id} + '/run'" style="color:white;margin-left:1px;" class="btn btn-sm btn-warning">Force</a>-->
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-
-
-                    </div>
+                    <h2 class="strapline">Contact Us</h2>
+                    <p class="intro">For technical issues relating to either the Webulous server or the Google Sheets Add-on, please submit tickets to the issue tracker on GitHub <a href="https://github.com/EBISPOT/webulous/issues">https://github.com/EBISPOT/webulous/issues</a>.
+                        For any other enquiries please contact Simon Jupp (jupp [at] ebi.ac.uk)</p>
+                    <!--<p><a class="btn btn-primary btn-lg">Learn more</a></p>-->
                 </section>
+
             </div>
+
+
         </div>
     </div>
 
@@ -242,10 +193,8 @@
     </footer>
 
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script type="text/javascript" src="../js/main.js" th:href="@{../js/main.js}"></script>
+
 <script defer="defer" src="//www.ebi.ac.uk/web_guidelines/js/cookiebanner.js"></script>
 <script defer="defer" src="//www.ebi.ac.uk/web_guidelines/js/foot.js"></script>
 </body>
 </html>
-
