@@ -118,21 +118,6 @@ public class PopulousTemplateDocument implements PopulousTemplate {
     }
 
     public List<PopulousDataRestriction> getDataRestrictions() {
-        Collections.sort(dataRestrictions, new Comparator<PopulousDataRestriction>() {
-            @Override
-            public int compare(PopulousDataRestriction o1, PopulousDataRestriction o2) {
-                if (o1.getColumnIndex() == 0) {
-                    return  1;
-                }
-                else if (o2.getColumnIndex() == 0) {
-                    return  -1;
-                }
-                else if (o1.getColumnIndex() <= o2.getColumnIndex()) {
-                    return -1;
-                }
-                return 1;
-            }
-        });
         return dataRestrictions;
     }
 
