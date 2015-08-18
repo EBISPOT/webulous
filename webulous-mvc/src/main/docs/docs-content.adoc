@@ -96,6 +96,26 @@ For users who work with a pre-populated Webulous template, it is highly recommen
 
 Some fields may accept multiple values (e.g. synonyms), these fields read a double-piped delimited string. For example, Rienhoff syndrome are synonymous with Loeys-Dietz syndrome 5, or LDS-5. The synonym field should be filled as "Loyes-Dietz syndrome 5 || LDS-5". Webulous will generate multiple fields for these synonyms in the output file.
 
+In a template customized for the use of class creation with the Experimental Factor Ontology (EFO), you may see a definition_citation field. This is an annotation field that aims to keep track of the reference of the term being created from the source that records the term (or its synonyms) in a similar context. The source of definition citation is not restricted to any format of structure. Therefore, a definition citation may be a URL, an entry ID from a dictionary, or another ontology. Definition citation fields are also used as a cross-reference annotation. Filling out definition_citation field in EFO-specific templates requires a specific string format of "[source]:[ID]". For example, "thrombocytopenia" has a MeSH Unique ID: D013921. When filling out MeSH_definition_citation field, the user should put in "MSH:D013921" (without space before and after :) as the field value.
+
+Below are some examples of prefix for definition_citation field.
+
+ATCC_definition_citation prefix "ATCC:[ATCC catalog number]"
+ChEBI_definition_citation prefix "ChEBI:[ChEBI number]"
+ChEBML_definition_cittion prefix "ChEMBL:[ChEMBL number]"
+CL_definition_citation prefix "CL:000xxxx"
+CLO_definition_citation prefix "CLO:000xxxx"
+GO_definition_citation prefix "GO:00xxxxx"
+ICD9_definition_citation prefix "ICD9:[ICD9 number]"
+ICD10_definition_citation prefix "ICD10:[ICD10 number]"
+MSH_definition_citation prefix "MSH:[MeSH Unique ID]"
+NCI_Thesaurus_definition_citation prefix "NCIt:Cxxx"
+PMID_definition_citation prefix "PMID:[PMID number]"
+SNOMEDCT_definition_citation prefix "SNOMEDCT:[SNOMED ID]"
+UMLS_definition_citation preffix "UMLS:[CUI]"
+Wikipedia_definition_citation prefix "Wikipedia:[string]"
+
+
 ==== Submitting data to Webulous
 
 Once you have loaded a template and populated it with some data, you can submit that data back to the Webulous server where you loaded the template.
