@@ -101,18 +101,31 @@ In a template customized for the use of class creation with the Experimental Fac
 Below are some examples of prefix for definition_citation field.
 
 ATCC_definition_citation prefix "ATCC:[ATCC catalog number]"
+
 ChEBI_definition_citation prefix "ChEBI:[ChEBI number]"
+
 ChEBML_definition_cittion prefix "ChEMBL:[ChEMBL number]"
+
 CL_definition_citation prefix "CL:000xxxx"
+
 CLO_definition_citation prefix "CLO:000xxxx"
+
 GO_definition_citation prefix "GO:00xxxxx"
+
 ICD9_definition_citation prefix "ICD9:[ICD9 number]"
+
 ICD10_definition_citation prefix "ICD10:[ICD10 number]"
+
 MSH_definition_citation prefix "MSH:[MeSH Unique ID]"
+
 NCI_Thesaurus_definition_citation prefix "NCIt:Cxxx"
+
 PMID_definition_citation prefix "PMID:[PMID number]"
+
 SNOMEDCT_definition_citation prefix "SNOMEDCT:[SNOMED ID]"
+
 UMLS_definition_citation preffix "UMLS:[CUI]"
+
 Wikipedia_definition_citation prefix "Wikipedia:[string]"
 
 
