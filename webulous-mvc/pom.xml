@@ -4,18 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.3.RELEASE</version>
-        <relativePath />
-        <!-- lookup parent from repository -->
+        <groupId>uk.ac.ebi.spot</groupId>
+        <artifactId>webulous-parent</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../webulous-parent/pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>uk.ac.ebi.fgpt</groupId>
     <artifactId>webulous-mvc</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <packaging>war</packaging>
 
@@ -24,6 +21,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.2.5.RELEASE</version>
                 <executions>
                     <execution>
                         <configuration>
@@ -87,11 +85,12 @@
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>webulous-service</artifactId>
-            <version>0.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
+
+
 
 </project>

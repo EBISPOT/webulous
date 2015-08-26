@@ -16,7 +16,7 @@ public class WebulousRestMVCConfirguation extends RepositoryRestMvcConfiguration
 
     @Override
     protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-        config.setBaseUri(URI.create("/api"));
+        config.setBasePath("/api");
     }
 
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <groupId>uk.ac.ebi.spot</groupId>
+    <artifactId>webulous-parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>uk.ac.ebi.spot</groupId>
+        <artifactId>webulous-dependencies</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../webulous-dependencies/pom.xml</relativePath>
+    </parent>
+
+
+
+    <name>Webulous</name>
+    <description>
+        Webulous - Ontology builder from spreadhseets.
+    </description>
+
+    <url>http://www.ebi.ac.uk/spot/webulous</url>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+
+
+</project>
