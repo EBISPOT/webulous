@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.webulous.config;
 
 import com.mongodb.*;
 import org.apache.commons.lang3.*;
+import org.jaxen.util.SingletonList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
@@ -40,6 +41,12 @@ public class MongoAppConfig {
     MongoClientFactoryBean mongoFactory() throws UnknownHostException {
 
         MongoClientFactoryBean mongoClientFactoryBean = new MongoClientFactoryBean();
+
+        if (properties.getAuthenticationDatabase() != null) {
+            MongoCredential credential = MongoCredential.createCredential(properties.getUsername(), properties.getAuthenticationDatabase(), properties.getPassword());
+            mongoClientFactoryBean.setCredentials(new MongoCredential[]{credential});
+        }
+
 
         if (StringUtils.isNoneEmpty(readPreference, seedList)) {
             List<ServerAddress> seedListArray = new ArrayList<ServerAddress>();
