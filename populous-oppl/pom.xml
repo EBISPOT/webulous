@@ -3,9 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>web-populous</artifactId>
-        <groupId>uk.ac.ebi.fgpt</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.3.0.M1</version>
+        <relativePath/>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -38,29 +39,10 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-rest-webmvc</artifactId>
-            <version>2.2.1.RELEASE</version>
         </dependency>
 
 
-        <!--<dependency>-->
-            <!--<groupId>org.semanticweb</groupId>-->
-            <!--<artifactId>HermiT</artifactId>-->
-            <!--<version>1.3.7</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>com.hermit-reasoner</groupId>-->
-            <!--<artifactId>org.semanticweb.hermit</artifactId>-->
-            <!--<version>1.3.8.4</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>commons-logging</groupId>-->
-                    <!--<artifactId>commons-logging</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
-
-        <dependency>
+       <dependency>
             <groupId>uk.ac.ebi.fgpt</groupId>
             <artifactId>populous-api</artifactId>
             <version>0.1-SNAPSHOT</version>
@@ -68,5 +50,44 @@
 
     </dependencies>
 
+    <repositories>
+
+        <repository>
+            <id>webulous-repo</id>
+            <url>http://www.ebi.ac.uk/~dwelter/webulous/maven/repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>coconut.ebi.ac.uk</id>
+            <name>EBI Artifactory</name>
+            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>http://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/libs-release</url>
+        </repository>
+
+        <repository>
+            <id>repo.spring.io</id>
+            <name>repo.spring.io-releases</name>
+            <url>http://repo.spring.io/libs-milestone-local</url>
+        </repository>
+    </repositories>
 
 </project>

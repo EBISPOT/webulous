@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoClientFactoryBean;
 import org.springframework.data.mongodb.core.MongoFactoryBean;
 
 import java.net.UnknownHostException;
@@ -35,14 +36,15 @@ public class MongoAppConfig {
 * Factory bean that creates the com.mongodb.Mongo instance
 * Checks supplied properties for a seed list and read preference
 *
-* todo update to     MongoClientFactoryBean when spring mongo data 1.7 is available for spring boot
 */
 
     @Bean
-    MongoFactoryBean mongoFactory() throws UnknownHostException {
+    MongoClientFactoryBean mongoFactory() throws UnknownHostException {
+
+        MongoClientFactoryBean mongoClientFactoryBean = new MongoClientFactoryBean();
 
 
-        MongoFactoryBean bean = new MongoFactoryBean();
+//        MongoFactoryBean bean = new MongoFactoryBean();
 
         if (StringUtils.isNoneEmpty(readPreference, seedList)) {
             List<ServerAddress> seedListArray = new ArrayList<ServerAddress>();
@@ -51,25 +53,25 @@ public class MongoAppConfig {
                 seedListArray.add(new ServerAddress(seed));
             }
 
-            bean.setReplicaSetSeeds(seedListArray.toArray(new ServerAddress[seedListArray.size()]));
+            mongoClientFactoryBean.setReplicaSetSeeds(seedListArray.toArray(new ServerAddress[seedListArray.size()]));
             ReadPreference preference = ReadPreference.valueOf(readPreference);
             if (preference != null) {
 
                 // use a mongo client options builder when 1.7 is available
-                //MongoClientOptions.Builder clientOptions = new MongoClientOptions.Builder();
-                //clientOptions.readPreference(preference);
-                MongoOptions options = new MongoOptions();
-                options.setReadPreference(preference);
-                bean.setMongoOptions(options);
+                MongoClientOptions.Builder clientOptions = new MongoClientOptions.Builder();
+                clientOptions.readPreference(preference);
+//                MongoOptions options = new MongoClientOptions();
+//                options.setReadPreference(preference);
+                mongoClientFactoryBean.setMongoClientOptions(clientOptions.build());
             }
         }
         else {
-            bean.setHost(properties.getHost());
+            mongoClientFactoryBean.setHost(properties.getHost());
             if (properties.getPort() != null) {
-                bean.setPort(properties.getPort());
+                mongoClientFactoryBean.setPort(properties.getPort());
             }
         }
-        return bean;
+        return mongoClientFactoryBean;
 
     }
 }
