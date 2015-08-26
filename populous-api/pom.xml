@@ -3,9 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>web-populous</artifactId>
-        <groupId>uk.ac.ebi.fgpt</groupId>
+        <groupId>uk.ac.ebi.spot</groupId>
+        <artifactId>webulous-parent</artifactId>
         <version>0.1-SNAPSHOT</version>
+        <relativePath>../webulous-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,8 +16,6 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
-            <version>3.4.8</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 

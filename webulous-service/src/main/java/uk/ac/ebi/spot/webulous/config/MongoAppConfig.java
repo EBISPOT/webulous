@@ -8,11 +8,9 @@ import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoClientFactoryBean;
-import org.springframework.data.mongodb.core.MongoFactoryBean;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,9 +41,6 @@ public class MongoAppConfig {
 
         MongoClientFactoryBean mongoClientFactoryBean = new MongoClientFactoryBean();
 
-
-//        MongoFactoryBean bean = new MongoFactoryBean();
-
         if (StringUtils.isNoneEmpty(readPreference, seedList)) {
             List<ServerAddress> seedListArray = new ArrayList<ServerAddress>();
 
@@ -56,12 +51,8 @@ public class MongoAppConfig {
             mongoClientFactoryBean.setReplicaSetSeeds(seedListArray.toArray(new ServerAddress[seedListArray.size()]));
             ReadPreference preference = ReadPreference.valueOf(readPreference);
             if (preference != null) {
-
-                // use a mongo client options builder when 1.7 is available
                 MongoClientOptions.Builder clientOptions = new MongoClientOptions.Builder();
                 clientOptions.readPreference(preference);
-//                MongoOptions options = new MongoClientOptions();
-//                options.setReadPreference(preference);
                 mongoClientFactoryBean.setMongoClientOptions(clientOptions.build());
             }
         }

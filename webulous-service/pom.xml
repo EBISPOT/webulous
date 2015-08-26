@@ -3,12 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.0.M1</version>
-        <relativePath />
-        <!-- lookup parent from repository -->
+        <groupId>uk.ac.ebi.spot</groupId>
+        <artifactId>webulous-parent</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../webulous-parent/pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>webulous-service</artifactId>
@@ -40,54 +40,27 @@
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
-            <version>1.5.2</version>
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>ontology-api</artifactId>
-            <version>0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>populous-api</artifactId>
-            <version>0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.ebi.fgpt</groupId>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>populous-oppl</artifactId>
-            <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.1.3.Final</version>
         </dependency>
 
 
     </dependencies>
-    <repositories>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>http://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>spring-releases</id>
-            <name>Spring Releases</name>
-            <url>https://repo.spring.io/libs-release</url>
-        </repository>
-
-        <repository>
-            <id>repo.spring.io</id>
-            <name>repo.spring.io-releases</name>
-            <url>http://repo.spring.io/libs-milestone-local</url>
-        </repository>
-    </repositories>
 </project>
