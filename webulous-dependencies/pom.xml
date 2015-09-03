@@ -27,6 +27,12 @@
         <springboot.maven>1.2.5.RELEASE</springboot.maven>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+    </dependencies>
 
 
     <dependencyManagement>
