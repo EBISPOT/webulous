@@ -67,13 +67,21 @@ For example, we could also add ‘cell lines’ to the organism validation above
 
 ==== Removing data validations
 
-You can remove a data validation using the “Remove selected data validation” action in the Webulous menu. This will remove the validation associated with the selected cell.
-If the cell you have selected is within an existing validation (such as an entire column) This action will remove all the validations in that column.
+===== To remove validation in a single cell:
 To remove a validation from a single cell, you can do this through the standard Data -> Validations option in Google Sheets.
 
+===== To remove validations associated to the values in the selected range:
+You can remove a data validation using the “Remove selected data validation” action in the Webulous menu. This will remove the validation associated with the selected cell.
+If the cell you have selected is within an existing validation (such as an entire column) This action will remove all the validations in that column.
+
+===== To remove all validations in the active sheet:
 If you want to remove all the validations in the active sheet, use the “Remove all data validations” option from the Webulous menu.
 
 N.B. Webulous does not currently support creating validations across multiple worksheets within a single spreadsheet.
+
+--- IMPORTANT NOTE ---
+Webulous does not encourage the implementation of mixed validation restrictions. Please kindly be reminded that, when Webulous generates the OWL classes to be merged to an ontology, it is likely that an ontology relation (i.e., the object property) will be generate to represent relationtionship between two classes, each represented by the value in the associated column.
+
 
 ==== Loading templates from a Webulous server
 
