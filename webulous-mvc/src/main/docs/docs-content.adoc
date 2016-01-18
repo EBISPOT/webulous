@@ -137,8 +137,6 @@ UMLS_definition_citation preffix "UMLS:[CUI]"
 Wikipedia_definition_citation prefix "Wikipedia:[string]"
 
 
---- IMPORTANT NOTE ---
-Failure to conform with validation restriction will result in an axiomatisation that points to a non-classified null class in the output file.
 
 ==== Submitting data to Webulous
 
