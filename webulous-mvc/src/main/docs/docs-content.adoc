@@ -80,7 +80,7 @@ If you want to remove all the validations in the active sheet, use the “Remove
 N.B. Webulous does not currently support creating validations across multiple worksheets within a single spreadsheet.
 
 --- IMPORTANT NOTE ---
-Webulous does not encourage the implementation of mixed validation restrictions. Please kindly be reminded that, when Webulous generates the OWL classes to be merged to an ontology, it is likely that an ontology relation (i.e., the object property) will be generate to represent relationtionship between two classes, each represented by the value in the associated column.
+Webulous does not encourage the implementation of mixed validation restrictions. Please kindly be reminded that, when Webulous generates the OWL classes to be merged to an ontology, it is likely that an ontology relation (i.e., the object property) will also be generated to represent relationtionship between two classes, each represented by the value in the associated column.
 
 
 ==== Loading templates from a Webulous server
