@@ -89,18 +89,18 @@ It is possible to load templates with pre-populated data validation directly fro
 The Webulous server is capable of serving more complex data validations, such as those that are constructed from a custom list, ontologies outside of BioPortal, and validation lists based on the results of a DL query.
 
 To load a data submission template from a Webulous server, the Webulous server needs to be running on a public URL accessible by the Google document.
-The EBI is currently hosting a read-only Webulous server that you can use to load templatesfor submitting term requests to EFO   (http://www.ebi.ac.uk/efo/webulous).
+The EBI is currently hosting a read-only Webulous server that you can use to load templates for submitting term requests to EFO   (http://www.ebi.ac.uk/efo/webulous).
 
-Open the Webulus menu and go down to the “Webulous server” option, then choose “Load a template…”.  This will open a dialog where you must enter the URL where the Webulous server is running (e.g. http://www.ebi.ac.uk/efo/webulous).
-Click the “Get templates” button and a list of available templates will appear in the drop down menu below.
-By default Webullou will create a template for 100 rows of data, but if you think you will require more rows, you can set the amount in the input here.
+Open the Webulus menu (Add-ons -> Webulous) and go down to the “Webulous server” option. Select a server from the available server list, or use "add a new server" option. This will open a dialog where you must enter the URL where the Webulous server is running (e.g. http://www.ebi.ac.uk/efo/webulous). Then choose a template from the drop-down list. 
+
+By default Webulous will create a template for 20 rows of data, but if you think you will require more rows, you can set the amount in the input here.
 Finally, click the “Load teamplte” button that will create a new sheet in the current spreadsheet with the appropriate data validations pre populated.
 
 N.B. Some templates can be large and may take some time to create all the necessary data validations. These happen asynchronously in the background, so please be patient while the template loads.
 
 ==== Filling out Webulous template
 
-For users who work with a pre-populated Webulous template, it is highly recommended that they observe the validation field (a column of which the cells are marked with a drop-down arrow) and only fill in values that can be validated (i.e. can be selected from the drop-down list, or can be auto-filled). The validation fields that cannot be validated will be marked with a red triangle flag in the top-right corner of the field. If you cannot find the desirable value from the drop-down validated value list, please first create this term either by contacting the source ontology of the validation value or submitting a new term in a separate Webulous template (e.g. filling in a cell line template of which a disease associated to that cell line cannot be found needs a separate Webulous submission via a pre-populated disease template). Failure to conform with this recomendation will result in an axiomatisation that points to a non-classified null class in the output file.
+For users who work with a pre-populated Webulous template, it is highly recommended that they observe the validation field (a column of which the cells are marked with a drop-down arrow) and only fill in values that can be validated (i.e. can be selected from the drop-down list, or can be auto-filled). "Failure to conform with this recomendation will result in an axiomatisation that points to a non-classified null class in the output file". The validation fields that cannot be validated will be marked with a red triangle flag in the top-right corner of the field. If you cannot find the desirable value from the drop-down validated value list, please first create this term either by contacting the source ontology of the validation value or submitting a new term in a separate Webulous template (e.g. filling in a cell line template of which a disease associated to that cell line cannot be found needs a separate Webulous submission via a pre-populated disease template). Failure to conform with this recomendation will result in an axiomatisation that points to a non-classified null class in the output file.
 
 Some fields may accept multiple values (e.g. synonyms), these fields read a double-piped delimited string. For example, Rienhoff syndrome are synonymous with Loeys-Dietz syndrome 5, or LDS-5. The synonym field should be filled as "Loyes-Dietz syndrome 5 || LDS-5". Webulous will generate multiple fields for these synonyms in the output file.
 
@@ -137,10 +137,13 @@ UMLS_definition_citation preffix "UMLS:[CUI]"
 Wikipedia_definition_citation prefix "Wikipedia:[string]"
 
 
+--- IMPORTANT NOTE ---
+Failure to conform with validation restriction will result in an axiomatisation that points to a non-classified null class in the output file.
+
 ==== Submitting data to Webulous
 
 Once you have loaded a template and populated it with some data, you can submit that data back to the Webulous server where you loaded the template.
-In the Webulous menu, under “Webulous server”, choose “Submit populated template”. A dialog will open showing the address where the data will be submitted, along with two input fields.
+In the Add-ons -> Webulous -> Webulous template, choose “Submit populated template”. A dialog will open showing the address where the data will be submitted, along with two input fields.
 The first is where you can submit a short message to accompany the submission. This message is optional, but it is advised that you enter something relevant so that the Webulous administrators can easily identify your submission in any future correspondence.
 The second option is for a URIGen API key, this is only relevant for templates that have an accompanying URIGen server running for new URI creation.
 The template administrators will advise you on if you need to supply a URIGen API key when you submit new data.
