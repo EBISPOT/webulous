@@ -349,29 +349,11 @@ public class OpplPatternExecutionService {
         if (type == 1) {
 
             boolean hasRestriction = false;
-            OWLClass parent = null;
-            if (!StringUtils.isBlank(populousDataRestriction.getClassExpression())) {
-                // see if there is a parent term
-                String render = populousDataRestriction.getClassExpression();
-                // remove single quotes
-                if (render.contains(" ") && render.startsWith("'") && render.endsWith("'")) {
-                    render = render.substring(1, (render.length() -1));
-                }
-                OWLEntity parentEntity = shortFormProvider.getEntity(render);
-                if (parentEntity instanceof OWLClass) {
-                    parent = parentEntity.asOWLClass();
-                }
-            }
 
             OWLEntityCreationSet<OWLClass> ecs = null;
             try {
-                if(parent != null){
-                    ecs = owlEntityFactory.createOWLClass(shortForm, defaultBaseUri, parent);
-                }
-                else{
-                    logger.info("creating owl class with base URI" + defaultBaseUri.toString());
-                    ecs = owlEntityFactory.createOWLClass(shortForm, defaultBaseUri);
-                }
+                logger.info("creating owl class with base URI" + defaultBaseUri.toString());
+                ecs = owlEntityFactory.createOWLClass(shortForm, defaultBaseUri);
                 if (ecs.getOntologyChanges() != null) {
                     ontologyManager.applyChanges(ecs.getOntologyChanges());
                     shortFormProvider.add(ecs.getOWLEntity());
