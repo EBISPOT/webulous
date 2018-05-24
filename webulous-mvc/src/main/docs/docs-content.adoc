@@ -234,4 +234,11 @@ Webulous was designed and developed by the http://www.ebi.ac.uk/about/spot-team[
 * https://github.com[GitHub]
 * https://www.jetbrains.com/idea/[IntelliJ IDEA] is the full-featured commercial IDE — with a complete set of tools and integrations with the most important modern technologies and frameworks, such as Spring and Hibernate — a must-have for effective Web and Java EE development.
 
+== Privacy Policy
 
+The General Data Protection Regulation (GDPR) will apply in the UK from 25 May 2018. It will replace the 1998 Data Protection Act and introduce new rules on privacy notices, as well as processing and safeguarding personal data.
+
+This website requires cookies, and the limited processing of your personal data in order to function. By using the site you are agreeing to this as outlined in our https//www.ebi.ac.uk/data-protection/privacy-notice/embl-ebi-public-website[Privacy Notice] and https://www.ebi.ac.uk/about/terms-of-use[Terms of Use].
+
+https://www.ebi.ac.uk/data-protection/privacy-notice/webulous[Webulous Submission Service] applies to the data submitted to Webulous (eg. populated templates for ontologies)
+https://www.ebi.ac.uk/data-protection/privacy-notice/webulous-mailing-list[Webulous Mail Service] applies to our public e-mail lists; ols-support [at] ebi.ac.uk, ols-announce [at] ebi.ac.uk and ontology-tools-support [at] ebi.ac.uk.
