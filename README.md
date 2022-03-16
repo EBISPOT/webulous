@@ -1,3 +1,5 @@
+Currently Webulous is not actively maintained.
+
 Webulous
 ===========
 
